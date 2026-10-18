@@ -95,13 +95,22 @@
                             BackgroundColor="{StaticResource White}"
                             HeightRequest="140"
                             Margin="0, 4, 0, 0">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnPickModelPhotoTapped" />
-                        </Border.GestureRecognizers>
                         <Grid>
                             <Image Source="{Binding PhotoPath}"
                                    Aspect="AspectFill"
                                    IsVisible="{Binding HasPhoto}" />
+                            <Border BackgroundColor="#66000000"
+                                    StrokeThickness="0"
+                                    Padding="10, 6"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="End"
+                                    IsVisible="{Binding HasPhoto}">
+                                <Label Text="Toucher pour changer la photo"
+                                       FontFamily="DMSansBold"
+                                       FontSize="12"
+                                       TextColor="{StaticResource White}"
+                                       HorizontalTextAlignment="Center" />
+                            </Border>
                             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="6"
                                                  IsVisible="{Binding HasPhoto, Converter={StaticResource BoolInvert}}">
                                 <Border WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 14" StrokeThickness="0" BackgroundColor="{StaticResource Mist}" HorizontalOptions="Center">
@@ -116,6 +125,16 @@
                                 <Label Text="Ajouter la photo du modèle" FontFamily="DMSansBold" FontSize="14" TextColor="{StaticResource Indigo}" HorizontalTextAlignment="Center" />
                                 <Label Text="Choisir une image sur l'appareil" FontFamily="DMSans" FontSize="11" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
                             </VerticalStackLayout>
+                            <Button Grid.Row="0"
+                                    Text=""
+                                    BackgroundColor="Transparent"
+                                    BorderColor="Transparent"
+                                    BorderWidth="0"
+                                    Padding="0"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill"
+                                    Clicked="OnPickModelPhotoClicked"
+                                    SemanticProperties.Description="Choisir ou remplacer la photo du modèle" />
                         </Grid>
                     </Border>
                 </VerticalStackLayout>

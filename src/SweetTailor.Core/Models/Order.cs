@@ -1,7 +1,13 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace SweetTailor.Core.Models;
 
-public class Order
+public partial class Order : ObservableObject
 {
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StatusText))]
+    private OrderStatus _status = OrderStatus.Recue;
+
     public int Id { get; set; }
     public string OrderNumber { get; set; } = "#0001";
     public int ClientId { get; set; }
@@ -19,7 +25,6 @@ public class Order
     public DateTime DueDate { get; set; }
     public string DueDateLabel { get; set; } = string.Empty;
     public bool IsHotDueDate { get; set; }
-    public OrderStatus Status { get; set; } = OrderStatus.Recue;
 
     public string SvgAsset { get; set; } = "dress";
     public string ImagePath { get; set; } = string.Empty;

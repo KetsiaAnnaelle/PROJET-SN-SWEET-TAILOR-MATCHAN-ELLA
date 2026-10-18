@@ -31,12 +31,23 @@ public partial class NewOrderPage : ContentPage
         await Shell.Current.GoToAsync($"{nameof(OrderDetailPage)}?OrderId={order.Id}");
     }
 
-    private async void OnPickModelPhotoTapped(object? sender, TappedEventArgs e)
+    private async void OnPickModelPhotoClicked(object? sender, EventArgs e)
     {
-        var path = await ImageFilePicker.PickAndSaveImageAsync("Choisir la photo du modèle");
-        if (path is not null)
+        try
         {
-            _viewModel.PhotoPath = path;
+            var path = await ImageFilePicker.PickAndSaveImageAsync("Choisir la photo du modèle");
+            if (path is not null)
+            {
+                _viewModel.PhotoPath = path;
+                _viewModel.ShowToast("Photo du modèle importée.", ToastType.Success);
+            }
+        }
+        catch (Exception ex) when (ex is FeatureNotSupportedException
+                                   or PermissionException
+                                   or IOException
+                                   or UnauthorizedAccessException)
+        {
+            _viewModel.ShowToast($"Impossible d'importer la photo : {ex.Message}", ToastType.Error);
         }
     }
 }
