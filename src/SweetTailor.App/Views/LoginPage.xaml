@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             NavigationPage.HasNavigationBar="False"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{StaticResource Chalk}">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="0, 0, 0, 30" Spacing="20">
+                <!-- Top Tape Accent -->
+                <controls:TapeMeasure HeightRequest="20" HorizontalOptions="FillAndExpand" />
+
+                <!-- Header with Logo -->
+                <VerticalStackLayout Padding="24, 16, 24, 0" Spacing="16">
+                    <Border WidthRequest="64" HeightRequest="64"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource Indigo}"
+                            HorizontalOptions="Start">
+                        <Label Text="S"
+                               FontFamily="BricolageExtraBold"
+                               FontSize="32"
+                               TextColor="{StaticResource Tape}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Bon retour !"
+                               FontFamily="BricolageExtraBold"
+                               FontSize="30"
+                               TextColor="{StaticResource Ink}" />
+                        <Label Text="Connectez-vous pour retrouver vos clients et vos commandes."
+                               FontFamily="DMSans"
+                               FontSize="14"
+                               TextColor="{StaticResource Muted}"
+                               LineHeight="1.4" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- Form Fields -->
+                <VerticalStackLayout Padding="24, 10, 24, 0" Spacing="16">
+                    <controls:AppEntry Label="E-mail ou téléphone"
+                                       Text="{Binding Identifier, Mode=TwoWay}"
+                                       Placeholder="nom@exemple.com"
+                                       LeadingIcon="mail"
+                                       Keyboard="Email" />
+
+                    <controls:AppEntry Label="Mot de passe"
+                                       Text="{Binding Password, Mode=TwoWay}"
+                                       Placeholder="••••••••"
+                                       IsPassword="True"
+                                       LeadingIcon="lock" />
+
+                    <!-- Forgot Password Link -->
+                    <Label Text="Mot de passe oublié ?"
+                           FontFamily="DMSansBold"
+                           FontSize="14"
+                           TextColor="{StaticResource Indigo}"
+                           HorizontalOptions="End"
+                           TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnForgotPasswordTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <!-- Submit CTA -->
+                    <controls:AppButton Text="Se connecter"
+                                        Variant="Primary"
+                                        IsBusy="{Binding IsBusy}"
+                                        Command="{Binding LoginCommand}"
+                                        Margin="0, 10, 0, 0" />
+                </VerticalStackLayout>
+
+                <!-- Footer: Switch to Register -->
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0, 30, 0, 10">
+                    <Label Text="Pas encore de compte ?" FontFamily="DMSans" FontSize="14" TextColor="{StaticResource Muted}" />
+                    <Label Text="Créer un compte"
+                           FontFamily="DMSansBold"
+                           FontSize="14"
+                           TextColor="{StaticResource Indigo}"
+                           TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnRegisterTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Toast Banner -->
+        <controls:ToastBanner Grid.Row="1"
+                              IsVisible="{Binding IsToastVisible}"
+                              Message="{Binding ToastMessage}"
+                              Type="{Binding ToastType}" />
+    </Grid>
+
+</ContentPage>

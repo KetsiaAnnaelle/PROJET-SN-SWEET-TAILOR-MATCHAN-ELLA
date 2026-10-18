@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.SplashPage"
+             NavigationPage.HasNavigationBar="False"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             Background="{StaticResource GradSplash}">
+
+    <Grid RowDefinitions="*, Auto">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnSplashTapped" />
+        </Grid.GestureRecognizers>
+        <!-- Center Brand Block -->
+        <VerticalStackLayout Grid.Row="0"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="20">
+
+            <!-- Logo Mark with Dashed Tape Border -->
+            <Grid x:Name="BrandMark" WidthRequest="180" HeightRequest="180" HorizontalOptions="Center">
+                <!-- Outer Ring -->
+                <Ellipse Stroke="#24FFFFFF" StrokeThickness="1" />
+                <!-- Dashed Tape Accent -->
+                <Ellipse Stroke="{StaticResource Tape}" StrokeThickness="2" StrokeDashArray="3, 3" Margin="8" />
+
+                <!-- Solid Brand Tile -->
+                <Border WidthRequest="120"
+                        HeightRequest="120"
+                        StrokeShape="RoundRectangle 36"
+                        BackgroundColor="{StaticResource Indigo}"
+                        Stroke="#24FFFFFF"
+                        StrokeThickness="1"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Grid WidthRequest="64" HeightRequest="64" HorizontalOptions="Center" VerticalOptions="Center">
+                        <!-- S-Thread in Tape Yellow -->
+                        <Path Data="{StaticResource GeoLogoThread}"
+                              Stroke="{StaticResource Tape}"
+                              StrokeThickness="8"
+                              StrokeLineCap="Round"
+                              StrokeLineJoin="Round"
+                              Aspect="Uniform" />
+                        <!-- Needle Eye Ring in Rose -->
+                        <Ellipse WidthRequest="14" HeightRequest="14"
+                                 Stroke="{StaticResource Rose}"
+                                 StrokeThickness="3"
+                                 HorizontalOptions="End" VerticalOptions="Start" Margin="0, 4, 4, 0" />
+                        <!-- Bottom Knot in Rose -->
+                        <Ellipse WidthRequest="12" HeightRequest="12"
+                                 Fill="{StaticResource Rose}"
+                                 HorizontalOptions="Start" VerticalOptions="End" Margin="4, 0, 0, 4" />
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- App Title -->
+            <Label Text="Sweet Tailor"
+                   FontFamily="BricolageGrotesque"
+                   FontSize="44"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource White}"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Slogan -->
+            <Label Text="Chaque mesure compte."
+                   FontSize="16"
+                   TextColor="#C9CCEA"
+                   HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+
+        <!-- Footer: Version & Tape Motif -->
+        <VerticalStackLayout Grid.Row="1" Spacing="16" Margin="0, 0, 0, 10">
+            <Label Text="Version 1.0"
+                   FontSize="12"
+                   FontAttributes="Bold"
+                   TextColor="#9EA4D6"
+                   HorizontalTextAlignment="Center" />
+            <controls:TapeControl HeightRequest="22" />
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>

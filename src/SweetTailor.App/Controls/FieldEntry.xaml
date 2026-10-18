@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SweetTailor.App.Controls.FieldEntry">
+    <VerticalStackLayout Spacing="4">
+        <Border x:Name="FieldBorder"
+                StrokeShape="RoundRectangle 14"
+                StrokeThickness="1"
+                Stroke="{StaticResource Line}"
+                BackgroundColor="{StaticResource White}"
+                Padding="14, 8">
+            <VerticalStackLayout Spacing="2">
+                <Label x:Name="FieldLabel"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Muted}" />
+
+                <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                    <Entry x:Name="EntryInput"
+                           Grid.Column="0"
+                           FontSize="15"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Ink}"
+                           BackgroundColor="Transparent"
+                           Margin="0"
+                           HeightRequest="32"
+                           VerticalOptions="Center" />
+
+                    <!-- Trailing Icon or Action -->
+                    <Path x:Name="TrailingIconPath"
+                          Grid.Column="1"
+                          WidthRequest="20"
+                          HeightRequest="20"
+                          VerticalOptions="Center"
+                          Aspect="Uniform"
+                          Fill="{StaticResource Muted}"
+                          IsVisible="False" />
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Error / Helper Message -->
+        <HorizontalStackLayout x:Name="HelperStack" Spacing="6" Margin="4, 0, 0, 0" IsVisible="False">
+            <Path x:Name="HelperIcon"
+                  WidthRequest="14"
+                  HeightRequest="14"
+                  Aspect="Uniform"
+                  VerticalOptions="Center" />
+            <Label x:Name="HelperText"
+                   FontSize="12"
+                   VerticalTextAlignment="Center" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentView>

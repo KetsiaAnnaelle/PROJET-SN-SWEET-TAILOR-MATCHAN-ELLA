@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.OnboardingPage"
+             x:DataType="vm:OnboardingViewModel"
+             NavigationPage.HasNavigationBar="False"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{StaticResource Chalk}">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <!-- ===== Carousel (illustration pleine largeur + textes) ===== -->
+        <CarouselView Grid.Row="0"
+                      x:Name="OnboardingCarousel"
+                      ItemsSource="{Binding Slides}"
+                      Position="{Binding CurrentSlideIndex, Mode=TwoWay}"
+                      IsSwipeEnabled="True"
+                      IsBounceEnabled="False"
+                      Loop="False"
+                      HorizontalScrollBarVisibility="Never">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="vm:OnboardingSlide">
+                    <Grid RowDefinitions="*, Auto">
+
+                        <!-- Zone illustration : pleine largeur, coins bas arrondis (maquette) -->
+                        <Border Grid.Row="0"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 0,0,40,40"
+                                BackgroundColor="{Binding BackgroundColorHex}">
+                            <Grid Padding="0,56,0,0">
+
+                                <!-- ========== SLIDE 0 : Mesures ========== -->
+                                <Grid IsVisible="{Binding IsSlide0}"
+                                      WidthRequest="300" HeightRequest="300"
+                                      HorizontalOptions="Center" VerticalOptions="Center">
+
+                                    <!-- mètre ruban incliné -->
+                                    <Grid WidthRequest="280" HeightRequest="22"
+                                          Rotation="-14" TranslationY="108"
+                                          BackgroundColor="{StaticResource Tape}">
+                                        <Line X1="0" X2="280" Y1="16" Y2="16"
+                                              Stroke="{StaticResource Ink}" StrokeThickness="8"
+                                              StrokeDashArray="0.125,7.875" VerticalOptions="End"/>
+                                    </Grid>
+
+                                    <!-- carte de mesures -->
+                                    <Border Rotation="-5" WidthRequest="226"
+                                            StrokeShape="RoundRectangle 20"
+                                            BackgroundColor="{StaticResource White}"
+                                            Stroke="{StaticResource Line}"
+                                            VerticalOptions="Center" HorizontalOptions="Center"
+                                            Padding="16,16,16,0">
+                                        <Border.Shadow>
+                                            <Shadow Brush="{StaticResource Ink}" Opacity="0.18" Radius="22" Offset="0,12"/>
+                                        </Border.Shadow>
+                                        <VerticalStackLayout Spacing="6">
+                                            <HorizontalStackLayout Spacing="10">
+                                                <controls:AvatarInitials Name="Nadège Mbarga" ColorVariant="a1" Size="38"/>
+                                                <VerticalStackLayout VerticalOptions="Center">
+                                                    <Label Text="Nadège Mbarga" FontFamily="DMSansBold" FontSize="14" TextColor="{StaticResource Ink}"/>
+                                                    <Label Text="Mesures du 12 sept." FontFamily="DMSans" FontSize="11" TextColor="{StaticResource Muted}"/>
+                                                </VerticalStackLayout>
+                                            </HorizontalStackLayout>
+                                            <controls:MeasureRow Label="Poitrine" Value="92" Unit="cm"/>
+                                            <controls:MeasureRow Label="Taille" Value="74" Unit="cm"/>
+                                            <controls:MeasureRow Label="Hanches" Value="98" Unit="cm"/>
+                                            <controls:MeasureRow Label="Longueur robe" Value="112" Unit="cm"/>
+                                            <Grid HeightRequest="16" Margin="-16,6,-16,0" BackgroundColor="{StaticResource Tape}">
+                                                <Line X1="0" X2="260" Y1="12" Y2="12"
+                                                      Stroke="{StaticResource Ink}" StrokeThickness="6"
+                                                      StrokeDashArray="0.16,7.84" VerticalOptions="End"/>
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <!-- pastille "Taille 74 cm" -->
+                                    <Border Rotation="-5" BackgroundColor="{StaticResource Indigo}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 14"
+                                            Padding="13,9" HorizontalOptions="Start" VerticalOptions="Start"
+                                            Margin="-6,18,0,0">
+                                        <Label Text="Taille 74 cm" TextColor="White" FontFamily="DMSansBold" FontSize="12.5"/>
+                                    </Border>
+
+                                    <!-- pastille check rose -->
+                                    <Border WidthRequest="52" HeightRequest="52" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 26"
+                                            BackgroundColor="{StaticResource Rose}"
+                                            HorizontalOptions="End" VerticalOptions="End"
+                                            Margin="0,0,-8,30">
+                                        <Label Text="✓" TextColor="White" FontSize="26" FontFamily="DMSansBold"
+                                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+                                </Grid>
+
+                                <!-- ========== SLIDE 1 : Commandes / échéances ========== -->
+                                <Grid IsVisible="{Binding IsSlide1}"
+                                      WidthRequest="300" HeightRequest="300"
+                                      HorizontalOptions="Center" VerticalOptions="Center">
+
+                                    <VerticalStackLayout Spacing="10" VerticalOptions="Center">
+                                        <!-- badge "Dans 5 jours" -->
+                                        <Border BackgroundColor="{StaticResource Rose}" StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 99" Padding="12,7"
+                                                HorizontalOptions="Start">
+                                            <Label Text="🕒  Dans 5 jours" TextColor="White" FontFamily="DMSansBold" FontSize="12"/>
+                                        </Border>
+
+                                        <!-- commande 1 (urgente) -->
+                                        <Border StrokeShape="RoundRectangle 18" BackgroundColor="{StaticResource White}"
+                                                Stroke="{StaticResource Line}" Padding="12" Rotation="1.5">
+                                            <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="12">
+                                                <Border BackgroundColor="{StaticResource Rose}" StrokeThickness="0"
+                                                        StrokeShape="RoundRectangle 14" HeightRequest="50">
+                                                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                                                        <Label Text="08" TextColor="White" FontFamily="BricolageExtraBold" FontSize="18" HorizontalOptions="Center"/>
+                                                        <Label Text="OCT." TextColor="White" FontFamily="DMSansBold" FontSize="9.5" HorizontalOptions="Center"/>
+                                                    </VerticalStackLayout>
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                                    <Label Text="Robe de soirée" FontFamily="DMSansBold" FontSize="14" TextColor="{StaticResource Ink}"/>
+                                                    <Label Text="Nadège Mbarga" FontFamily="DMSans" FontSize="12" TextColor="{StaticResource Muted}"/>
+                                                </VerticalStackLayout>
+                                                <Border Grid.Column="2" BackgroundColor="#FCE4EA" StrokeThickness="0"
+                                                        StrokeShape="RoundRectangle 99" Padding="10,4" VerticalOptions="Center">
+                                                    <Label Text="Essayage" FontFamily="DMSansBold" FontSize="11" TextColor="#B8325A"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- commande 2 -->
+                                        <Border StrokeShape="RoundRectangle 18" BackgroundColor="{StaticResource White}"
+                                                Stroke="{StaticResource Line}" Padding="12" Rotation="-2">
+                                            <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="12">
+                                                <Border BackgroundColor="{StaticResource Chalk}" StrokeThickness="0"
+                                                        StrokeShape="RoundRectangle 14" HeightRequest="50">
+                                                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                                                        <Label Text="11" TextColor="{StaticResource Ink}" FontFamily="BricolageExtraBold" FontSize="18" HorizontalOptions="Center"/>
+                                                        <Label Text="OCT." TextColor="{StaticResource Muted}" FontFamily="DMSansBold" FontSize="9.5" HorizontalOptions="Center"/>
+                                                    </VerticalStackLayout>
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                                    <Label Text="Ensemble pagne" FontFamily="DMSansBold" FontSize="14" TextColor="{StaticResource Ink}"/>
+                                                    <Label Text="Christelle Tchoua" FontFamily="DMSans" FontSize="12" TextColor="{StaticResource Muted}"/>
+                                                </VerticalStackLayout>
+                                                <Border Grid.Column="2" BackgroundColor="#FDF3D6" StrokeThickness="0"
+                                                        StrokeShape="RoundRectangle 99" Padding="10,4" VerticalOptions="Center">
+                                                    <Label Text="Couture" FontFamily="DMSansBold" FontSize="11" TextColor="#8A6A10"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- commande 3 -->
+                                        <Border StrokeShape="RoundRectangle 18" BackgroundColor="{StaticResource White}"
+                                                Stroke="{StaticResource Line}" Padding="12" Rotation="3" Opacity="0.92">
+                                            <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="12">
+                                                <Border BackgroundColor="{StaticResource Chalk}" StrokeThickness="0"
+                                                        StrokeShape="RoundRectangle 14" HeightRequest="50">
+                                                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                                                        <Label Text="17" TextColor="{StaticResource Ink}" FontFamily="BricolageExtraBold" FontSize="18" HorizontalOptions="Center"/>
+                                                        <Label Text="OCT." TextColor="{StaticResource Muted}" FontFamily="DMSansBold" FontSize="9.5" HorizontalOptions="Center"/>
+                                                    </VerticalStackLayout>
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                                    <Label Text="Robe de mariée" FontFamily="DMSansBold" FontSize="14" TextColor="{StaticResource Ink}"/>
+                                                    <Label Text="Sandrine Kamga" FontFamily="DMSans" FontSize="12" TextColor="{StaticResource Muted}"/>
+                                                </VerticalStackLayout>
+                                                <Border Grid.Column="2" BackgroundColor="#FDF3D6" StrokeThickness="0"
+                                                        StrokeShape="RoundRectangle 99" Padding="10,4" VerticalOptions="Center">
+                                                    <Label Text="Couture" FontFamily="DMSansBold" FontSize="11" TextColor="#8A6A10"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- badge "Prête à retirer" -->
+                                        <Border BackgroundColor="White" StrokeThickness="0" StrokeShape="RoundRectangle 99"
+                                                Padding="8,8,14,8" HorizontalOptions="Start">
+                                            <HorizontalStackLayout Spacing="8">
+                                                <Border WidthRequest="26" HeightRequest="26" StrokeThickness="0"
+                                                        StrokeShape="RoundRectangle 13" BackgroundColor="{StaticResource Green}">
+                                                    <Label Text="✓" TextColor="White" FontSize="14" FontFamily="DMSansBold"
+                                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                </Border>
+                                                <Label Text="Prête à retirer" FontFamily="DMSansBold" FontSize="12.5"
+                                                       TextColor="{StaticResource Ink}" VerticalOptions="Center"/>
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                                <!-- ========== SLIDE 2 : Catalogue ========== -->
+                                <Grid IsVisible="{Binding IsSlide2}"
+                                      WidthRequest="300" HeightRequest="320"
+                                      HorizontalOptions="Center" VerticalOptions="Center">
+
+                                    <HorizontalStackLayout Spacing="10" Rotation="-7" HorizontalOptions="Center" VerticalOptions="Center">
+                                        <!-- colonne gauche -->
+                                        <VerticalStackLayout Spacing="12" Margin="0,26,0,0">
+                                            <Border WidthRequest="130" HeightRequest="150" StrokeShape="RoundRectangle 18" StrokeThickness="0">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0.3,1">
+                                                        <GradientStop Color="#FCE4EA" Offset="0"/>
+                                                        <GradientStop Color="#F4B3C4" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <Path Aspect="Uniform" HeightRequest="86" Fill="{StaticResource Indigo}"
+                                                      HorizontalOptions="Center" VerticalOptions="Center"
+                                                      Data="M48 10Q60 22 72 10L80 40 70 62C84 100 98 140 104 172H16C22 140 36 100 50 62L40 40Z"/>
+                                            </Border>
+                                            <Border WidthRequest="130" HeightRequest="118" StrokeShape="RoundRectangle 18" StrokeThickness="0">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0.3,1">
+                                                        <GradientStop Color="#3B4A9E" Offset="0"/>
+                                                        <GradientStop Color="#1B2352" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <Path Aspect="Uniform" HeightRequest="70" Fill="{StaticResource Tape}"
+                                                      HorizontalOptions="Center" VerticalOptions="Center"
+                                                      Data="M48 10c0 14 24 14 24 0l10 8 6 28-12 6 10 118H24L34 52l-12-6 6-28 10-8Z"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+                                        <!-- colonne droite -->
+                                        <VerticalStackLayout Spacing="12">
+                                            <Border WidthRequest="130" HeightRequest="108" StrokeShape="RoundRectangle 18" StrokeThickness="0">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0.3,1">
+                                                        <GradientStop Color="#FDF3D6" Offset="0"/>
+                                                        <GradientStop Color="#F4C95D" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <Path Aspect="Uniform" HeightRequest="64" Fill="{StaticResource Indigo}"
+                                                      HorizontalOptions="Center" VerticalOptions="Center"
+                                                      Data="M40 14Q60 30 80 14L108 36 96 62 84 54 88 160H32L36 54 24 62 12 36Z"/>
+                                            </Border>
+                                            <Border WidthRequest="130" HeightRequest="160" StrokeShape="RoundRectangle 18" StrokeThickness="0">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0.3,1">
+                                                        <GradientStop Color="#ECEDF8" Offset="0"/>
+                                                        <GradientStop Color="#B7BCE0" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                                <Path Aspect="Uniform" HeightRequest="92" Fill="{StaticResource Indigo}"
+                                                      HorizontalOptions="Center" VerticalOptions="Center"
+                                                      Data="M44 10 60 34 76 10 104 24 112 70 98 74 96 168H24L22 74 8 70 16 24Z"/>
+                                            </Border>
+                                        </VerticalStackLayout>
+                                    </HorizontalStackLayout>
+
+                                    <!-- coeur favori -->
+                                    <Border WidthRequest="46" HeightRequest="46" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 23" BackgroundColor="White"
+                                            HorizontalOptions="End" VerticalOptions="Start" Margin="0,18,-4,0">
+                                        <Label Text="♥" TextColor="{StaticResource Rose}" FontSize="22"
+                                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+
+                                    <!-- pastille "Catalogue de modèles" -->
+                                    <Border BackgroundColor="{StaticResource Indigo}" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 99" Padding="16,9"
+                                            HorizontalOptions="Start" VerticalOptions="End" Margin="-8,0,0,0">
+                                        <Label Text="Catalogue de modèles" TextColor="White" FontFamily="DMSansBold" FontSize="12.5"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- Titre + description -->
+                        <VerticalStackLayout Grid.Row="1" Spacing="10" Padding="24,26,24,18" MinimumHeightRequest="170">
+                            <Label Text="{Binding Title}"
+                                   FontFamily="BricolageExtraBold" FontSize="26"
+                                   TextColor="{StaticResource Ink}" LineHeight="1.1"/>
+                            <Label Text="{Binding Description}"
+                                   FontFamily="DMSans" FontSize="15"
+                                   TextColor="{StaticResource Muted}" LineHeight="1.4"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <!-- ===== Bouton "Passer" (pastille flottante, comme la maquette) ===== -->
+        <Button Grid.Row="0"
+                x:Name="SkipButton"
+                Text="Passer"
+                FontFamily="DMSansBold" FontSize="13"
+                TextColor="{StaticResource Indigo}"
+                BackgroundColor="#D9FFFFFF"
+                CornerRadius="18" HeightRequest="36" Padding="14,0"
+                HorizontalOptions="End" VerticalOptions="Start"
+                Margin="0,52,18,0"
+                Clicked="OnSkipClicked"/>
+
+        <!-- ===== Pied : indicateurs + bouton ===== -->
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*" Padding="24,6,24,28">
+            <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
+                <Border x:Name="Dot0" HeightRequest="8" WidthRequest="26" StrokeThickness="0" StrokeShape="RoundRectangle 4" BackgroundColor="{StaticResource Indigo}"/>
+                <Border x:Name="Dot1" HeightRequest="8" WidthRequest="8"  StrokeThickness="0" StrokeShape="RoundRectangle 4" BackgroundColor="{StaticResource Mist}"/>
+                <Border x:Name="Dot2" HeightRequest="8" WidthRequest="8"  StrokeThickness="0" StrokeShape="RoundRectangle 4" BackgroundColor="{StaticResource Mist}"/>
+            </HorizontalStackLayout>
+
+            <Button Grid.Column="1"
+                    x:Name="NextButton"
+                    Text="Suivant  →"
+                    FontFamily="DMSansBold" FontSize="16"
+                    TextColor="White"
+                    BackgroundColor="{StaticResource Indigo}"
+                    CornerRadius="16" HeightRequest="50" Padding="26,0"
+                    HorizontalOptions="End"
+                    Clicked="OnNextClicked"/>
+        </Grid>
+    </Grid>
+</ContentPage>

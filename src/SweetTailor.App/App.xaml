@@ -1,0 +1,23 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:SweetTailor.App.Converters"
+             x:Class="SweetTailor.App.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+                <ResourceDictionary Source="Resources/VectorIcons/SvgIcons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:CurrencyConverter x:Key="CurrencyConv" />
+            <converters:DateFormatConverter x:Key="DateConv" />
+            <converters:BoolInverter x:Key="BoolInvert" />
+            <converters:DueDateColorConverter x:Key="DueDateColor" />
+            <converters:BooleanHeartFillConverter x:Key="HeartFill" />
+            <converters:BooleanHeartStrokeConverter x:Key="HeartStroke" />
+            <converters:GarmentGeometryConverter x:Key="GarmentGeometry" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

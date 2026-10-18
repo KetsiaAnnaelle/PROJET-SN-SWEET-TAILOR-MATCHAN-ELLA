@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Base Page Style -->
+    <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor" Value="{StaticResource Chalk}" />
+    </Style>
+
+    <!-- Typography Styles -->
+    <Style x:Key="DisplayTitleStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="BricolageGrotesque" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+        <Setter Property="LineHeight" Value="1.1" />
+    </Style>
+
+    <Style x:Key="LargeTitleStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="BricolageGrotesque" />
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource Indigo}" />
+    </Style>
+
+    <Style x:Key="SectionTitleStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="BricolageGrotesque" />
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+    </Style>
+
+    <Style x:Key="SectionHeaderMutedStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource Muted}" />
+    </Style>
+
+    <Style x:Key="SubtitleStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextColor" Value="{StaticResource Muted}" />
+        <Setter Property="LineHeight" Value="1.4" />
+    </Style>
+
+    <Style x:Key="BodyStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource Ink}" />
+    </Style>
+
+    <!-- Button Styles -->
+    <Style x:Key="PrimaryBtnStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Indigo}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="CornerRadius" Value="16" />
+    </Style>
+
+    <Style x:Key="RoseBtnStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Rose}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="CornerRadius" Value="16" />
+    </Style>
+
+    <Style x:Key="GhostBtnStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="TextColor" Value="{StaticResource Indigo}" />
+        <Setter Property="BorderColor" Value="{StaticResource Mist}" />
+        <Setter Property="BorderWidth" Value="1.5" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="CornerRadius" Value="14" />
+    </Style>
+
+    <Style x:Key="SmBtnStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Indigo}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="Padding" Value="24, 0" />
+    </Style>
+
+    <Style x:Key="DisabledBtnStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource BtnDisabled}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="CornerRadius" Value="16" />
+    </Style>
+
+    <!-- Card and Box Styles -->
+    <Style x:Key="CardBorderStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="Stroke" Value="{StaticResource Line}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <Style x:Key="RowBorderStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="Stroke" Value="{StaticResource Line}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 18" />
+        <Setter Property="Padding" Value="12, 14" />
+    </Style>
+
+    <Style x:Key="IconBtnBorderStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="Stroke" Value="{StaticResource Line}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+        <Setter Property="WidthRequest" Value="42" />
+        <Setter Property="HeightRequest" Value="42" />
+    </Style>
+
+    <!-- Search Box Style -->
+    <Style x:Key="SearchBorderStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="Stroke" Value="{StaticResource Line}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="Padding" Value="14, 0" />
+    </Style>
+
+    <!-- Chip Styles -->
+    <Style x:Key="ChipActiveStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource Indigo}" />
+        <Setter Property="Stroke" Value="{StaticResource Indigo}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+        <Setter Property="HeightRequest" Value="34" />
+        <Setter Property="Padding" Value="14, 0" />
+    </Style>
+
+    <Style x:Key="ChipInactiveStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="Stroke" Value="{StaticResource Line}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+        <Setter Property="HeightRequest" Value="34" />
+        <Setter Property="Padding" Value="14, 0" />
+    </Style>
+
+</ResourceDictionary>

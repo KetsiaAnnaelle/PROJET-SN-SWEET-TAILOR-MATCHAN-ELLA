@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Sweet Tailor Brand Palette -->
+    <Color x:Key="Indigo">#26306B</Color>
+    <Color x:Key="Ink">#14173A</Color>
+    <Color x:Key="Rose">#E8607F</Color>
+    <Color x:Key="RoseSoft">#FCE4EA</Color>
+    <Color x:Key="RoseDark">#B8325A</Color>
+    <Color x:Key="Tape">#F4C95D</Color>
+    <Color x:Key="TapeSoft">#FDF3D6</Color>
+    <Color x:Key="TapeDark">#8A6A10</Color>
+    <Color x:Key="Chalk">#F6F5FA</Color>
+    <Color x:Key="Mist">#E4E5F2</Color>
+    <Color x:Key="Line">#E8E9F3</Color>
+    <Color x:Key="Muted">#6B7094</Color>
+    <Color x:Key="Green">#2E9E6B</Color>
+    <Color x:Key="GreenSoft">#DDF3E8</Color>
+    <Color x:Key="GreenDark">#1E7A50</Color>
+    <Color x:Key="Success">#2E9E6B</Color>
+    <Color x:Key="SuccessSoft">#DDF3E8</Color>
+    <Color x:Key="Error">#D93A4A</Color>
+    <Color x:Key="ErrorSoft">#FDE8EA</Color>
+    <Color x:Key="ErrorDark">#B02A3A</Color>
+    <Color x:Key="White">#FFFFFF</Color>
+
+    <!-- Component States Colors -->
+    <Color x:Key="DisabledBg">#EEEFF6</Color>
+    <Color x:Key="DisabledBorder">#E2E3EF</Color>
+    <Color x:Key="DisabledText">#A6AAC8</Color>
+    <Color x:Key="BtnDisabled">#C9CCEA</Color>
+
+    <!-- Solid Brushes -->
+    <SolidColorBrush x:Key="BrushIndigo" Color="{StaticResource Indigo}" />
+    <SolidColorBrush x:Key="BrushInk" Color="{StaticResource Ink}" />
+    <SolidColorBrush x:Key="BrushRose" Color="{StaticResource Rose}" />
+    <SolidColorBrush x:Key="BrushRoseSoft" Color="{StaticResource RoseSoft}" />
+    <SolidColorBrush x:Key="BrushTape" Color="{StaticResource Tape}" />
+    <SolidColorBrush x:Key="BrushTapeSoft" Color="{StaticResource TapeSoft}" />
+    <SolidColorBrush x:Key="BrushChalk" Color="{StaticResource Chalk}" />
+    <SolidColorBrush x:Key="BrushMist" Color="{StaticResource Mist}" />
+    <SolidColorBrush x:Key="BrushLine" Color="{StaticResource Line}" />
+    <SolidColorBrush x:Key="BrushMuted" Color="{StaticResource Muted}" />
+    <SolidColorBrush x:Key="BrushGreen" Color="{StaticResource Green}" />
+    <SolidColorBrush x:Key="BrushGreenSoft" Color="{StaticResource GreenSoft}" />
+    <SolidColorBrush x:Key="BrushError" Color="{StaticResource Error}" />
+    <SolidColorBrush x:Key="BrushErrorSoft" Color="{StaticResource ErrorSoft}" />
+    <SolidColorBrush x:Key="BrushWhite" Color="{StaticResource White}" />
+
+    <!-- Mockup Gradients -->
+    <LinearGradientBrush x:Key="GradRose" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FCE4EA" Offset="0.0" />
+        <GradientStop Color="#F4B3C4" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradTape" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FDF3D6" Offset="0.0" />
+        <GradientStop Color="#F4C95D" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradMist" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#ECEDF8" Offset="0.0" />
+        <GradientStop Color="#B7BCE0" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradGreen" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#E6F6EE" Offset="0.0" />
+        <GradientStop Color="#9ED8BC" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradIndigo" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#3B4A9E" Offset="0.0" />
+        <GradientStop Color="#1B2352" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradPink" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F7A5BA" Offset="0.0" />
+        <GradientStop Color="#E8607F" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradSplash" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Color="#3D4CA6" Offset="0.0" />
+        <GradientStop Color="#26306B" Offset="0.5" />
+        <GradientStop Color="#1B2352" Offset="1.0" />
+    </LinearGradientBrush>
+
+</ResourceDictionary>

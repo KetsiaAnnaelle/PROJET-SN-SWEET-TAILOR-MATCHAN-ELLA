@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SweetTailor.App.Controls.ToastBanner">
+    <Border x:Name="ToastBorder"
+            StrokeShape="RoundRectangle 14"
+            StrokeThickness="0"
+            Padding="14, 12"
+            Margin="20, 8">
+        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+            <Path x:Name="ToastIcon"
+                  WidthRequest="20"
+                  HeightRequest="20"
+                  Aspect="Uniform"
+                  VerticalOptions="Center" />
+            <Label x:Name="ToastText"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"
+                   LineBreakMode="WordWrap" />
+        </HorizontalStackLayout>
+    </Border>
+</ContentView>
