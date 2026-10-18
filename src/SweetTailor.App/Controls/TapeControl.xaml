@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SweetTailor.App.Controls.TapeControl">
+    <Border BackgroundColor="{StaticResource Tape}"
+            StrokeShape="{Binding CornerRadiusShape, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+            StrokeThickness="0"
+            HeightRequest="{Binding HeightRequest, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+            HorizontalOptions="FillAndExpand">
+        <Grid HeightRequest="{Binding HeightRequest, Source={RelativeSource AncestorType={x:Type ContentView}}}">
+            <!-- Simulated Ruler Centimeter & Millimeter Hash Marks -->
+            <HorizontalStackLayout Spacing="6" VerticalOptions="End" HorizontalOptions="Fill">
+                <BoxView WidthRequest="1.5" HeightRequest="12" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1.5" HeightRequest="12" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1.5" HeightRequest="12" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1.5" HeightRequest="12" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1.5" HeightRequest="12" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1.5" HeightRequest="12" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1.5" HeightRequest="12" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1" HeightRequest="6" Color="{StaticResource Ink}" VerticalOptions="End"/>
+                <BoxView WidthRequest="1.5" HeightRequest="12" Color="{StaticResource Ink}" VerticalOptions="End"/>
+            </HorizontalStackLayout>
+        </Grid>
+    </Border>
+</ContentView>

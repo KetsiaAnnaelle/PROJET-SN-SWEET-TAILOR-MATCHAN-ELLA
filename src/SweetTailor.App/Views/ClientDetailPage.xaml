@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             xmlns:models="clr-namespace:SweetTailor.Core.Models;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.ClientDetailPage"
+             x:DataType="vm:ClientDetailViewModel"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource Chalk}">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="16" Padding="0, 10, 0, 30">
+                <!-- Topbar -->
+                <Grid ColumnDefinitions="Auto, *, Auto" Padding="20, 0">
+                    <Border StrokeShape="RoundRectangle 20"
+                            Stroke="{StaticResource Line}"
+                            StrokeThickness="1"
+                            BackgroundColor="{StaticResource White}"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            HorizontalOptions="Start">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackTapped" />
+                        </Border.GestureRecognizers>
+                        <Path Data="{StaticResource IconPathBack}"
+                              Stroke="{StaticResource Ink}"
+                              StrokeThickness="1.8"
+                              WidthRequest="20"
+                              HeightRequest="20"
+                              HorizontalOptions="Center"
+                              VerticalOptions="Center" />
+                    </Border>
+                    <Label Grid.Column="1" Text="Fiche client" FontFamily="BricolageExtraBold" FontSize="17" TextColor="{StaticResource Ink}" HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Border Grid.Column="2"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="{StaticResource Line}"
+                            StrokeThickness="1"
+                            BackgroundColor="{StaticResource White}"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            HorizontalOptions="End">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnEditTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="✏️" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+
+                <!-- Profile Center Card -->
+                <VerticalStackLayout Spacing="8" Padding="20, 6, 20, 0" HorizontalOptions="Center">
+                    <controls:AvatarInitials Name="{Binding Client.AvatarInitials}"
+                                            ColorVariant="{Binding Client.AvatarColorClass}"
+                                            ImagePath="{Binding Client.PhotoPath}"
+                                            Size="84"
+                                            HorizontalOptions="Center" />
+                    <Label Text="{Binding Client.FullName}"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="24"
+                           TextColor="{StaticResource Ink}"
+                           HorizontalTextAlignment="Center" />
+                    <Label Text="{Binding Client.PhoneNumber}"
+                           FontFamily="DMSans"
+                           FontSize="13"
+                           TextColor="{StaticResource Muted}"
+                           HorizontalTextAlignment="Center" />
+
+                    <!-- Action Buttons: Appeler & WhatsApp -->
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="12" Margin="0, 8, 0, 0" WidthRequest="280">
+                        <controls:AppButton Grid.Column="0" Text="📞 Appeler" Variant="Ghost" Clicked="OnCallClicked" />
+                        <controls:AppButton Grid.Column="1" Text="💬 WhatsApp" Variant="Ghost" Clicked="OnWhatsAppClicked" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- Segmented Tabs (Mesures, Commandes, Notes) -->
+                <Grid Padding="20, 0">
+                    <controls:SegmentedTabs Tabs="Mesures,Commandes,Notes"
+                                            SelectedTab="{Binding SelectedTab, Mode=TwoWay}"
+                                            TabChanged="OnTabChanged" />
+                </Grid>
+
+                <!-- ONGLET 1 : MESURES (Écran 12) -->
+                <VerticalStackLayout x:Name="MesuresTabContent" Spacing="14" Padding="20, 0">
+                    <Border BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="{StaticResource Line}"
+                            StrokeThickness="1"
+                            Padding="0">
+                        <VerticalStackLayout Spacing="0">
+                            <!-- Card Header -->
+                            <Grid ColumnDefinitions="*, Auto" Padding="16, 14, 16, 10">
+                                <Label Text="Dernières mesures" FontFamily="BricolageExtraBold" FontSize="17" TextColor="{StaticResource Ink}" />
+                                <Label Grid.Column="1" Text="12 sept. 2026" FontFamily="DMSans" FontSize="13" TextColor="{StaticResource Muted}" VerticalOptions="Center" />
+                            </Grid>
+
+                            <!-- Measurement Rows -->
+                            <VerticalStackLayout Spacing="0" Padding="16, 0, 16, 8">
+                                <BindableLayout.ItemsSource>
+                                    <Binding Path="KeyMeasurements" />
+                                </BindableLayout.ItemsSource>
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:MeasurementItem">
+                                        <VerticalStackLayout Spacing="0">
+                                            <controls:MeasureRow Measurement="{Binding .}"
+                                                                Unit="{Binding Unit}"
+                                                                IsHighlighted="{Binding IsHighlighted}" />
+                                            <BoxView HeightRequest="1" Color="{StaticResource Mist}" />
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                            <!-- Bottom Tape Accent -->
+                            <controls:TapeMeasure HeightRequest="16" HorizontalOptions="FillAndExpand" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <controls:AppButton Text="Voir toutes les mesures (14)"
+                                        Variant="Primary"
+                                        Clicked="OnViewAllMeasurementsClicked" />
+                </VerticalStackLayout>
+
+                <!-- ONGLET 2 : COMMANDES (Écran 13) -->
+                <VerticalStackLayout x:Name="CommandesTabContent" IsVisible="False" Spacing="12" Padding="20, 0">
+                    <BindableLayout.ItemsSource>
+                        <Binding Path="Orders" />
+                    </BindableLayout.ItemsSource>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:Order">
+                            <controls:OrderRow Order="{Binding .}"
+                                               Tapped="OnOrderRowClicked" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+
+                    <controls:AppButton Text="+ Nouvelle commande"
+                                        Variant="Primary"
+                                        Clicked="OnNewOrderClicked"
+                                        Margin="0, 10, 0, 0" />
+                </VerticalStackLayout>
+
+                <!-- ONGLET 3 : NOTES (Écran 14) -->
+                <VerticalStackLayout x:Name="NotesTabContent" IsVisible="False" Spacing="14" Padding="20, 0">
+                    <!-- Zone d'ajout de note -->
+                    <Border BackgroundColor="{StaticResource White}"
+                            StrokeShape="RoundRectangle 16"
+                            Stroke="{StaticResource Line}"
+                            Padding="12">
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                            <controls:AppEntry Grid.Column="0"
+                                               Placeholder="Ajouter une note pour ce client..."
+                                               Text="{Binding NewNoteContent, Mode=TwoWay}" />
+                            <controls:AppButton Grid.Column="1"
+                                                Text="+"
+                                                Variant="Primary"
+                                                WidthRequest="48"
+                                                Command="{Binding AddNoteCommand}" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Liste des notes -->
+                    <BindableLayout.ItemsSource>
+                        <Binding Path="Notes" />
+                    </BindableLayout.ItemsSource>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:ClientNote">
+                            <Border BackgroundColor="{StaticResource White}"
+                                    StrokeShape="RoundRectangle 16"
+                                    Stroke="{StaticResource Line}"
+                                    Padding="16, 12"
+                                    Margin="0, 0, 0, 4">
+                                <VerticalStackLayout Spacing="6">
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <Label Text="{Binding Date, StringFormat='{0:d MMMM yyyy}'}"
+                                               FontFamily="DMSans"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Muted}" />
+                                        <Border Grid.Column="1"
+                                                IsVisible="{Binding IsImportant}"
+                                                StrokeShape="RoundRectangle 999"
+                                                BackgroundColor="{StaticResource RoseSoft}"
+                                                Padding="8, 2">
+                                            <Label Text="Important" FontFamily="DMSansBold" FontSize="11" TextColor="{StaticResource Rose}" />
+                                        </Border>
+                                    </Grid>
+                                    <Label Text="{Binding Content}"
+                                           FontFamily="DMSans"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Ink}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Toast Banner -->
+        <controls:ToastBanner Grid.Row="1"
+                              IsVisible="{Binding IsToastVisible}"
+                              Message="{Binding ToastMessage}"
+                              Type="{Binding ToastType}" />
+    </Grid>
+
+</ContentPage>

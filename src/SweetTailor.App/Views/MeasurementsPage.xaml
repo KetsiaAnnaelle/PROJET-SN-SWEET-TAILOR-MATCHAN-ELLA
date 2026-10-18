@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             xmlns:models="clr-namespace:SweetTailor.Core.Models;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.MeasurementsPage"
+             x:DataType="vm:MeasurementsViewModel"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource Chalk}">
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *, Auto">
+        <!-- Topbar -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Padding="20, 10, 20, 10">
+            <Border Grid.Column="0"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="{StaticResource Line}"
+                    StrokeThickness="1"
+                    BackgroundColor="{StaticResource White}"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    HorizontalOptions="Start">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackTapped" />
+                </Border.GestureRecognizers>
+                <Path Data="{StaticResource IconPathBack}"
+                      Stroke="{StaticResource Ink}"
+                      StrokeThickness="1.8"
+                      WidthRequest="20"
+                      HeightRequest="20"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center" />
+            </Border>
+            <Label Grid.Column="1"
+                   Text="{Binding ClientName, StringFormat='Mesures · {0}'}"
+                   FontFamily="BricolageExtraBold"
+                   FontSize="16"
+                   TextColor="{StaticResource Ink}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+            <Border Grid.Column="2"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="{StaticResource Line}"
+                    StrokeThickness="1"
+                    BackgroundColor="{StaticResource White}"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    HorizontalOptions="End">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SaveCommand}" />
+                </Border.GestureRecognizers>
+                <Path Data="{StaticResource IconPathCheck}"
+                      Stroke="{StaticResource Indigo}"
+                      StrokeThickness="2"
+                      WidthRequest="20"
+                      HeightRequest="20"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center" />
+            </Border>
+        </Grid>
+
+        <!-- Tape Motif -->
+        <controls:TapeMeasure Grid.Row="1" HeightRequest="16" HorizontalOptions="FillAndExpand" />
+
+        <!-- Category Chips -->
+        <ScrollView Grid.Row="2" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="20, 14, 20, 14">
+            <HorizontalStackLayout Spacing="8">
+                <controls:FilterChip Text="Haut du corps"
+                                     IsSelected="True"
+                                     Tapped="OnCategoryChipClicked" />
+                <controls:FilterChip Text="Bas"
+                                     IsSelected="False"
+                                     Tapped="OnCategoryChipClicked" />
+                <controls:FilterChip Text="Longueurs"
+                                     IsSelected="False"
+                                     Tapped="OnCategoryChipClicked" />
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Detailed Measurements Card List -->
+        <ScrollView Grid.Row="3" Padding="20, 0">
+            <Border BackgroundColor="{StaticResource White}"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="{StaticResource Line}"
+                    StrokeThickness="1"
+                    Padding="16, 8">
+                <VerticalStackLayout Spacing="0">
+                    <BindableLayout.ItemsSource>
+                        <Binding Path="FilteredMeasurements" />
+                    </BindableLayout.ItemsSource>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:MeasurementItem">
+                            <VerticalStackLayout Spacing="0">
+                                <controls:MeasureRow Measurement="{Binding .}"
+                                                    Unit="{Binding Unit}" />
+                                <BoxView HeightRequest="1" Color="{StaticResource Mist}" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+        </ScrollView>
+
+        <!-- Bottom Action Buttons: Annuler & Enregistrer -->
+        <Grid Grid.Row="4" ColumnDefinitions="Auto, *" ColumnSpacing="12" Padding="20, 16, 20, 26">
+            <controls:AppButton Grid.Column="0"
+                                Text="Annuler"
+                                Variant="Ghost"
+                                WidthRequest="130"
+                                Clicked="OnBackTapped" />
+            <controls:AppButton Grid.Column="1"
+                                Text="Enregistrer"
+                                Variant="Primary"
+                                Command="{Binding SaveCommand}" />
+        </Grid>
+
+        <!-- Toast Banner -->
+        <controls:ToastBanner Grid.Row="4"
+                              IsVisible="{Binding IsToastVisible}"
+                              Message="{Binding ToastMessage}"
+                              Type="{Binding ToastType}" />
+    </Grid>
+
+</ContentPage>

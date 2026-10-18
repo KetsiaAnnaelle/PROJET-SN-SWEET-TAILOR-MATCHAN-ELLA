@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             x:Class="SweetTailor.App.Controls.OrderRow">
+    <Border StrokeShape="RoundRectangle 18"
+            StrokeThickness="1"
+            Stroke="{StaticResource Line}"
+            BackgroundColor="{StaticResource White}"
+            Padding="14, 12"
+            Margin="0, 0, 0, 10">
+        <Grid ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center">
+            <!-- Date Badge Left -->
+            <Border x:Name="DateBox"
+                    Grid.Column="0"
+                    WidthRequest="46"
+                    HeightRequest="46"
+                    StrokeShape="RoundRectangle 12"
+                    StrokeThickness="0"
+                    BackgroundColor="{StaticResource Chalk}"
+                    VerticalOptions="Center"
+                    Margin="0, 0, 10, 0">
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="0">
+                    <Label x:Name="DayLabel"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Ink}"
+                           HorizontalTextAlignment="Center" />
+                    <Label x:Name="MonthLabel"
+                           FontSize="9.5"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Muted}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Order Info Middle -->
+            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2" Margin="4, 0, 8, 0">
+                <Label x:Name="TitleLabel"
+                       FontSize="14.5"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Ink}" />
+                <Label x:Name="ClientLabel"
+                       FontSize="12"
+                       TextColor="{StaticResource Muted}" />
+            </VerticalStackLayout>
+
+            <!-- Status Pill Right -->
+            <controls:StatusPill x:Name="StatusBadge"
+                                 Grid.Column="2"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="End" />
+        </Grid>
+    </Border>
+</ContentView>

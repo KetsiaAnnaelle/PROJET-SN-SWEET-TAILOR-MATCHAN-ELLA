@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             xmlns:models="clr-namespace:SweetTailor.Core.Models;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.NewOrderPage"
+             x:DataType="vm:NewOrderViewModel"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource Chalk}">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20, 10, 20, 30" Spacing="16">
+                <!-- Topbar -->
+                <Grid ColumnDefinitions="Auto, *, Auto">
+                    <Border Grid.Column="0"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="{StaticResource Line}"
+                            StrokeThickness="1"
+                            BackgroundColor="{StaticResource White}"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            HorizontalOptions="Start">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCloseTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="✕" FontSize="16" TextColor="{StaticResource Ink}" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    <Label Grid.Column="1" Text="Nouvelle commande" FontFamily="BricolageExtraBold" FontSize="17" TextColor="{StaticResource Ink}" HorizontalOptions="Center" VerticalOptions="Center" />
+                    <BoxView Grid.Column="2" WidthRequest="40" HeightRequest="40" Color="Transparent" />
+                </Grid>
+
+                <!-- Form Content -->
+                <VerticalStackLayout Spacing="12">
+                    <!-- Client Picker -->
+                    <Border StrokeShape="RoundRectangle 14" Stroke="{StaticResource Line}" StrokeThickness="1" BackgroundColor="{StaticResource White}" Padding="14, 8">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Client" FontFamily="DMSansBold" FontSize="11" TextColor="{StaticResource Muted}" />
+                            <Picker ItemsSource="{Binding Clients}"
+                                    ItemDisplayBinding="{Binding FullName}"
+                                    SelectedItem="{Binding SelectedClient, Mode=TwoWay}"
+                                    FontFamily="DMSansBold"
+                                    FontSize="15"
+                                    TextColor="{StaticResource Ink}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Model Name -->
+                    <controls:AppEntry Label="Modèle"
+                                       Text="{Binding ModelName, Mode=TwoWay}"
+                                       Placeholder="Ex. : Robe de soirée longue" />
+
+                    <!-- Tissu & Prix -->
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <controls:AppEntry Grid.Column="0"
+                                           Label="Tissu"
+                                           Text="{Binding Fabric, Mode=TwoWay}"
+                                           Placeholder="Ex. : Satin" />
+                        <controls:AppEntry Grid.Column="1"
+                                           Label="Prix (FCFA)"
+                                           Text="{Binding TotalPrice, Mode=TwoWay}"
+                                           Keyboard="Numeric" />
+                    </Grid>
+
+                    <!-- Avance & Échéance -->
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <controls:AppEntry Grid.Column="0"
+                                           Label="Acompte (FCFA)"
+                                           Text="{Binding AdvancePayment, Mode=TwoWay}"
+                                           Keyboard="Numeric" />
+
+                        <!-- Due Date Card in RoseSoft with DatePicker -->
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 14"
+                                Stroke="{StaticResource Rose}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource RoseSoft}"
+                                Padding="12, 6">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Échéance" FontFamily="DMSansBold" FontSize="11" TextColor="{StaticResource Rose}" />
+                                <DatePicker Date="{Binding DueDate, Mode=TwoWay}"
+                                            FontFamily="DMSansBold"
+                                            FontSize="14"
+                                            TextColor="{StaticResource Ink}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Model Photo Upload Zone -->
+                    <Border StrokeShape="RoundRectangle 18"
+                            Stroke="#C9CCEA"
+                            StrokeThickness="2"
+                            StrokeDashArray="3, 3"
+                            BackgroundColor="{StaticResource White}"
+                            HeightRequest="140"
+                            Margin="0, 4, 0, 0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPickModelPhotoTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid>
+                            <Image Source="{Binding PhotoPath}"
+                                   Aspect="AspectFill"
+                                   IsVisible="{Binding HasPhoto}" />
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="6"
+                                                 IsVisible="{Binding HasPhoto, Converter={StaticResource BoolInvert}}">
+                                <Border WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 14" StrokeThickness="0" BackgroundColor="{StaticResource Mist}" HorizontalOptions="Center">
+                                    <Path Data="{StaticResource IconPathCamera}"
+                                          Stroke="{StaticResource Muted}"
+                                          StrokeThickness="1.8"
+                                          WidthRequest="24"
+                                          HeightRequest="24"
+                                          HorizontalOptions="Center"
+                                          VerticalOptions="Center" />
+                                </Border>
+                                <Label Text="Ajouter la photo du modèle" FontFamily="DMSansBold" FontSize="14" TextColor="{StaticResource Indigo}" HorizontalTextAlignment="Center" />
+                                <Label Text="Choisir une image sur l'appareil" FontFamily="DMSans" FontSize="11" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Bottom CTA Button in Rose -->
+                <controls:AppButton Text="Enregistrer la commande"
+                                    Variant="Accent"
+                                    Clicked="OnSaveOrderClicked"
+                                    Margin="0, 8, 0, 0" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Toast Banner -->
+        <controls:ToastBanner Grid.Row="1"
+                              IsVisible="{Binding IsToastVisible}"
+                              Message="{Binding ToastMessage}"
+                              Type="{Binding ToastType}" />
+    </Grid>
+
+</ContentPage>

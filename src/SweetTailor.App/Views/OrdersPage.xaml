@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             xmlns:models="clr-namespace:SweetTailor.Core.Models;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.OrdersPage"
+             x:DataType="vm:OrdersViewModel"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource Chalk}">
+
+    <Grid RowDefinitions="*,Auto">
+      <Grid Grid.Row="0">
+        <RefreshView Command="{Binding LoadOrdersCommand}"
+                     IsRefreshing="{Binding IsLoadingState}">
+            <ScrollView>
+                <VerticalStackLayout Spacing="16" Padding="0, 10, 0, 24">
+                    <!-- Topbar -->
+                    <Grid ColumnDefinitions="*, Auto" Padding="20, 6, 20, 0">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="{Binding ActiveCountLabel}"
+                                   FontFamily="DMSans"
+                                   FontSize="13"
+                                   TextColor="{StaticResource Muted}" />
+                            <Label Text="Commandes"
+                                   FontFamily="BricolageExtraBold"
+                                   FontSize="28"
+                                   TextColor="{StaticResource Ink}" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="{StaticResource Line}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource White}"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center">
+                            <Path Data="{StaticResource IconPathCalendar}"
+                                  Stroke="{StaticResource Indigo}"
+                                  StrokeThickness="1.8"
+                                  WidthRequest="20"
+                                  HeightRequest="20"
+                                  HorizontalOptions="Center"
+                                  VerticalOptions="Center" />
+                        </Border>
+                      </Grid>
+
+                    <!-- Status Filter Chips -->
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="20, 0">
+                        <HorizontalStackLayout Spacing="8">
+                            <controls:FilterChip Text="Toutes"
+                                                 IsSelected="True"
+                                                 Tapped="OnFilterChipClicked" />
+                            <controls:FilterChip Text="Reçues"
+                                                 IsSelected="False"
+                                                 Tapped="OnFilterChipClicked" />
+                            <controls:FilterChip Text="Couture"
+                                                 IsSelected="False"
+                                                 Tapped="OnFilterChipClicked" />
+                            <controls:FilterChip Text="Essayage"
+                                                 IsSelected="False"
+                                                 Tapped="OnFilterChipClicked" />
+                            <controls:FilterChip Text="Prêtes"
+                                                 IsSelected="False"
+                                                 Tapped="OnFilterChipClicked" />
+                        </HorizontalStackLayout>
+                    </ScrollView>
+
+                    <!-- ÉTAT 1 : NORMAL (Sections par semaine) -->
+                    <VerticalStackLayout IsVisible="{Binding IsNormalState}" Spacing="16">
+                        <!-- Section: Cette semaine -->
+                        <VerticalStackLayout Spacing="10" Padding="20, 4, 20, 0"
+                                             IsVisible="{Binding ThisWeekOrders.Count, Converter={StaticResource BoolInvert}, ConverterParameter=False}">
+                            <Label Text="Cette semaine"
+                                   FontFamily="BricolageExtraBold"
+                                   FontSize="15"
+                                   TextColor="{StaticResource Muted}" />
+
+                            <BindableLayout.ItemsSource>
+                                <Binding Path="ThisWeekOrders" />
+                            </BindableLayout.ItemsSource>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:Order">
+                                    <controls:OrderRow Order="{Binding .}"
+                                                       Tapped="OnOrderRowClicked" />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                        <!-- Section: Semaine prochaine -->
+                        <VerticalStackLayout Spacing="10" Padding="20, 8, 20, 0"
+                                             IsVisible="{Binding NextWeekOrders.Count, Converter={StaticResource BoolInvert}, ConverterParameter=False}">
+                            <Label Text="Semaine prochaine"
+                                   FontFamily="BricolageExtraBold"
+                                   FontSize="15"
+                                   TextColor="{StaticResource Muted}" />
+
+                            <BindableLayout.ItemsSource>
+                                <Binding Path="NextWeekOrders" />
+                            </BindableLayout.ItemsSource>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:Order">
+                                    <controls:OrderRow Order="{Binding .}"
+                                                       Tapped="OnOrderRowClicked" />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- ÉTAT 2 : CHARGEMENT (SkeletonList) -->
+                    <controls:SkeletonList IsVisible="{Binding IsLoadingState}"
+                                           Margin="20, 0" />
+
+                    <!-- ÉTAT 3 : VIDE (EmptyStateView) -->
+                    <controls:EmptyStateView IsVisible="{Binding IsEmptyState}"
+                                             Title="Aucune commande trouvée"
+                                             Description="Aucune commande ne correspond au filtre sélectionné. Créez une nouvelle commande pour votre client."
+                                             ButtonText="Nouvelle commande"
+                                             ActionClicked="OnEmptyStateActionClicked"
+                                             Margin="20, 10" />
+
+                    <!-- ÉTAT 4 : ERREUR RÉSEAU (ErrorStateView) -->
+                    <controls:ErrorStateView IsVisible="{Binding IsErrorState}"
+                                             ErrorCode="NET-01"
+                                             RetryCommand="{Binding RetryCommand}"
+                                             Margin="20, 10" />
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+        <!-- Floating Action Button (FAB) pour ajouter une commande -->
+        <Border WidthRequest="56"
+                HeightRequest="56"
+                StrokeShape="RoundRectangle 28"
+                StrokeThickness="0"
+                BackgroundColor="{StaticResource Rose}"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0, 0, 20, 24"
+                Shadow="{OnPlatform Android='0 4 8 #40000000'}">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnAddOrderFabTapped" />
+            </Border.GestureRecognizers>
+            <Label Text="+"
+                   FontSize="32"
+                   TextColor="{StaticResource White}"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   Margin="0, -2, 0, 0" />
+        </Border>
+
+        <!-- Toast Banner -->
+        <controls:ToastBanner IsVisible="{Binding IsToastVisible}"
+                              Message="{Binding ToastMessage}"
+                              Type="{Binding ToastType}"
+                              VerticalOptions="End" />
+    </Grid>
+    <controls:BottomNavigationBar Grid.Row="1" CurrentTab="Orders" />
+    </Grid>
+
+</ContentPage>
