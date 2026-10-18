@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             x:Class="SweetTailor.App.Controls.EmptyStateView">
+    <VerticalStackLayout Spacing="16" HorizontalOptions="Center" VerticalOptions="Center" Padding="20">
+        <!-- Circular Icon Container -->
+        <Border x:Name="IconContainer"
+                WidthRequest="100"
+                HeightRequest="100"
+                StrokeShape="RoundRectangle 30"
+                StrokeThickness="0"
+                BackgroundColor="{StaticResource Mist}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+            <Path Data="{StaticResource GeoLogoThread}"
+                  Stroke="{StaticResource Indigo}"
+                  StrokeThickness="6"
+                  StrokeLineCap="Round"
+                  StrokeLineJoin="Round"
+                  Aspect="Uniform"
+                  WidthRequest="44"
+                  HeightRequest="44"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center" />
+        </Border>
+
+        <!-- Title -->
+        <Label x:Name="TitleLabel"
+               FontSize="20"
+               FontAttributes="Bold"
+               TextColor="{StaticResource Ink}"
+               HorizontalTextAlignment="Center" />
+
+        <!-- Description -->
+        <Label x:Name="DescriptionLabel"
+               FontSize="14"
+               TextColor="{StaticResource Muted}"
+               HorizontalTextAlignment="Center"
+               LineHeight="1.4"
+               Margin="0, 0, 0, 8" />
+
+        <!-- Action Button -->
+        <controls:AppButton x:Name="ActionButton"
+                            Variant="Primary"
+                            HorizontalOptions="Center"
+                            WidthRequest="220" />
+    </VerticalStackLayout>
+</ContentView>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SweetTailor.App.Controls.MeasureRow">
+    <Border x:Name="RowBorder"
+            StrokeShape="RoundRectangle 16"
+            StrokeThickness="1"
+            Stroke="{StaticResource Line}"
+            BackgroundColor="{StaticResource White}"
+            Padding="16, 12"
+            Margin="0, 0, 0, 8">
+        <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+            <!-- Measurement Label -->
+            <Label x:Name="NameLabel"
+                   Grid.Column="0"
+                   FontSize="14.5"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource Ink}"
+                   VerticalOptions="Center" />
+
+            <!-- Editable Value in cm -->
+            <Border Grid.Column="1"
+                    x:Name="InputContainer"
+                    StrokeShape="RoundRectangle 10"
+                    StrokeThickness="1"
+                    Stroke="{StaticResource Line}"
+                    BackgroundColor="{StaticResource Chalk}"
+                    Padding="8, 2"
+                    VerticalOptions="Center">
+                <HorizontalStackLayout Spacing="2" VerticalOptions="Center">
+                    <Entry x:Name="ValueEntry"
+                           FontSize="16"
+                           FontFamily="DMSansBold"
+                           TextColor="{StaticResource Indigo}"
+                           Keyboard="Numeric"
+                           HorizontalTextAlignment="End"
+                           WidthRequest="64"
+                           MinimumWidthRequest="48"
+                           BackgroundColor="Transparent"
+                           VerticalOptions="Center"
+                           IsEnabled="True"
+                           IsReadOnly="False"
+                           TextChanged="OnValueChanged" />
+                    <Label x:Name="UnitLabel"
+                           Text="cm"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Muted}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+        </Grid>
+    </Border>
+</ContentView>

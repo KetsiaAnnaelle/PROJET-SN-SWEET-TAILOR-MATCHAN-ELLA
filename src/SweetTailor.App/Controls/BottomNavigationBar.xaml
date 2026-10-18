@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SweetTailor.App.Controls.BottomNavigationBar"
+             x:Name="Root">
+    <Border BackgroundColor="{StaticResource White}"
+            Stroke="{StaticResource Line}"
+            StrokeThickness="1"
+            Padding="0,8,0,6">
+        <Grid ColumnDefinitions="*,*,*,*">
+            <VerticalStackLayout x:Name="ClientsItem" Grid.Column="0" Spacing="3" HorizontalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnClientsTapped" />
+                </VerticalStackLayout.GestureRecognizers>
+                <Path x:Name="ClientsIcon" Data="{StaticResource IconPathUsers}" Stroke="{StaticResource Indigo}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                <Label x:Name="ClientsLabel" Text="Clients" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Indigo}" HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout x:Name="OrdersItem" Grid.Column="1" Spacing="3" HorizontalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnOrdersTapped" />
+                </VerticalStackLayout.GestureRecognizers>
+                <Path x:Name="OrdersIcon" Data="{StaticResource IconPathBag}" Stroke="{StaticResource Muted}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                <Label x:Name="OrdersLabel" Text="Commandes" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout x:Name="CatalogItem" Grid.Column="2" Spacing="3" HorizontalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCatalogTapped" />
+                </VerticalStackLayout.GestureRecognizers>
+                <Path x:Name="CatalogIcon" Data="{StaticResource IconPathBook}" Stroke="{StaticResource Muted}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                <Label x:Name="CatalogLabel" Text="Catalogue" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout x:Name="ProfileItem" Grid.Column="3" Spacing="3" HorizontalOptions="Center">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnProfileTapped" />
+                </VerticalStackLayout.GestureRecognizers>
+                <Path x:Name="ProfileIcon" Data="{StaticResource IconPathUser}" Stroke="{StaticResource Muted}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                <Label x:Name="ProfileLabel" Text="Profil" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </Grid>
+    </Border>
+</ContentView>

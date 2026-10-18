@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SweetTailor.App.Controls.AvatarView">
+    <Border x:Name="AvatarBorder"
+            StrokeShape="RoundRectangle 999"
+            StrokeThickness="0"
+            WidthRequest="{Binding Size, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+            HeightRequest="{Binding Size, Source={RelativeSource AncestorType={x:Type ContentView}}}">
+        <Label x:Name="InitialsLabel"
+               FontFamily="BricolageGrotesque"
+               FontAttributes="Bold"
+               VerticalOptions="Center"
+               HorizontalOptions="Center" />
+    </Border>
+</ContentView>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             xmlns:models="clr-namespace:SweetTailor.Core.Models;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.ClientsPage"
+             x:DataType="vm:ClientsViewModel"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource Chalk}">
+
+    <Grid RowDefinitions="*,Auto">
+      <Grid Grid.Row="0">
+        <!-- Main Content -->
+        <RefreshView Command="{Binding LoadClientsCommand}"
+                     IsRefreshing="{Binding IsLoadingState}">
+            <ScrollView>
+                <VerticalStackLayout Spacing="16" Padding="0, 10, 0, 24">
+
+                    <!-- Topbar -->
+                    <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="8" Padding="20, 6, 20, 0">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="{Binding WorkshopName}"
+                                   FontFamily="DMSans"
+                                   FontSize="13"
+                                   TextColor="{StaticResource Muted}" />
+                            <Label Text="Mes clients"
+                                   FontFamily="BricolageExtraBold"
+                                   FontSize="28"
+                                   TextColor="{StaticResource Ink}" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="{StaticResource Line}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource White}"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSearchTapped" />
+                            </Border.GestureRecognizers>
+                            <Path Data="{StaticResource IconPathSearch}"
+                                  Stroke="{StaticResource Indigo}"
+                                  StrokeThickness="1.8"
+                                  WidthRequest="20"
+                                  HeightRequest="20"
+                                  HorizontalOptions="Center"
+                                  VerticalOptions="Center" />
+                        </Border>
+                        <Border Grid.Column="2"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="{StaticResource Line}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource White}"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center">
+                            <Path Data="{StaticResource IconPathMore}"
+                                  Stroke="{StaticResource Muted}"
+                                  StrokeThickness="2"
+                                  WidthRequest="20"
+                                  HeightRequest="20"
+                                  HorizontalOptions="Center"
+                                  VerticalOptions="Center" />
+                        </Border>
+                      </Grid>
+
+                    <!-- Search Box -->
+                    <Grid Padding="20, 0">
+                        <controls:SearchBox Placeholder="Rechercher un client ou une commande"
+                                            Text="{Binding SearchQuery, Mode=TwoWay}"
+                                            SearchCommandParameter="{Binding SearchQuery}"
+                                            SearchCommand="{Binding SearchCommand}" />
+                    </Grid>
+
+                    <!-- Filter Chips -->
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="20, 0">
+                        <HorizontalStackLayout Spacing="8">
+                            <controls:FilterChip Text="Tous · 48"
+                                                 IsSelected="True"
+                                                 Tapped="OnFilterChipClicked" />
+                            <controls:FilterChip Text="En cours · 12"
+                                                 IsSelected="False"
+                                                 Tapped="OnFilterChipClicked" />
+                            <controls:FilterChip Text="À livrer · 5"
+                                                 IsSelected="False"
+                                                 Tapped="OnFilterChipClicked" />
+                            <controls:FilterChip Text="Livrés"
+                                                 IsSelected="False"
+                                                 Tapped="OnFilterChipClicked" />
+                        </HorizontalStackLayout>
+                    </ScrollView>
+
+                    <!-- Weekly Delivery Banner -->
+                    <Grid Padding="20, 0">
+                        <Border BackgroundColor="{StaticResource Indigo}"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="0">
+                            <VerticalStackLayout Spacing="0">
+                                <Grid ColumnDefinitions="*, Auto" Padding="16, 16, 16, 14">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="{Binding UpcomingTitle}"
+                                               FontFamily="DMSans"
+                                               FontSize="12"
+                                               TextColor="#C9CCEA" />
+                                        <Label Text="{Binding UpcomingSubtitle}"
+                                               FontFamily="BricolageExtraBold"
+                                               FontSize="22"
+                                               TextColor="{StaticResource White}" />
+                                    </VerticalStackLayout>
+                                    <Border Grid.Column="1"
+                                            WidthRequest="40"
+                                            HeightRequest="40"
+                                            StrokeShape="RoundRectangle 12"
+                                            StrokeThickness="0"
+                                            BackgroundColor="#24FFFFFF">
+                                        <Path Data="{StaticResource IconPathCalendar}"
+                                              Stroke="{StaticResource Tape}"
+                                              StrokeThickness="1.8"
+                                              WidthRequest="20"
+                                              HeightRequest="20"
+                                              HorizontalOptions="Center"
+                                              VerticalOptions="Center" />
+                                    </Border>
+                                </Grid>
+                                <!-- Mini Tape Accent -->
+                                <controls:TapeMeasure HeightRequest="14" HorizontalOptions="FillAndExpand" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- ÉTAT 1 : NORMAL (Liste des clients) -->
+                    <VerticalStackLayout IsVisible="{Binding IsNormalState}" Spacing="10" Padding="20, 0">
+                        <BindableLayout.ItemsSource>
+                            <Binding Path="Clients" />
+                        </BindableLayout.ItemsSource>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:Client">
+                                <controls:ClientRow Client="{Binding .}"
+                                                    Tapped="OnClientRowClicked" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <!-- ÉTAT 2 : CHARGEMENT (SkeletonList) -->
+                    <controls:SkeletonList IsVisible="{Binding IsLoadingState}"
+                                           Margin="20, 0" />
+
+                    <!-- ÉTAT 3 : VIDE (EmptyStateView) -->
+                    <controls:EmptyStateView IsVisible="{Binding IsEmptyState}"
+                                             Title="Aucun client pour le moment"
+                                             Description="Ajoutez votre premier client pour enregistrer ses mesures et démarrer sa première commande."
+                                             ButtonText="Ajouter mon premier client"
+                                             ActionClicked="OnEmptyStateActionClicked"
+                                             Margin="20, 10" />
+
+                    <!-- ÉTAT 4 : ERREUR RÉSEAU (ErrorStateView) -->
+                    <controls:ErrorStateView IsVisible="{Binding IsErrorState}"
+                                             ErrorCode="NET-01"
+                                             RetryCommand="{Binding RetryCommand}"
+                                             Margin="20, 10" />
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+        <!-- Floating Action Button (FAB) pour ajouter un client -->
+        <Border WidthRequest="56"
+                HeightRequest="56"
+                StrokeShape="RoundRectangle 28"
+                StrokeThickness="0"
+                BackgroundColor="{StaticResource Rose}"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0, 0, 20, 24"
+                Shadow="{OnPlatform Android='0 4 8 #40000000'}">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnAddClientFabTapped" />
+            </Border.GestureRecognizers>
+            <Label Text="+"
+                   FontSize="32"
+                   TextColor="{StaticResource White}"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   Margin="0, -2, 0, 0" />
+        </Border>
+
+        <!-- Toast Banner -->
+        <controls:ToastBanner IsVisible="{Binding IsToastVisible}"
+                              Message="{Binding ToastMessage}"
+                              Type="{Binding ToastType}"
+                              VerticalOptions="End" />
+    </Grid>
+    <controls:BottomNavigationBar Grid.Row="1" CurrentTab="Clients" />
+    </Grid>
+
+</ContentPage>

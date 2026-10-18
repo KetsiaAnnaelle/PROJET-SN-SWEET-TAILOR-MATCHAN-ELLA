@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.OrderDetailPage"
+             x:DataType="vm:OrderDetailViewModel"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource Chalk}">
+
+    <Grid RowDefinitions="*,Auto,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="16" Padding="0, 10, 0, 30">
+                <!-- Topbar -->
+                <Grid ColumnDefinitions="Auto, *, Auto" Padding="20, 0">
+                    <Border Grid.Column="0"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="{StaticResource Line}"
+                            StrokeThickness="1"
+                            BackgroundColor="{StaticResource White}"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            HorizontalOptions="Start">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackTapped" />
+                        </Border.GestureRecognizers>
+                        <Path Data="{StaticResource IconPathBack}"
+                              Stroke="{StaticResource Ink}"
+                              StrokeThickness="1.8"
+                              WidthRequest="20"
+                              HeightRequest="20"
+                              HorizontalOptions="Center"
+                              VerticalOptions="Center" />
+                    </Border>
+                    <Label Grid.Column="1"
+                           Text="{Binding Order.OrderNumber, StringFormat='Commande {0}'}"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="17"
+                           TextColor="{StaticResource Ink}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                    <BoxView Grid.Column="2" WidthRequest="40" HeightRequest="40" Color="Transparent" />
+                </Grid>
+
+                <!-- Hero Garment & Info Card -->
+                <Grid ColumnDefinitions="116, *" ColumnSpacing="14" Padding="20, 6, 20, 0">
+                    <!-- Garment Thumbnail -->
+                    <Border Grid.Column="0"
+                            WidthRequest="116"
+                            HeightRequest="150"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource Indigo}">
+                        <Grid>
+                            <Image Source="{Binding Order.ImagePath}"
+                                   Aspect="AspectFill"
+                                   HorizontalOptions="Fill"
+                                   VerticalOptions="Fill" />
+                            <Border BackgroundColor="#66000000"
+                                    StrokeShape="RoundRectangle 999"
+                                    StrokeThickness="0"
+                                    Padding="8, 3"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="End"
+                                    Margin="0, 0, 0, 8">
+                                <Label Text="Modèle" FontFamily="DMSansBold" FontSize="10" TextColor="{StaticResource White}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Order Details Column -->
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6">
+                        <controls:StatusPill Status="{Binding Order.Status}" HorizontalOptions="Start" />
+                        <Label Text="{Binding Order.ModelName}"
+                               FontFamily="BricolageExtraBold"
+                               FontSize="20"
+                               TextColor="{StaticResource Ink}"
+                               LineHeight="1.15" />
+                        <Label Text="{Binding Order.ClientName}"
+                               FontFamily="DMSans"
+                               FontSize="13"
+                               TextColor="{StaticResource Muted}" />
+
+                        <!-- Due Date Hot Badge -->
+                        <Border BackgroundColor="{Binding Order.IsHotDueDate, Converter={StaticResource DueDateColor}}"
+                                StrokeShape="RoundRectangle 12"
+                                StrokeThickness="0"
+                                Padding="10, 6"
+                                HorizontalOptions="Start"
+                                Margin="0, 4, 0, 0">
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Path Data="{StaticResource IconPathClock}"
+                                      Stroke="{StaticResource White}"
+                                      StrokeThickness="1.8"
+                                      WidthRequest="16"
+                                      HeightRequest="16"
+                                      VerticalOptions="Center" />
+                                <Label Text="{Binding Order.DueDateLabel}"
+                                       FontFamily="DMSansBold"
+                                       FontSize="12"
+                                       TextColor="{StaticResource White}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- Payment Progress Card -->
+                <Grid Padding="20, 0">
+                    <Border StrokeShape="RoundRectangle 18"
+                            Stroke="{StaticResource Line}"
+                            StrokeThickness="1"
+                            BackgroundColor="{StaticResource White}"
+                            Padding="16, 14">
+                        <VerticalStackLayout Spacing="10">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Label Text="Paiement" FontFamily="DMSansBold" FontSize="14" TextColor="{StaticResource Ink}" />
+                                <Label Grid.Column="1"
+                                       FontFamily="DMSansBold"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Ink}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Order.AdvancePayment, StringFormat='{0:N0} '}" />
+                                            <Span Text="/ " />
+                                            <Span Text="{Binding Order.TotalPrice, StringFormat='{0:N0} FCFA'}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </Grid>
+
+                            <!-- Progress Bar -->
+                            <ProgressBar Progress="{Binding Order.AdvancePaymentRatio}"
+                                         ProgressColor="{StaticResource Indigo}"
+                                         HeightRequest="8" />
+
+                            <Label Text="{Binding Order.BalancePayment, StringFormat='Reste à payer : {0:N0} FCFA'}"
+                                   FontFamily="DMSans"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Muted}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Avancement / Stepper Card -->
+                <Grid Padding="20, 0">
+                    <Border StrokeShape="RoundRectangle 18"
+                            Stroke="{StaticResource Line}"
+                            StrokeThickness="1"
+                            BackgroundColor="{StaticResource White}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="14">
+                            <Label Text="Avancement"
+                                   FontFamily="BricolageExtraBold"
+                                   FontSize="17"
+                                   TextColor="{StaticResource Ink}" />
+
+                            <!-- Stepper component -->
+                            <controls:OrderStepper CurrentStatus="{Binding Order.Status}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Action CTA: Avancer le statut -->
+                <Grid Padding="20, 8, 20, 0">
+                    <controls:AppButton Text="{Binding NextActionTitle}"
+                                        Variant="Primary"
+                                        Command="{Binding AdvanceStatusCommand}" />
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Toast Banner -->
+        <controls:ToastBanner Grid.Row="1"
+                              IsVisible="{Binding IsToastVisible}"
+                              Message="{Binding ToastMessage}"
+                              Type="{Binding ToastType}" />
+
+        <controls:BottomNavigationBar Grid.Row="2" CurrentTab="Orders" />
+    </Grid>
+
+</ContentPage>

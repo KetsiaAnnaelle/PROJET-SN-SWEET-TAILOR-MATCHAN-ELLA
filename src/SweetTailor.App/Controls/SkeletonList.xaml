@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SweetTailor.App.Controls.SkeletonList">
+    <VerticalStackLayout Spacing="14" Padding="20, 10">
+        <!-- Thin yellow activity progress bar -->
+        <ProgressBar Progress="0.65" ProgressColor="{StaticResource Tape}" HeightRequest="3" Margin="0, 0, 0, 10" />
+
+        <!-- Static Skeleton Rows (Ecoconception: static without animation) -->
+        <!-- Row 1 -->
+        <Border StrokeShape="RoundRectangle 18" StrokeThickness="1" Stroke="{StaticResource Line}" BackgroundColor="{StaticResource White}" Padding="14, 12">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <BoxView Grid.Column="0" WidthRequest="46" HeightRequest="46" CornerRadius="23" Color="{StaticResource Mist}" />
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6" Margin="12, 0">
+                    <BoxView WidthRequest="140" HeightRequest="14" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                    <BoxView WidthRequest="180" HeightRequest="10" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+                <BoxView Grid.Column="2" WidthRequest="60" HeightRequest="22" CornerRadius="11" Color="{StaticResource Mist}" VerticalOptions="Center" />
+            </Grid>
+        </Border>
+
+        <!-- Row 2 -->
+        <Border StrokeShape="RoundRectangle 18" StrokeThickness="1" Stroke="{StaticResource Line}" BackgroundColor="{StaticResource White}" Padding="14, 12">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <BoxView Grid.Column="0" WidthRequest="46" HeightRequest="46" CornerRadius="23" Color="{StaticResource Mist}" />
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6" Margin="12, 0">
+                    <BoxView WidthRequest="120" HeightRequest="14" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                    <BoxView WidthRequest="160" HeightRequest="10" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+                <BoxView Grid.Column="2" WidthRequest="60" HeightRequest="22" CornerRadius="11" Color="{StaticResource Mist}" VerticalOptions="Center" />
+            </Grid>
+        </Border>
+
+        <!-- Row 3 -->
+        <Border StrokeShape="RoundRectangle 18" StrokeThickness="1" Stroke="{StaticResource Line}" BackgroundColor="{StaticResource White}" Padding="14, 12">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <BoxView Grid.Column="0" WidthRequest="46" HeightRequest="46" CornerRadius="23" Color="{StaticResource Mist}" />
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6" Margin="12, 0">
+                    <BoxView WidthRequest="150" HeightRequest="14" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                    <BoxView WidthRequest="130" HeightRequest="10" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+                <BoxView Grid.Column="2" WidthRequest="60" HeightRequest="22" CornerRadius="11" Color="{StaticResource Mist}" VerticalOptions="Center" />
+            </Grid>
+        </Border>
+
+        <!-- Row 4 -->
+        <Border StrokeShape="RoundRectangle 18" StrokeThickness="1" Stroke="{StaticResource Line}" BackgroundColor="{StaticResource White}" Padding="14, 12">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <BoxView Grid.Column="0" WidthRequest="46" HeightRequest="46" CornerRadius="23" Color="{StaticResource Mist}" />
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6" Margin="12, 0">
+                    <BoxView WidthRequest="110" HeightRequest="14" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                    <BoxView WidthRequest="170" HeightRequest="10" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+                <BoxView Grid.Column="2" WidthRequest="60" HeightRequest="22" CornerRadius="11" Color="{StaticResource Mist}" VerticalOptions="Center" />
+            </Grid>
+        </Border>
+
+        <!-- Row 5 -->
+        <Border StrokeShape="RoundRectangle 18" StrokeThickness="1" Stroke="{StaticResource Line}" BackgroundColor="{StaticResource White}" Padding="14, 12">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <BoxView Grid.Column="0" WidthRequest="46" HeightRequest="46" CornerRadius="23" Color="{StaticResource Mist}" />
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6" Margin="12, 0">
+                    <BoxView WidthRequest="130" HeightRequest="14" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                    <BoxView WidthRequest="140" HeightRequest="10" CornerRadius="4" Color="{StaticResource Mist}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+                <BoxView Grid.Column="2" WidthRequest="60" HeightRequest="22" CornerRadius="11" Color="{StaticResource Mist}" VerticalOptions="Center" />
+            </Grid>
+        </Border>
+
+        <!-- Loading message -->
+        <Label x:Name="LoadingMessageLabel"
+               Text="Chargement de vos clients…"
+               FontSize="13"
+               FontAttributes="Bold"
+               TextColor="{StaticResource Muted}"
+               HorizontalTextAlignment="Center"
+               Margin="0, 10, 0, 0" />
+    </VerticalStackLayout>
+</ContentView>

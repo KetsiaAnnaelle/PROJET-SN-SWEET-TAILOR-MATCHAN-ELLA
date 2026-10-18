@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             x:Class="SweetTailor.App.Controls.ErrorStateView">
+    <VerticalStackLayout Spacing="16" HorizontalOptions="Center" VerticalOptions="Center" Padding="24">
+        <!-- Error Toast Banner Top -->
+        <Border BackgroundColor="{StaticResource ErrorSoft}"
+                StrokeShape="RoundRectangle 12"
+                StrokeThickness="0"
+                Padding="14, 10"
+                Margin="0, 0, 0, 16">
+            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                <Path Data="{StaticResource IconPathAlert}"
+                      Stroke="{StaticResource Error}"
+                      StrokeThickness="1.8"
+                      WidthRequest="18"
+                      HeightRequest="18"
+                      VerticalOptions="Center" />
+                <Label x:Name="BannerMessageLabel" Text="Impossible de charger les données." FontSize="13" FontAttributes="Bold" TextColor="{StaticResource ErrorDark}" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+        </Border>
+
+        <!-- Big Wifi Off Icon Box -->
+        <Border WidthRequest="96"
+                HeightRequest="96"
+                StrokeShape="RoundRectangle 30"
+                StrokeThickness="0"
+                BackgroundColor="{StaticResource ErrorSoft}"
+                HorizontalOptions="Center">
+            <Border WidthRequest="72"
+                    HeightRequest="72"
+                    StrokeShape="RoundRectangle 22"
+                    StrokeThickness="0"
+                    BackgroundColor="{StaticResource White}"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Path Data="{StaticResource IconPathWifiOff}"
+                      Stroke="{StaticResource Error}"
+                      StrokeThickness="1.8"
+                      WidthRequest="40"
+                      HeightRequest="40"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center" />
+            </Border>
+        </Border>
+
+        <!-- Title -->
+        <Label Text="Connexion impossible"
+               FontSize="22"
+               FontAttributes="Bold"
+               TextColor="{StaticResource Ink}"
+               HorizontalTextAlignment="Center"
+               Margin="0, 10, 0, 0" />
+
+        <!-- Description -->
+        <Label Text="Vérifiez votre connexion Internet puis réessayez. Vos données ne sont pas perdues."
+               FontSize="14"
+               TextColor="{StaticResource Muted}"
+               HorizontalTextAlignment="Center"
+               LineHeight="1.5" />
+
+        <!-- Error Code -->
+        <Label x:Name="ErrorCodeLabel"
+               Text="Code : NET-01"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="{StaticResource Muted}"
+               HorizontalTextAlignment="Center"
+               Margin="0, 0, 0, 10" />
+
+        <!-- Retry and Home Buttons -->
+        <controls:AppButton x:Name="RetryButton"
+                            Text="Réessayer"
+                            Variant="Primary"
+                            HorizontalOptions="Fill" />
+
+        <controls:AppButton x:Name="HomeButton"
+                            Text="Revenir à l'accueil"
+                            Variant="Ghost"
+                            HorizontalOptions="Fill" />
+    </VerticalStackLayout>
+</ContentView>
