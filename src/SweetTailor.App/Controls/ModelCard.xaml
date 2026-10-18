@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SweetTailor.App.Controls.ModelCard">
+    <Border StrokeShape="RoundRectangle 20"
+            StrokeThickness="1"
+            Stroke="{StaticResource Line}"
+            BackgroundColor="{StaticResource White}"
+            Padding="0"
+            Margin="0, 0, 0, 14">
+        <VerticalStackLayout Spacing="0">
+            <!-- Visual / Image Box with Favorite Heart -->
+            <Grid HeightRequest="{Binding ImageHeight, Source={RelativeSource AncestorType={x:Type ContentView}}}">
+                <Border x:Name="ImagePlaceholder"
+                        StrokeShape="RoundRectangle 20, 20, 0, 0"
+                        StrokeThickness="0"
+                        BackgroundColor="{StaticResource RoseSoft}">
+                    <Grid>
+                        <Image x:Name="GarmentPhoto"
+                               Aspect="AspectFill"
+                               HorizontalOptions="Fill"
+                               VerticalOptions="Fill" />
+                        <Path x:Name="GarmentIcon"
+                              WidthRequest="78"
+                              HeightRequest="116"
+                              Aspect="Uniform"
+                              HorizontalOptions="Center"
+                              VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- Heart Favorite Button Top-Right -->
+                <Border WidthRequest="34"
+                        HeightRequest="34"
+                        StrokeShape="RoundRectangle 17"
+                        StrokeThickness="0"
+                        BackgroundColor="{StaticResource White}"
+                        HorizontalOptions="End"
+                        VerticalOptions="Start"
+                        Margin="10">
+                    <Path x:Name="HeartIcon"
+                          Data="{StaticResource IconPathHeart}"
+                          WidthRequest="20"
+                          HeightRequest="20"
+                          Aspect="Uniform"
+                          Stroke="#6B7094"
+                          StrokeThickness="1.8"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center" />
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHeartTapped" />
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+
+            <!-- Text Content -->
+            <VerticalStackLayout Spacing="3" Padding="12, 10">
+                <Label x:Name="CategoryLabel"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Muted}" />
+                <Label x:Name="TitleLabel"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Ink}"
+                       LineBreakMode="TailTruncation" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Border>
+</ContentView>

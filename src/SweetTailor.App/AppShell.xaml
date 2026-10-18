@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SweetTailor.App.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Sweet Tailor"
+    FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False">
+
+    <!-- Screen 1: Splash Screen (Page 1) - Initial Screen, No Navbar -->
+    <ShellContent x:Name="SplashShellContent"
+                  Route="SplashPage"
+                  Shell.TabBarIsVisible="False"
+                  Shell.FlyoutItemIsVisible="False" />
+
+    <!-- Screen 2-4: 3 Onboarding Screens - No Navbar -->
+    <ShellContent x:Name="OnboardingShellContent"
+                  Route="OnboardingPage"
+                  Shell.TabBarIsVisible="False"
+                  Shell.FlyoutItemIsVisible="False" />
+
+    <!-- Screen 5: Login / Authentication - No Navbar -->
+    <ShellContent x:Name="LoginShellContent"
+                  Route="LoginPage"
+                  Shell.TabBarIsVisible="False"
+                  Shell.FlyoutItemIsVisible="False" />
+
+    <!-- Keep Shell tabs for route management; the app renders its own bottom bar. -->
+    <TabBar Shell.TabBarBackgroundColor="{StaticResource White}"
+            Shell.TabBarForegroundColor="{StaticResource Indigo}"
+            Shell.TabBarUnselectedColor="{StaticResource Muted}"
+            Shell.TabBarTitleColor="{StaticResource Indigo}"
+            Shell.TabBarIsVisible="False">
+
+        <Tab Title="Clients">
+            <ShellContent x:Name="ClientsShellContent" Title="Clients" Icon="clients.svg" Route="ClientsPage" />
+        </Tab>
+
+        <Tab Title="Commandes">
+            <ShellContent x:Name="OrdersShellContent" Title="Commandes" Icon="orders.svg" Route="OrdersPage" />
+        </Tab>
+
+        <Tab Title="Catalogue">
+            <ShellContent x:Name="CatalogShellContent" Title="Catalogue" Icon="catalog.svg" Route="CatalogPage" />
+        </Tab>
+
+        <Tab Title="Profil">
+            <ShellContent x:Name="ProfileShellContent" Title="Profil" Icon="profile.svg" Route="ProfilePage" />
+        </Tab>
+    </TabBar>
+
+</Shell>

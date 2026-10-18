@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sweet Tailor — Maquette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --indigo:#26306B; --ink:#14173A; --rose:#E8607F; --rose-soft:#FCE4EA;
+  --tape:#F4C95D; --tape-soft:#FDF3D6; --chalk:#F6F5FA; --mist:#E4E5F2;
+  --line:#E8E9F3; --muted:#6B7094; --green:#2E9E6B; --green-soft:#DDF3E8;
+  --white:#fff;
+  --display:'Bricolage Grotesque','DM Sans',system-ui,sans-serif;
+  --body:'DM Sans',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:#DCDEEE;color:var(--ink);padding:48px 32px 80px}
+.head{max-width:1500px;margin:0 auto 40px}
+.head h1{font-family:var(--display);font-size:40px;font-weight:800;letter-spacing:-.02em;color:var(--indigo)}
+.head p{margin-top:8px;color:var(--muted);font-size:16px;max-width:640px;line-height:1.5}
+.palette{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.sw{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:6px 14px 6px 6px;font-size:12px;font-weight:600}
+.sw i{width:22px;height:22px;border-radius:50%;display:block;border:1px solid rgba(0,0,0,.08)}
+.board{max-width:1500px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,360px);gap:56px 40px;justify-content:center}
+.cell figcaption{margin-top:16px;font-size:14px;font-weight:700;color:var(--indigo);text-align:center}
+.cell figcaption span{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:2px}
+
+/* Phone */
+.phone{width:360px;height:800px;background:var(--chalk);border-radius:44px;border:9px solid var(--ink);position:relative;overflow:hidden;box-shadow:0 30px 60px -20px rgba(20,23,58,.35)}
+.status{height:44px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 26px 6px;font-size:13px;font-weight:700;position:relative;z-index:5}
+.status .r{display:flex;gap:5px;align-items:center}
+.status .r b{display:block;width:16px;height:9px;border-radius:2px;border:1.5px solid currentColor}
+.status .r u{display:block;width:12px;height:9px;background:currentColor;clip-path:polygon(0 100%,100% 100%,100% 0)}
+.notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:92px;height:24px;background:var(--ink);border-radius:20px;z-index:6}
+.screen{position:absolute;inset:44px 0 0 0;display:flex;flex-direction:column}
+.pad{padding:0 20px}
+svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+h2.t{font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+h3.s{font-family:var(--display);font-size:17px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px}
+
+/* Tape motif */
+.tape{height:22px;background:var(--tape);position:relative;overflow:hidden}
+.tape::before{content:"";position:absolute;left:0;right:0;bottom:0;height:7px;background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 8px)}
+.tape::after{content:"";position:absolute;left:0;right:0;bottom:0;height:13px;background:repeating-linear-gradient(90deg,var(--ink) 0 1.5px,transparent 1.5px 40px)}
+.tape.sm{height:16px;border-radius:4px}
+.tape.sm::before{height:5px}.tape.sm::after{height:9px}
+
+/* Components */
+.btn{height:52px;border-radius:16px;background:var(--indigo);color:#fff;border:0;font:600 16px var(--body);display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.btn.rose{background:var(--rose)}
+.btn.ghost{background:#fff;color:var(--indigo);border:1.5px solid var(--mist)}
+.search{height:48px;border-radius:14px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;color:var(--muted);font-size:14px}
+.chips{display:flex;gap:8px;overflow:hidden}
+.chip{height:34px;padding:0 14px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:600;display:flex;align-items:center;color:var(--muted);white-space:nowrap}
+.chip.on{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 16px var(--display);flex:none}
+.a1{background:var(--rose-soft);color:#B8325A}.a2{background:var(--tape-soft);color:#8A6A10}.a3{background:var(--mist);color:var(--indigo)}.a4{background:var(--green-soft);color:#1E7A50}
+.pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.p-new{background:var(--mist);color:var(--indigo)}.p-cut{background:var(--tape-soft);color:#8A6A10}.p-fit{background:var(--rose-soft);color:#B8325A}.p-ready{background:var(--green-soft);color:#1E7A50}.p-done{background:#ECECF2;color:var(--muted)}
+.row{display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:12px 14px;border:1px solid var(--line)}
+.row .m{flex:1;min-width:0}
+.row .n{font-weight:700;font-size:15px}
+.row .d{font-size:12px;color:var(--muted);margin-top:2px}
+.list{display:flex;flex-direction:column;gap:10px}
+.nav{margin-top:auto;height:78px;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;position:relative}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:#9A9EBD;width:64px}
+.nav a.on{color:var(--indigo)}
+.fab{position:absolute;right:20px;bottom:92px;width:56px;height:56px;border-radius:18px;background:var(--rose);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 24px -8px rgba(232,96,127,.6)}
+.fab svg{width:26px;height:26px;stroke-width:2.2}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 20px 14px}
+.iconbtn{width:42px;height:42px;border-radius:14px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.field{background:#fff;border:1px solid var(--line);border-radius:14px;padding:9px 14px}
+.field label{display:block;font-size:11px;color:var(--muted);font-weight:600}
+.field div{font-size:15px;font-weight:600;margin-top:1px}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px dashed var(--mist);font-size:14px;font-weight:500}
+.mrow:last-child{border:0}
+.mval{background:var(--chalk);border:1px solid var(--mist);border-radius:10px;padding:5px 12px;font-weight:700;font-variant-numeric:tabular-nums}
+.mval small{color:var(--muted);font-weight:500;margin-left:2px}
+.card{background:#fff;border-radius:20px;border:1px solid var(--line);padding:16px}
+.stepper{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:12px;align-items:flex-start;position:relative;padding-bottom:14px}
+.step:last-child{padding-bottom:0}
+.step::before{content:"";position:absolute;left:10px;top:22px;bottom:0;width:2px;background:var(--mist)}
+.step:last-child::before{display:none}
+.step .dot{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--mist);flex:none;display:flex;align-items:center;justify-content:center}
+.step.done .dot{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.step.done::before{background:var(--indigo)}
+.step.now .dot{border-color:var(--rose);background:var(--rose-soft)}
+.step.now .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--rose)}
+.step b{font-size:14px;display:block}
+.step span{font-size:12px;color:var(--muted)}
+.step.todo b{color:#9A9EBD;font-weight:600}
+.bar{height:8px;border-radius:99px;background:var(--mist);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--indigo);border-radius:99px}
+.hl{background:var(--tape);border-radius:3px;padding:0 2px}
+.date{width:50px;text-align:center;border-radius:14px;background:var(--chalk);padding:6px 0;flex:none}
+.date b{display:block;font:800 18px var(--display);line-height:1}
+.date span{font-size:10.5px;color:var(--muted);font-weight:700}
+.date.hot{background:var(--rose);color:#fff}.date.hot span{color:#fff}
+.sec{font-size:13px;font-weight:700;color:var(--muted);margin:4px 0 10px}
+
+/* ===== v2 ===== */
+.cell.wide{grid-column:span 2}
+.lt{border-radius:28%;background:var(--indigo);display:flex;align-items:center;justify-content:center;flex:none}
+.lt svg{width:88%;height:88%}
+.sheet{width:760px;min-height:760px;background:#fff;border-radius:44px;padding:44px;box-shadow:0 30px 60px -20px rgba(20,23,58,.25);display:flex;flex-direction:column;justify-content:space-between;gap:30px}
+.sheet h4{font:700 13px var(--body);color:var(--muted)}
+.lockup{display:flex;align-items:center;gap:26px}
+.wm{font-family:var(--display);font-weight:800;font-size:56px;letter-spacing:-.03em;line-height:.95;color:var(--indigo)}
+.wm small{display:block;font:500 15px var(--body);letter-spacing:0;color:var(--muted);margin-top:10px}
+.vars{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap}
+.vars figure{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;font-weight:600;color:var(--muted)}
+.concept{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.concept div{background:var(--chalk);border-radius:18px;padding:16px;font-size:13px;line-height:1.5;color:var(--muted)}
+.concept b{display:block;color:var(--indigo);font:700 15px var(--display);margin-bottom:4px}
+@media (max-width:820px){.cell.wide{grid-column:span 1}.sheet{width:360px;min-height:0;padding:24px}.wm{font-size:38px}.concept{grid-template-columns:1fr}}
+
+.art{position:absolute;top:0;left:0;right:0;height:440px;border-radius:0 0 40px 40px;overflow:hidden}
+.skip{position:absolute;top:50px;right:18px;z-index:7;font-size:13px;font-weight:700;color:var(--indigo);background:rgba(255,255,255,.85);border-radius:99px;padding:7px 14px}
+.onb-t{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.02em;line-height:1.12;color:var(--ink)}
+.onb-d{font-size:14.5px;line-height:1.55;color:var(--muted);margin-top:10px}
+.dots{display:flex;gap:6px}
+.dots i{width:8px;height:8px;border-radius:99px;background:var(--mist);display:block}
+.dots i.on{width:26px;background:var(--indigo)}
+.foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding:0 20px 26px}
+.btn.sm{width:auto;height:50px;padding:0 26px;border-radius:15px}
+.float{position:absolute;box-shadow:0 14px 28px -10px rgba(20,23,58,.35)}
+.card3{background:#fff;border-radius:20px;position:absolute}
+
+.colw{display:flex;gap:10px}
+.col{flex:1;display:flex;flex-direction:column;gap:12px}
+.img{border-radius:18px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.img svg.g{width:52%}
+.img .save{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;color:var(--rose)}
+.img .save svg{width:16px;height:16px;stroke-width:2}
+.tcap{font-size:13px;font-weight:700;padding:7px 4px 0;line-height:1.25}
+.tcap span{display:block;font-size:11.5px;font-weight:500;color:var(--muted);margin-top:1px}
+.g-rose{background:linear-gradient(160deg,#FCE4EA,#F4B3C4)}
+.g-tape{background:linear-gradient(160deg,#FDF3D6,#F4C95D)}
+.g-mist{background:linear-gradient(160deg,#ECEDF8,#B7BCE0)}
+.g-green{background:linear-gradient(160deg,#E6F6EE,#9ED8BC)}
+.g-ind{background:linear-gradient(160deg,#3B4A9E,#1B2352)}
+.g-pink{background:linear-gradient(160deg,#F7A5BA,#E8607F)}
+
+/* ===== v3 : états ===== */
+:root{--err:#D93A4A;--err-soft:#FDE8EA}
+.phone{height:800px}
+.f-act{border-color:var(--indigo)!important;box-shadow:0 0 0 4px rgba(38,48,107,.12)}
+.f-ok{border-color:var(--green)!important}
+.f-err{border-color:var(--err)!important;background:#FFF8F9!important}
+.f-err label{color:var(--err)!important}
+.f-dis{background:#EEEFF6!important;border-color:#E2E3EF!important}
+.f-dis label,.f-dis .v{color:#A6AAC8!important}
+.fr{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fr .v{font-size:15px;font-weight:600;margin-top:1px}
+.ph{color:#9A9EBD!important;font-weight:500!important}
+.caret{display:inline-block;width:2px;height:16px;background:var(--indigo);vertical-align:-3px;margin-left:1px}
+.msg{display:flex;align-items:flex-start;gap:6px;font-size:12px;line-height:1.35;margin:5px 4px 0;font-weight:500}
+.msg.e{color:var(--err)}.msg.h{color:var(--muted)}
+.msg svg{width:14px;height:14px;flex:none;margin-top:1px}
+.btn.dis{background:#C9CCEA;color:#fff}
+.btn.press{background:#1B2352;box-shadow:0 0 0 4px rgba(38,48,107,.22)}
+.btn.err{background:#fff;color:var(--err);border:1.5px solid var(--err)}
+.spin{width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;display:inline-block}
+.toast{display:flex;align-items:center;gap:10px;border-radius:14px;padding:12px 14px;font-size:13px;font-weight:600}
+.t-ok{background:var(--green-soft);color:#1E7A50}.t-err{background:var(--err-soft);color:#B02A3A}.t-info{background:var(--mist);color:var(--indigo)}
+.sk{background:#E6E7F2;border-radius:8px}
+.linkb{color:var(--indigo);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.cb{width:22px;height:22px;border-radius:7px;border:2px solid #B9BDDA;background:#fff;flex:none;display:flex;align-items:center;justify-content:center;color:#fff}
+.cb.on{background:var(--indigo);border-color:var(--indigo)}
+.cb.dis{background:#EEEFF6;border-color:#D8DAEA}
+.cb.er{border-color:var(--err)}
+.empty-ic{width:148px;height:148px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;position:relative}
+.states{display:grid;grid-template-columns:92px repeat(4,1fr);gap:14px 12px;align-items:center;min-width:672px}
+.states .h{font-size:11.5px;font-weight:700;color:var(--muted);text-align:center}
+.states .rl{font-size:13px;font-weight:700;color:var(--indigo)}
+.sheet{overflow-x:auto}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.8c1.8.7 3 2.4 3.5 5.2"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20c.7-4 3.7-6 7.5-6s6.8 2 7.5 6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2Z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5Z"/></symbol>
+    <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2h7L17 8h3v11H4V8Z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-hist" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.5-5.8L4 8.5"/><path d="M4 4v4.5h4.5M12 8v4l3 2"/></symbol>
+    <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6.5" r="2.5"/><circle cx="6" cy="17.5" r="2.5"/><path d="M8 8l12 9M8 16 20 7"/></symbol>
+    <symbol id="dress" viewBox="0 0 120 180"><path d="M48 10c0 14 24 14 24 0l10 8 6 28-12 6 10 118H24L34 52l-12-6 6-28 10-8-2-0Z" /></symbol>
+  
+    <symbol id="logo-mark" viewBox="0 0 100 100">
+      <path d="M68 28C56 18 32 22 32 36C32 52 68 48 68 64C68 78 44 82 32 72" fill="none" style="stroke:var(--thread,#F4C95D)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="68" cy="28" r="8" fill="none" style="stroke:var(--eye,#E8607F)" stroke-width="4"/>
+      <circle cx="32" cy="72" r="7" style="fill:var(--eye,#E8607F)"/>
+    </symbol>
+    <symbol id="gown" viewBox="0 0 120 180"><path d="M48 10Q60 22 72 10L80 40 70 62C84 100 98 140 104 172H16C22 140 36 100 50 62L40 40Z"/></symbol>
+    <symbol id="kaba" viewBox="0 0 120 180"><path d="M40 14Q60 30 80 14L108 36 96 62 84 54 88 160H32L36 54 24 62 12 36Z"/></symbol>
+    <symbol id="suit" viewBox="0 0 120 180"><path d="M44 10 60 34 76 10 104 24 112 70 98 74 96 168H24L22 74 8 70 16 24Z"/></symbol>
+    <symbol id="skirt" viewBox="0 0 120 180"><path d="M38 20H82L108 168H12Z"/></symbol>
+    <symbol id="i-img" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="m4 17 5-4.5 4 3.5 3-2.5 4 3.5"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0 1 12 7.6 4.2 4.2 0 0 1 19.5 10C19.5 15.4 12 20 12 20Z"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="3"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="3"/><path d="m4 8 8 5.5L20 8"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V13M12 16.3v.1"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="3"/><path d="M9 8.5h6M9 12.5h6M9 16.5h3"/></symbol>
+    <symbol id="i-wifioff" viewBox="0 0 24 24"><path d="M3 3l18 18M5.2 10.3A11 11 0 0 1 9 8.3M19 10.3a11 11 0 0 0-5.3-2.9M8.6 14.3a6 6 0 0 1 3.4-1.4M15.6 14.4a6 6 0 0 0-1-.6"/><circle cx="12" cy="18" r=".9"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.1"/></symbol>
+  </defs>
+</svg>
+
+<header class="head">
+  <h1>Sweet Tailor</h1>
+  <p>Carnet de mesures et de commandes pour couturiers. Maquette mobile haute fidélité : logo, onboarding, connexion, inscription, 18 écrans fonctionnels et états (vide, chargement, erreur). Format 360 × 800.</p>
+  <div class="palette">
+    <div class="sw"><i style="background:#26306B"></i>Indigo #26306B</div>
+    <div class="sw"><i style="background:#14173A"></i>Encre #14173A</div>
+    <div class="sw"><i style="background:#E8607F"></i>Rose épingle #E8607F</div>
+    <div class="sw"><i style="background:#F4C95D"></i>Mètre ruban #F4C95D</div>
+    <div class="sw"><i style="background:#F6F5FA"></i>Craie #F6F5FA</div>
+    <div class="sw"><i style="background:#2E9E6B"></i>Succès #2E9E6B</div>
+    <div class="sw"><i style="background:#D93A4A"></i>Erreur #D93A4A</div>
+  </div>
+</header>
+
+<main class="board">
+
+
+<!-- 0. LOGO -->
+<figure class="cell wide">
+<div class="sheet">
+  <h4>Identité visuelle · Logo Sweet Tailor</h4>
+  <div class="lockup">
+    <div class="lt" style="width:128px;height:128px;box-shadow:0 20px 40px -14px rgba(38,48,107,.55)"><svg viewBox="0 0 100 100"><use href="#logo-mark"/></svg></div>
+    <div class="wm">Sweet<br>Tailor<small>Chaque mesure compte.</small></div>
+  </div>
+  <div>
+    <h4 style="margin-bottom:14px">Déclinaisons</h4>
+    <div class="vars">
+      <figure><div class="lt" style="width:104px;height:104px"><svg viewBox="0 0 100 100"><use href="#logo-mark"/></svg></div>Principal</figure>
+      <figure><div class="lt" style="width:104px;height:104px;background:var(--rose);--thread:#fff;--eye:#26306B"><svg viewBox="0 0 100 100"><use href="#logo-mark"/></svg></div>Rose</figure>
+      <figure><div class="lt" style="width:104px;height:104px;background:var(--tape);--thread:#26306B;--eye:#E8607F"><svg viewBox="0 0 100 100"><use href="#logo-mark"/></svg></div>Mètre ruban</figure>
+      <figure><div class="lt" style="width:104px;height:104px;background:var(--chalk);border:1.5px solid var(--mist);--thread:#26306B;--eye:#E8607F"><svg viewBox="0 0 100 100"><use href="#logo-mark"/></svg></div>Clair</figure>
+      <figure><div class="lt" style="width:64px;height:64px"><svg viewBox="0 0 100 100"><use href="#logo-mark"/></svg></div>Icône app</figure>
+      <figure><div class="lt" style="width:36px;height:36px"><svg viewBox="0 0 100 100"><use href="#logo-mark"/></svg></div>Petit</figure>
+    </div>
+  </div>
+  <div class="concept">
+    <div><b>Un fil continu</b>Le S de Sweet est tracé d'un seul fil, dans le jaune du mètre ruban.</div>
+    <div><b>Un chas d'aiguille</b>Le fil sort du chas, l'anneau rose en haut. On reconnaît tout de suite la couture.</div>
+    <div><b>Un nœud final</b>Le point rose en bas ferme la ligne. Le logo reste lisible à 36 px.</div>
+  </div>
+</div>
+<figcaption>Logo<span>Monogramme S en fil, aiguille et nœud</span></figcaption>
+</figure>
+
+<!-- 1. SPLASH -->
+<figure class="cell">
+<div class="phone" style="background:radial-gradient(120% 55% at 50% 0%,#3D4CA6 0%,rgba(61,76,166,0) 62%),radial-gradient(90% 50% at 100% 100%,rgba(232,96,127,.38),rgba(232,96,127,0) 62%),var(--indigo);color:#fff">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <svg viewBox="0 0 342 698" preserveAspectRatio="none" style="position:absolute;left:0;top:44px;width:100%;height:calc(100% - 44px)">
+    <path d="M-10 560C70 470 130 640 210 560S330 440 360 500" fill="none" stroke="rgba(244,201,93,.38)" stroke-width="2" stroke-dasharray="7 9" stroke-linecap="round"/>
+    <path d="M-10 90C60 150 120 40 200 100S320 60 360 120" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.5" stroke-dasharray="5 9" stroke-linecap="round"/>
+  </svg>
+  <div class="screen" style="align-items:center">
+    <div style="margin-top:92px;position:relative;width:210px;height:210px">
+      <div style="position:absolute;inset:-28px;border-radius:50%;border:1px solid rgba(255,255,255,.12)"></div>
+      <div style="position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(244,201,93,.75)"></div>
+      <div class="lt" style="position:absolute;inset:32px;background:linear-gradient(160deg,#34428F,#1B2352);box-shadow:0 28px 50px -12px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.14)"><svg viewBox="0 0 100 100"><use href="#logo-mark"/></svg></div>
+    </div>
+    <h2 class="t" style="font-size:46px;margin-top:44px;text-align:center;line-height:1">Sweet Tailor</h2>
+    <p style="margin-top:14px;font-size:16px;color:#C9CCEA;text-align:center;line-height:1.5">Chaque mesure compte.</p>
+    <div style="margin-top:auto;width:100%">
+      <div style="text-align:center;font-size:12px;color:#9EA4D6;margin-bottom:18px;font-weight:600">Version 1.0</div>
+      <div class="tape"></div>
+    </div>
+  </div>
+</div>
+<figcaption>1 · Écran de lancement<span>Logo, fil de couture et mètre ruban</span></figcaption>
+</figure>
+
+<!-- 2. ONBOARDING 1 -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="art" style="background:linear-gradient(170deg,#FCE4EA,#F9CFDA)">
+    <div style="position:absolute;width:260px;height:260px;border-radius:50%;background:var(--tape-soft);left:-90px;top:60px"></div>
+    <div style="position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.55);right:-40px;bottom:30px"></div>
+    <div class="card3 float" style="left:60px;top:96px;width:222px;transform:rotate(-5deg);padding:16px 16px 0;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px"><div class="av a1" style="width:38px;height:38px;font-size:13px">NM</div><div><div style="font-weight:700;font-size:14px">Nadège Mbarga</div><div class="sub" style="font-size:11px">Mesures du 12 sept.</div></div></div>
+      <div style="margin-top:8px">
+        <div class="mrow" style="padding:9px 0;font-size:12.5px"><span>Poitrine</span><span class="mval" style="padding:3px 10px">92<small>cm</small></span></div>
+        <div class="mrow" style="padding:9px 0;font-size:12.5px"><span>Taille</span><span class="mval" style="padding:3px 10px">74<small>cm</small></span></div>
+        <div class="mrow" style="padding:9px 0;font-size:12.5px"><span>Hanches</span><span class="mval" style="padding:3px 10px">98<small>cm</small></span></div>
+        <div class="mrow" style="padding:9px 0 12px;font-size:12.5px"><span>Longueur robe</span><span class="mval" style="padding:3px 10px">112<small>cm</small></span></div>
+      </div>
+      <div class="tape sm" style="margin:0 -16px;border-radius:0"></div>
+    </div>
+    <div class="float" style="left:18px;top:62px;background:var(--indigo);color:#fff;border-radius:14px;padding:9px 13px;font-size:12.5px;font-weight:700;transform:rotate(-5deg)">Taille 74 cm</div>
+    <div class="float" style="left:20px;bottom:50px;width:300px;transform:rotate(-14deg);border-radius:4px;overflow:hidden"><div class="tape"></div></div>
+    <div class="float" style="right:24px;bottom:74px;width:52px;height:52px;border-radius:50%;background:var(--rose);display:flex;align-items:center;justify-content:center;color:#fff"><svg class="i" style="width:26px;height:26px"><use href="#i-check"/></svg></div>
+  </div>
+  <div class="skip">Passer</div>
+  <div class="screen">
+    <div style="height:414px"></div>
+    <div class="pad"><h2 class="onb-t">Fini les cahiers, tout est dans votre poche</h2><p class="onb-d">Notez les mesures de chaque client une seule fois. Retrouvez-les en un geste, même des mois plus tard.</p></div>
+    <div class="foot"><div class="dots"><i class="on"></i><i></i><i></i></div><button class="btn sm" style="gap:8px">Suivant<svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button></div>
+  </div>
+</div>
+<figcaption>2 · Onboarding 1/3<span>Mesures toujours à portée de main</span></figcaption>
+</figure>
+
+<!-- 3. ONBOARDING 2 -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="art" style="background:linear-gradient(170deg,#FDF3D6,#F9E3A0)">
+    <div style="position:absolute;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.5);right:-80px;top:50px"></div>
+    <div style="position:absolute;width:120px;height:120px;border-radius:50%;background:var(--rose-soft);left:-30px;bottom:40px"></div>
+    <div class="row float" style="left:34px;top:278px;width:288px;transform:rotate(3deg);opacity:.9"><div class="date"><b>17</b><span>OCT.</span></div><div class="m"><div class="n" style="font-size:14px;white-space:nowrap">Robe de mariée</div><div class="d" style="white-space:nowrap">Sandrine Kamga</div></div><span class="pill p-cut">Couture</span></div>
+    <div class="row float" style="left:20px;top:196px;width:290px;transform:rotate(-2deg)"><div class="date"><b>11</b><span>OCT.</span></div><div class="m"><div class="n" style="font-size:14px;white-space:nowrap">Ensemble pagne</div><div class="d" style="white-space:nowrap">Christelle Tchoua</div></div><span class="pill p-cut">Couture</span></div>
+    <div class="row float" style="left:30px;top:106px;width:290px;transform:rotate(1.5deg);padding:14px"><div class="date hot"><b>08</b><span>OCT.</span></div><div class="m"><div class="n" style="font-size:14px;white-space:nowrap">Robe de soirée</div><div class="d" style="white-space:nowrap">Nadège Mbarga</div></div><span class="pill p-fit">Essayage</span></div>
+    <div class="float" style="left:24px;top:62px;background:var(--rose);color:#fff;border-radius:99px;padding:7px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px"><svg class="i" style="width:14px;height:14px"><use href="#i-clock"/></svg>Dans 5 jours</div>
+    <div class="float" style="left:24px;bottom:22px;background:#fff;border-radius:99px;padding:8px 14px 8px 8px;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center"><svg class="i" style="width:14px;height:14px;stroke-width:3"><use href="#i-check"/></svg></span>Prête à retirer</div>
+  </div>
+  <div class="skip">Passer</div>
+  <div class="screen">
+    <div style="height:414px"></div>
+    <div class="pad"><h2 class="onb-t">Chaque commande, livrée à temps</h2><p class="onb-d">Suivez l'échéance et le statut de chaque vêtement, de la coupe à l'essayage jusqu'à la livraison.</p></div>
+    <div class="foot"><div class="dots"><i></i><i class="on"></i><i></i></div><button class="btn sm" style="gap:8px">Suivant<svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button></div>
+  </div>
+</div>
+<figcaption>3 · Onboarding 2/3<span>Échéances et statuts</span></figcaption>
+</figure>
+
+<!-- 4. ONBOARDING 3 -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="art" style="background:linear-gradient(170deg,#ECEDF8,#CDD0EC)">
+    <div style="position:absolute;width:230px;height:230px;border-radius:50%;background:rgba(255,255,255,.55);left:-60px;bottom:-20px"></div>
+    <div style="position:absolute;left:34px;top:70px;width:290px;transform:rotate(-7deg)" class="colw">
+      <div class="col" style="margin-top:26px">
+        <div class="img g-rose" style="height:170px"><svg class="g" style="fill:#26306B"><use href="#gown"/></svg></div>
+        <div class="img g-ind" style="height:130px"><svg class="g" style="fill:#F4C95D"><use href="#dress"/></svg></div>
+      </div>
+      <div class="col">
+        <div class="img g-tape" style="height:120px"><svg class="g" style="fill:#26306B"><use href="#kaba"/></svg></div>
+        <div class="img g-mist" style="height:180px"><svg class="g" style="fill:#26306B"><use href="#suit"/></svg></div>
+      </div>
+    </div>
+    <div class="float" style="right:26px;top:96px;width:46px;height:46px;border-radius:50%;background:#fff;color:var(--rose);display:flex;align-items:center;justify-content:center"><svg class="i" style="fill:var(--rose)"><use href="#i-heart"/></svg></div>
+    <div class="float" style="left:22px;bottom:34px;background:var(--indigo);color:#fff;border-radius:99px;padding:9px 16px;font-size:12.5px;font-weight:700">Catalogue de modèles</div>
+  </div>
+  <div class="skip">Passer</div>
+  <div class="screen">
+    <div style="height:414px"></div>
+    <div class="pad"><h2 class="onb-t">Inspirez-vous, puis passez à la création</h2><p class="onb-d">Parcourez un catalogue de modèles, enregistrez vos coups de cœur et liez-les à une commande.</p></div>
+    <div class="foot"><div class="dots"><i></i><i></i><i class="on"></i></div><button class="btn sm rose">Commencer</button></div>
+  </div>
+</div>
+<figcaption>4 · Onboarding 3/3<span>Catalogue et inspiration</span></figcaption>
+</figure>
+
+
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="tape" style="margin-top:6px"></div>
+    <div class="pad" style="margin-top:34px">
+      <div class="lt" style="width:64px;height:64px;box-shadow:0 14px 28px -10px rgba(38,48,107,.55)"><svg viewBox="0 0 100 100"><use href="#logo-mark"/></svg></div>
+      <h2 class="t" style="margin-top:24px;font-size:30px">Bon retour !</h2>
+      <p class="sub" style="margin-top:8px;font-size:14px;line-height:1.5">Connectez-vous pour retrouver vos clients et vos commandes.</p>
+    </div>
+    <div class="pad list" style="margin-top:30px;gap:14px">
+      <div><div class="field"><label>E-mail ou téléphone</label><div class="fr"><span class="v">rose.ndongo@mail.com</span><svg class="i" style="width:20px;height:20px;color:var(--muted)"><use href="#i-mail"/></svg></div></div></div>
+      <div><div class="field f-act"><label>Mot de passe</label><div class="fr"><span class="v">••••••••<span class="caret"></span></span><svg class="i" style="width:20px;height:20px;color:var(--muted)"><use href="#i-eye"/></svg></div></div></div>
+      <div style="text-align:right;margin-top:-2px"><span class="linkb" style="font-size:13.5px">Mot de passe oublié ?</span></div>
+    </div>
+    <div class="pad" style="margin-top:24px"><button class="btn">Se connecter</button></div>
+    <div class="pad" style="margin-top:auto;padding-bottom:34px;text-align:center;font-size:13.5px;color:var(--muted);white-space:nowrap">Pas encore de compte ? <span class="linkb">Créer un compte</span></div>
+
+  </div>
+</div>
+<figcaption>5 · Connexion<span>Identifiants, mot de passe oublié, accès à l'inscription</span></figcaption>
+</figure>
+
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div class="iconbtn"><svg class="i"><use href="#i-back"/></svg></div><div class="sub" style="font-weight:700">Récupération</div><div style="width:42px"></div></div>
+    <div class="pad" style="margin-top:20px">
+      <div style="width:72px;height:72px;border-radius:24px;background:var(--rose-soft);display:flex;align-items:center;justify-content:center;color:#B8325A"><svg class="i" style="width:32px;height:32px;color:#B8325A"><use href="#i-lock"/></svg></div>
+      <h2 class="t" style="margin-top:24px;font-size:28px">Mot de passe oublié ?</h2>
+      <p class="sub" style="margin-top:10px;font-size:14px;line-height:1.55">Entrez votre e-mail ou votre téléphone. Nous vous enverrons un code pour choisir un nouveau mot de passe.</p>
+    </div>
+    <div class="pad" style="margin-top:28px"><div><div class="field f-act"><label>E-mail ou téléphone</label><div class="fr"><span class="v">rose.ndongo@mail.com<span class="caret"></span></span><svg class="i" style="width:20px;height:20px;color:var(--muted)"><use href="#i-mail"/></svg></div></div></div></div>
+    <div class="pad" style="margin-top:22px"><button class="btn">Envoyer le code</button></div>
+    <div class="pad" style="margin-top:auto;padding-bottom:34px;text-align:center;font-size:13.5px;color:var(--muted);white-space:nowrap">Vous vous souvenez ? <span class="linkb">Retour à la connexion</span></div>
+
+  </div>
+</div>
+<figcaption>6 · Mot de passe oublié<span>Récupération par e-mail ou téléphone</span></figcaption>
+</figure>
+
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar" style="padding-bottom:6px"><div class="iconbtn"><svg class="i"><use href="#i-back"/></svg></div><div class="sub" style="font-weight:700">Inscription</div><div style="width:42px"></div></div>
+    <div class="pad" style="margin-top:6px">
+      <h2 class="t" style="font-size:28px">Créer un compte</h2>
+      <p class="sub" style="margin-top:6px;font-size:14px">Quelques infos pour ouvrir votre carnet.</p>
+    </div>
+    <div class="pad list" style="margin-top:18px;gap:10px">
+      <div><div class="field f-ok"><label>Nom complet</label><div class="fr"><span class="v">Rose Ndongo</span><svg class="i" style="width:20px;height:20px;color:var(--green)"><use href="#i-check"/></svg></div></div></div>
+      <div><div class="field f-ok"><label>Téléphone</label><div class="fr"><span class="v">+237 6 77 00 00 00</span><svg class="i" style="width:20px;height:20px;color:var(--green)"><use href="#i-check"/></svg></div></div></div>
+      <div><div class="field f-err"><label>E-mail</label><div class="fr"><span class="v">rose.ndongo@mail</span><svg class="i" style="width:20px;height:20px;color:var(--err)"><use href="#i-alert"/></svg></div></div><div class="msg e"><svg class="i" style="width:14px;height:14px;color:var(--err)"><use href="#i-alert"/></svg><span>Adresse e-mail invalide. Exemple : nom@mail.com</span></div></div>
+      <div><div><div class="field f-act"><label>Mot de passe</label><div class="fr"><span class="v">••••••<span class="caret"></span></span><svg class="i" style="width:20px;height:20px;color:var(--muted)"><use href="#i-eye"/></svg></div></div></div><div class="msg h"><span>8 caractères minimum, dont 1 chiffre</span></div></div>
+      <div><div class="field f-err"><label>Confirmer le mot de passe</label><div class="fr"><span class="v">•••••••</span><svg class="i" style="width:20px;height:20px;color:var(--err)"><use href="#i-eye"/></svg></div></div><div class="msg e"><svg class="i" style="width:14px;height:14px;color:var(--err)"><use href="#i-alert"/></svg><span>Les mots de passe ne correspondent pas</span></div></div>
+    </div>
+    <div class="pad" style="margin-top:14px;display:flex;align-items:center;gap:10px"><div class="cb"></div><span style="font-size:13px;line-height:1.4">J'accepte les <span class="linkb">conditions d'utilisation</span></span></div>
+    <div class="pad" style="margin-top:auto;padding-bottom:12px"><button class="btn dis">Créer mon compte</button></div>
+    <div class="pad" style="padding-bottom:26px;text-align:center;font-size:14px;color:var(--muted)">Déjà un compte ? <span class="linkb">Se connecter</span></div>
+
+  </div>
+</div>
+<figcaption>7 · Inscription<span>Validation des champs : valide, erreur, désactivé</span></figcaption>
+</figure>
+
+<!-- 2. CLIENTS -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar">
+      <div><div class="sub">Atelier de Rose</div><h2 class="t">Mes clients</h2></div>
+      <div class="iconbtn"><svg class="i"><use href="#i-filter"/></svg></div>
+    </div>
+    <div class="pad"><div class="search"><svg class="i"><use href="#i-search"/></svg>Rechercher un client ou une commande</div></div>
+    <div class="pad" style="margin-top:14px"><div class="chips"><span class="chip on">Tous · 48</span><span class="chip">En cours · 12</span><span class="chip">À livrer · 5</span><span class="chip">Livrés</span></div></div>
+    <div class="pad" style="margin-top:16px">
+      <div style="background:var(--indigo);color:#fff;border-radius:20px;padding:0;overflow:hidden">
+        <div style="padding:16px 16px 14px;display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:12px;color:#C9CCEA">Cette semaine</div><div style="font:800 22px var(--display);margin-top:2px">3 livraisons à venir</div></div>
+          <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center"><svg class="i"><use href="#i-cal"/></svg></div>
+        </div>
+        <div class="tape sm" style="border-radius:0"></div>
+      </div>
+    </div>
+    <div class="pad list" style="margin-top:16px">
+      <div class="row"><div class="av a1">NM</div><div class="m"><div class="n">Nadège Mbarga</div><div class="d">Robe de soirée · pour le 8 oct.</div></div><span class="pill p-fit">Essayage</span></div>
+      <div class="row"><div class="av a2">CT</div><div class="m"><div class="n">Christelle Tchoua</div><div class="d">Ensemble pagne · pour le 11 oct.</div></div><span class="pill p-cut">Couture</span></div>
+      <div class="row"><div class="av a3">PE</div><div class="m"><div class="n">Patrick Essomba</div><div class="d">Costume 3 pièces · pour le 14 oct.</div></div><span class="pill p-new">Reçue</span></div>
+      <div class="row"><div class="av a4">AF</div><div class="m"><div class="n">Armelle Fotso</div><div class="d">Kaba · prête à retirer</div></div><span class="pill p-ready">Prête</span></div>
+    </div>
+    <div class="fab"><svg class="i"><use href="#i-plus"/></svg></div>
+    <nav class="nav">
+      <a class="on"><svg class="i"><use href="#i-users"/></svg>Clients</a>
+      <a><svg class="i"><use href="#i-bag"/></svg>Commandes</a>
+      <a><svg class="i"><use href="#i-img"/></svg>Catalogue</a>
+      <a><svg class="i"><use href="#i-user"/></svg>Profil</a>
+    </nav>
+  </div>
+</div>
+<figcaption>8 · Liste des clients<span>Accueil, recherche rapide, statuts</span></figcaption>
+</figure>
+
+
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div><div class="sub">Atelier de Rose</div><h2 class="t">Mes clients</h2></div><div class="iconbtn" style="opacity:.5"><svg class="i"><use href="#i-filter"/></svg></div></div>
+    <div class="pad"><div class="search f-dis" style="background:#EEEFF6;border-color:#E2E3EF;color:#A6AAC8"><svg class="i"><use href="#i-search"/></svg>Rechercher un client</div></div>
+    <div class="pad" style="margin-top:70px;text-align:center">
+      <div class="empty-ic" style="background:var(--mist)">
+        <div style="width:96px;height:96px;border-radius:30px;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--indigo);box-shadow:0 14px 28px -12px rgba(38,48,107,.4)"><svg class="i" style="width:48px;height:48px;color:var(--indigo)"><use href="#i-book"/></svg></div>
+        <div style="position:absolute;right:14px;bottom:18px;width:42px;height:42px;border-radius:50%;background:var(--rose);color:#fff;display:flex;align-items:center;justify-content:center;border:4px solid #fff"><svg class="i" style="width:20px;height:20px;color:#fff"><use href="#i-plus"/></svg></div>
+      </div>
+      <h3 class="s" style="margin-top:26px;font-size:21px">Aucun client pour le moment</h3>
+      <p class="sub" style="margin:10px auto 0;font-size:14px;line-height:1.55;max-width:270px">Ajoutez votre premier client pour enregistrer ses mesures et suivre ses commandes.</p>
+    </div>
+    <div class="pad" style="margin-top:28px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn rose"><svg class="i" style="width:20px;height:20px"><use href="#i-plus"/></svg>Ajouter un client</button>
+    </div>
+
+    <nav class="nav">
+      <a class="on"><svg class="i"><use href="#i-users"/></svg>Clients</a>
+      <a><svg class="i"><use href="#i-bag"/></svg>Commandes</a>
+      <a><svg class="i"><use href="#i-img"/></svg>Catalogue</a>
+      <a><svg class="i"><use href="#i-user"/></svg>Profil</a>
+    </nav>
+  </div>
+</div>
+<figcaption>9 · Clients : état vide<span>Aucune donnée, invitation à agir</span></figcaption>
+</figure>
+
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div><div class="sub">Atelier de Rose</div><h2 class="t">Mes clients</h2></div><div class="iconbtn"><svg class="i"><use href="#i-filter"/></svg></div></div>
+    <div style="height:4px;background:var(--mist);margin:0 20px 14px;border-radius:99px;overflow:hidden"><div style="width:42%;height:100%;background:var(--tape);border-radius:99px"></div></div>
+    <div class="pad"><div class="sk" style="height:48px;border-radius:14px"></div></div>
+    <div class="pad" style="margin-top:14px;display:flex;gap:8px"><div class="sk" style="width:84px;height:34px;border-radius:99px"></div><div class="sk" style="width:96px;height:34px;border-radius:99px"></div><div class="sk" style="width:80px;height:34px;border-radius:99px"></div></div>
+    <div class="pad list" style="margin-top:20px"><div class="row" style="padding:14px"><div class="sk" style="width:46px;height:46px;border-radius:50%"></div><div class="m"><div class="sk" style="width:62%;height:13px"></div><div class="sk" style="width:84%;height:10px;margin-top:9px;opacity:.7"></div></div><div class="sk" style="width:58px;height:22px;border-radius:99px"></div></div><div class="row" style="padding:14px"><div class="sk" style="width:46px;height:46px;border-radius:50%"></div><div class="m"><div class="sk" style="width:62%;height:13px"></div><div class="sk" style="width:84%;height:10px;margin-top:9px;opacity:.7"></div></div><div class="sk" style="width:58px;height:22px;border-radius:99px"></div></div><div class="row" style="padding:14px"><div class="sk" style="width:46px;height:46px;border-radius:50%"></div><div class="m"><div class="sk" style="width:62%;height:13px"></div><div class="sk" style="width:84%;height:10px;margin-top:9px;opacity:.7"></div></div><div class="sk" style="width:58px;height:22px;border-radius:99px"></div></div><div class="row" style="padding:14px"><div class="sk" style="width:46px;height:46px;border-radius:50%"></div><div class="m"><div class="sk" style="width:62%;height:13px"></div><div class="sk" style="width:84%;height:10px;margin-top:9px;opacity:.7"></div></div><div class="sk" style="width:58px;height:22px;border-radius:99px"></div></div><div class="row" style="padding:14px"><div class="sk" style="width:46px;height:46px;border-radius:50%"></div><div class="m"><div class="sk" style="width:62%;height:13px"></div><div class="sk" style="width:84%;height:10px;margin-top:9px;opacity:.7"></div></div><div class="sk" style="width:58px;height:22px;border-radius:99px"></div></div></div>
+    <div style="text-align:center;font-size:13px;color:var(--muted);font-weight:600;margin-top:16px">Chargement de vos clients…</div>
+
+    <nav class="nav">
+      <a class="on"><svg class="i"><use href="#i-users"/></svg>Clients</a>
+      <a><svg class="i"><use href="#i-bag"/></svg>Commandes</a>
+      <a><svg class="i"><use href="#i-img"/></svg>Catalogue</a>
+      <a><svg class="i"><use href="#i-user"/></svg>Profil</a>
+    </nav>
+  </div>
+</div>
+<figcaption>10 · Clients : chargement<span>Squelette de liste, sans animation</span></figcaption>
+</figure>
+
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div><div class="sub">Atelier de Rose</div><h2 class="t">Mes clients</h2></div><div class="iconbtn"><svg class="i"><use href="#i-filter"/></svg></div></div>
+    <div class="pad"><div class="toast t-err"><svg class="i" style="width:20px;height:20px;color:#B02A3A"><use href="#i-alert"/></svg><span>Impossible de charger la liste des clients.</span></div></div>
+    <div class="pad" style="margin-top:56px;text-align:center">
+      <div class="empty-ic" style="background:var(--err-soft)">
+        <div style="width:96px;height:96px;border-radius:30px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 28px -12px rgba(217,58,74,.4)"><svg class="i" style="width:48px;height:48px;color:var(--err)"><use href="#i-wifioff"/></svg></div>
+      </div>
+      <h3 class="s" style="margin-top:26px;font-size:21px">Connexion impossible</h3>
+      <p class="sub" style="margin:10px auto 0;font-size:14px;line-height:1.55;max-width:276px">Vérifiez votre connexion Internet puis réessayez. Vos données ne sont pas perdues.</p>
+      <div class="sub" style="margin-top:12px;font-size:12px">Code : NET-01</div>
+    </div>
+    <div class="pad" style="margin-top:26px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn">Réessayer</button>
+      <button class="btn ghost" style="height:46px;font-size:15px">Revenir à l'accueil</button>
+    </div>
+
+    <nav class="nav">
+      <a class="on"><svg class="i"><use href="#i-users"/></svg>Clients</a>
+      <a><svg class="i"><use href="#i-bag"/></svg>Commandes</a>
+      <a><svg class="i"><use href="#i-img"/></svg>Catalogue</a>
+      <a><svg class="i"><use href="#i-user"/></svg>Profil</a>
+    </nav>
+  </div>
+</div>
+<figcaption>11 · Clients : erreur réseau<span>Message clair et bouton Réessayer</span></figcaption>
+</figure>
+
+<!-- 3. FICHE CLIENT -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div class="iconbtn"><svg class="i"><use href="#i-back"/></svg></div><div class="sub" style="font-weight:700">Fiche client</div><div class="iconbtn"><svg class="i"><use href="#i-edit"/></svg></div></div>
+    <div class="pad" style="text-align:center">
+      <div class="av a1" style="width:84px;height:84px;font-size:30px;margin:0 auto">NM</div>
+      <h2 class="t" style="margin-top:12px;font-size:24px">Nadège Mbarga</h2>
+      <div class="sub" style="margin-top:4px">+237 6 77 00 00 00 · Bonamoussadi, Douala</div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn ghost" style="height:44px;font-size:14px"><svg class="i" style="width:18px;height:18px"><use href="#i-phone"/></svg>Appeler</button>
+        <button class="btn ghost" style="height:44px;font-size:14px"><svg class="i" style="width:18px;height:18px"><use href="#i-chat"/></svg>WhatsApp</button>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:18px">
+      <div style="display:flex;background:var(--mist);border-radius:14px;padding:4px">
+        <div style="flex:1;text-align:center;padding:9px 0;border-radius:11px;background:#fff;font-weight:700;font-size:13px;color:var(--indigo)">Mesures</div>
+        <div style="flex:1;text-align:center;padding:9px 0;font-weight:600;font-size:13px;color:var(--muted)">Commandes</div>
+        <div style="flex:1;text-align:center;padding:9px 0;font-weight:600;font-size:13px;color:var(--muted)">Notes</div>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:16px">
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center"><h3 class="s">Dernières mesures</h3><span class="sub">12 sept. 2026</span></div>
+        <div style="padding:0 16px 6px">
+          <div class="mrow"><span>Tour de poitrine</span><span class="mval">92<small>cm</small></span></div>
+          <div class="mrow"><span>Tour de taille</span><span class="mval">74<small>cm</small></span></div>
+          <div class="mrow"><span>Tour de hanches</span><span class="mval">98<small>cm</small></span></div>
+          <div class="mrow"><span>Longueur robe</span><span class="mval">112<small>cm</small></span></div>
+        </div>
+        <div class="tape sm" style="border-radius:0"></div>
+      </div>
+      <div style="margin-top:12px"><button class="btn">Voir toutes les mesures</button></div>
+    </div>
+  </div>
+</div>
+<figcaption>12 · Fiche client<span>Contact et résumé des mesures</span></figcaption>
+</figure>
+
+<!-- 4. MESURES DETAILLEES -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div class="iconbtn"><svg class="i"><use href="#i-back"/></svg></div><div class="sub" style="font-weight:700">Mesures · Nadège</div><div class="iconbtn"><svg class="i"><use href="#i-check"/></svg></div></div>
+    <div class="tape"></div>
+    <div class="pad" style="margin-top:14px;display:flex;gap:6px;overflow:hidden">
+      <span class="chip on">Haut du corps</span><span class="chip">Bas</span><span class="chip">Longueurs</span>
+    </div>
+    <div class="pad" style="margin-top:14px;overflow:hidden">
+      <div class="card" style="padding:4px 16px">
+        <div class="mrow"><span>Tour de cou</span><span class="mval">34<small>cm</small></span></div>
+        <div class="mrow"><span>Carrure dos</span><span class="mval">38<small>cm</small></span></div>
+        <div class="mrow"><span>Longueur d'épaule</span><span class="mval">12<small>cm</small></span></div>
+        <div class="mrow"><span>Tour de poitrine</span><span class="mval">92<small>cm</small></span></div>
+        <div class="mrow"><span>Hauteur de poitrine</span><span class="mval">26<small>cm</small></span></div>
+        <div class="mrow"><span>Tour de taille</span><span class="mval" style="border-color:var(--rose);background:var(--rose-soft)">74<small>cm</small></span></div>
+        <div class="mrow"><span>Longueur de manche</span><span class="mval">58<small>cm</small></span></div>
+        <div class="mrow"><span>Tour de bras</span><span class="mval">28<small>cm</small></span></div>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:auto;padding-bottom:26px;display:flex;gap:10px">
+      <button class="btn ghost" style="width:130px">Annuler</button>
+      <button class="btn">Enregistrer</button>
+    </div>
+  </div>
+</div>
+<figcaption>13 · Mesures détaillées<span>Saisie par catégorie, en centimètres</span></figcaption>
+</figure>
+
+<!-- 5. NOUVELLE COMMANDE -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div class="iconbtn"><svg class="i"><use href="#i-x"/></svg></div><div class="sub" style="font-weight:700">Nouvelle commande</div><div style="width:42px"></div></div>
+    <div class="pad list" style="gap:10px">
+      <div class="field"><label>Client</label><div style="display:flex;justify-content:space-between;align-items:center">Nadège Mbarga <svg class="i" style="width:18px;height:18px;color:var(--muted)"><use href="#i-chev"/></svg></div></div>
+      <div class="field"><label>Modèle</label><div>Robe de soirée longue</div></div>
+      <div style="display:flex;gap:10px">
+        <div class="field" style="flex:1"><label>Tissu</label><div>Satin bleu nuit</div></div>
+        <div class="field" style="flex:1"><label>Prix</label><div>45 000 FCFA</div></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <div class="field" style="flex:1"><label>Avance</label><div>20 000 FCFA</div></div>
+        <div class="field" style="flex:1;border-color:var(--rose);background:var(--rose-soft)"><label style="color:#B8325A">Échéance</label><div style="display:flex;align-items:center;gap:6px"><svg class="i" style="width:16px;height:16px"><use href="#i-cal"/></svg>08 oct. 2026</div></div>
+      </div>
+      <div style="border:2px dashed #C9CCEA;border-radius:18px;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:#fff;color:var(--indigo)">
+        <div style="width:46px;height:46px;border-radius:14px;background:var(--mist);display:flex;align-items:center;justify-content:center"><svg class="i"><use href="#i-cam"/></svg></div>
+        <b style="font-size:14px">Ajouter la photo du modèle</b>
+        <span class="sub" style="font-size:12px">Prendre une photo ou choisir dans la galerie</span>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:auto;padding-bottom:26px"><button class="btn rose">Enregistrer la commande</button></div>
+  </div>
+</div>
+<figcaption>14 · Nouvelle commande<span>Formulaire, échéance et photo du modèle</span></figcaption>
+</figure>
+
+<!-- 6. DETAIL COMMANDE -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar" style="padding-bottom:10px"><div class="iconbtn"><svg class="i"><use href="#i-back"/></svg></div><div class="sub" style="font-weight:700">Commande #0142</div><div class="iconbtn"><svg class="i"><use href="#i-more"/></svg></div></div>
+    <div class="pad" style="display:flex;gap:14px">
+      <div style="width:116px;height:150px;border-radius:20px;background:linear-gradient(160deg,#3A4690,var(--indigo));display:flex;align-items:center;justify-content:center;flex:none;position:relative;overflow:hidden">
+        <svg viewBox="0 0 120 180" style="width:76px;fill:#F4C95D;opacity:.95"><use href="#dress"/></svg>
+        <span style="position:absolute;left:8px;bottom:8px;background:rgba(255,255,255,.18);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px">Photo du modèle</span>
+      </div>
+      <div style="flex:1;padding-top:2px">
+        <span class="pill p-fit">Essayage</span>
+        <h2 class="t" style="font-size:21px;margin-top:8px">Robe de soirée longue</h2>
+        <div class="sub" style="margin-top:6px">Nadège Mbarga</div>
+        <div style="margin-top:12px;display:inline-flex;align-items:center;gap:6px;background:var(--rose);color:#fff;border-radius:12px;padding:7px 11px;font-size:12.5px;font-weight:700"><svg class="i" style="width:15px;height:15px"><use href="#i-clock"/></svg>Dans 5 jours · 8 oct.</div>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:16px">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600"><span>Paiement</span><span>20 000 / 45 000 FCFA</span></div>
+        <div class="bar" style="margin-top:10px"><i style="width:44%"></i></div>
+        <div class="sub" style="margin-top:8px;font-size:12px">Reste à payer : 25 000 FCFA</div>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:12px">
+      <div class="card">
+        <h3 class="s" style="margin-bottom:12px">Avancement</h3>
+        <div class="stepper">
+          <div class="step done"><div class="dot"><svg class="i" style="width:12px;height:12px;stroke-width:3"><use href="#i-check"/></svg></div><div><b>Commande reçue</b><span>28 sept.</span></div></div>
+          <div class="step done"><div class="dot"><svg class="i" style="width:12px;height:12px;stroke-width:3"><use href="#i-check"/></svg></div><div><b>Coupe et couture</b><span>2 oct.</span></div></div>
+          <div class="step now"><div class="dot"></div><div><b>Essayage client</b><span>En cours</span></div></div>
+          <div class="step todo"><div class="dot"></div><div><b>Prête à retirer</b></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:auto;padding-bottom:22px"><button class="btn">Passer à « Prête à retirer »</button></div>
+  </div>
+</div>
+<figcaption>15 · Détail d'une commande<span>Photo, échéance, paiement et statut</span></figcaption>
+</figure>
+
+<!-- 7. COMMANDES -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div><div class="sub">12 en cours</div><h2 class="t">Commandes</h2></div><div class="iconbtn"><svg class="i"><use href="#i-cal"/></svg></div></div>
+    <div class="pad"><div class="chips"><span class="chip on">Toutes</span><span class="chip">Reçues</span><span class="chip">Couture</span><span class="chip">Essayage</span><span class="chip">Prêtes</span></div></div>
+    <div class="pad" style="margin-top:18px">
+      <div class="sec">Cette semaine</div>
+      <div class="list">
+        <div class="row"><div class="date hot"><b>08</b><span>OCT.</span></div><div class="m"><div class="n">Robe de soirée</div><div class="d">Nadège Mbarga</div></div><span class="pill p-fit">Essayage</span></div>
+        <div class="row"><div class="date"><b>11</b><span>OCT.</span></div><div class="m"><div class="n">Ensemble pagne</div><div class="d">Christelle Tchoua</div></div><span class="pill p-cut">Couture</span></div>
+      </div>
+      <div class="sec" style="margin-top:18px">Semaine prochaine</div>
+      <div class="list">
+        <div class="row"><div class="date"><b>14</b><span>OCT.</span></div><div class="m"><div class="n">Costume 3 pièces</div><div class="d">Patrick Essomba</div></div><span class="pill p-new">Reçue</span></div>
+        <div class="row"><div class="date"><b>17</b><span>OCT.</span></div><div class="m"><div class="n">Robe de mariée</div><div class="d">Sandrine Kamga</div></div><span class="pill p-cut">Couture</span></div>
+      </div>
+    </div>
+    <div class="fab"><svg class="i"><use href="#i-plus"/></svg></div>
+    <nav class="nav">
+      <a><svg class="i"><use href="#i-users"/></svg>Clients</a>
+      <a class="on"><svg class="i"><use href="#i-bag"/></svg>Commandes</a>
+      <a><svg class="i"><use href="#i-img"/></svg>Catalogue</a>
+      <a><svg class="i"><use href="#i-user"/></svg>Profil</a>
+    </nav>
+  </div>
+</div>
+<figcaption>16 · Commandes et échéances<span>Classées par date de livraison</span></figcaption>
+</figure>
+
+<!-- 8. RECHERCHE -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar" style="gap:10px">
+      <div class="search" style="flex:1;border-color:var(--indigo);color:var(--ink);font-weight:600"><svg class="i" style="color:var(--indigo)"><use href="#i-search"/></svg>Mba<svg class="i" style="margin-left:auto;width:18px;height:18px;color:var(--muted)"><use href="#i-x"/></svg></div>
+      <div class="iconbtn"><svg class="i"><use href="#i-filter"/></svg></div>
+    </div>
+    <div class="pad"><div class="chips"><span class="chip on">Tout</span><span class="chip">Clients</span><span class="chip">Commandes</span><span class="chip">Statut ▾</span></div></div>
+    <div class="pad" style="margin-top:18px">
+      <div class="sec">Clients · 2 résultats</div>
+      <div class="list">
+        <div class="row"><div class="av a1">NM</div><div class="m"><div class="n">Nadège <span class="hl">Mba</span>rga</div><div class="d">2 commandes · dernière le 28 sept.</div></div><svg class="i" style="color:var(--muted)"><use href="#i-chev"/></svg></div>
+        <div class="row"><div class="av a3">JM</div><div class="m"><div class="n">Joël <span class="hl">Mba</span>ppé</div><div class="d">1 commande · livrée</div></div><svg class="i" style="color:var(--muted)"><use href="#i-chev"/></svg></div>
+      </div>
+      <div class="sec" style="margin-top:20px">Commandes · 1 résultat</div>
+      <div class="list">
+        <div class="row"><div class="date hot"><b>08</b><span>OCT.</span></div><div class="m"><div class="n">Robe de soirée</div><div class="d">Nadège <span class="hl">Mba</span>rga</div></div><span class="pill p-fit">Essayage</span></div>
+      </div>
+      <div class="sec" style="margin-top:22px">Recherches récentes</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="chip" style="gap:6px"><svg class="i" style="width:14px;height:14px"><use href="#i-hist"/></svg>Kaba</span>
+        <span class="chip" style="gap:6px"><svg class="i" style="width:14px;height:14px"><use href="#i-hist"/></svg>Costume</span>
+        <span class="chip" style="gap:6px"><svg class="i" style="width:14px;height:14px"><use href="#i-hist"/></svg>Tchoua</span>
+      </div>
+    </div>
+  </div>
+</div>
+<figcaption>17 · Recherche<span>Clients, commandes et filtres</span></figcaption>
+</figure>
+
+
+
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar" style="gap:10px">
+      <div class="search f-act" style="flex:1;color:var(--ink);font-weight:600"><svg class="i" style="color:var(--indigo)"><use href="#i-search"/></svg>Zzz<svg class="i" style="margin-left:auto;width:18px;height:18px;color:var(--muted)"><use href="#i-x"/></svg></div>
+      <div class="iconbtn"><svg class="i"><use href="#i-filter"/></svg></div>
+    </div>
+    <div class="pad"><div class="chips"><span class="chip on">Tout</span><span class="chip">Clients</span><span class="chip">Commandes</span></div></div>
+    <div class="pad" style="margin-top:72px;text-align:center">
+      <div class="empty-ic" style="background:var(--tape-soft)">
+        <div style="width:96px;height:96px;border-radius:30px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 28px -12px rgba(138,106,16,.35)"><svg class="i" style="width:46px;height:46px;color:#8A6A10"><use href="#i-search"/></svg></div>
+      </div>
+      <h3 class="s" style="margin-top:26px;font-size:21px">Aucun résultat pour «&nbsp;Zzz&nbsp;»</h3>
+      <p class="sub" style="margin:10px auto 0;font-size:14px;line-height:1.55;max-width:270px">Vérifiez l'orthographe ou essayez un autre nom, un numéro de téléphone ou un type de vêtement.</p>
+    </div>
+    <div class="pad" style="margin-top:26px"><button class="btn ghost"><svg class="i" style="width:20px;height:20px"><use href="#i-plus"/></svg>Ajouter ce client</button></div>
+
+  </div>
+</div>
+<figcaption>18 · Recherche : aucun résultat<span>État vide de la recherche</span></figcaption>
+</figure>
+
+<!-- CATALOGUE -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div><div class="sub">248 modèles</div><h2 class="t">Catalogue</h2></div><div class="iconbtn"><svg class="i"><use href="#i-heart"/></svg></div></div>
+    <div class="pad"><div class="search"><svg class="i"><use href="#i-search"/></svg>Rechercher un modèle, un style</div></div>
+    <div class="pad" style="margin-top:12px"><div class="chips"><span class="chip on">Tout</span><span class="chip">Robes</span><span class="chip">Pagne</span><span class="chip">Costumes</span><span class="chip">Mariage</span></div></div>
+    <div class="pad" style="margin-top:14px;flex:1;overflow:hidden">
+      <div class="colw">
+        <div class="col">
+          <div><div class="img g-rose" style="height:210px"><svg class="g" style="fill:#26306B"><use href="#gown"/></svg><span class="save"><svg class="i"><use href="#i-heart"/></svg></span></div><div class="tcap">Robe sirène en satin<span>Mariage</span></div></div>
+          <div><div class="img g-tape" style="height:150px"><svg class="g" style="fill:#26306B"><use href="#kaba"/></svg><span class="save"><svg class="i" style="fill:var(--rose)"><use href="#i-heart"/></svg></span></div><div class="tcap">Ensemble pagne<span>Pagne</span></div></div>
+          <div><div class="img g-ind" style="height:220px"><svg class="g" style="fill:#F4C95D"><use href="#dress"/></svg><span class="save"><svg class="i"><use href="#i-heart"/></svg></span></div><div class="tcap">Robe cocktail<span>Soirée</span></div></div>
+        </div>
+        <div class="col">
+          <div><div class="img g-mist" style="height:180px"><svg class="g" style="fill:#26306B"><use href="#suit"/></svg><span class="save"><svg class="i"><use href="#i-heart"/></svg></span></div><div class="tcap">Costume 3 pièces<span>Homme</span></div></div>
+          <div><div class="img g-green" style="height:140px"><svg class="g" style="fill:#1E7A50"><use href="#skirt"/></svg><span class="save"><svg class="i"><use href="#i-heart"/></svg></span></div><div class="tcap">Jupe plissée en wax<span>Pagne</span></div></div>
+          <div><div class="img g-pink" style="height:190px"><svg class="g" style="fill:#fff"><use href="#kaba"/></svg><span class="save"><svg class="i"><use href="#i-heart"/></svg></span></div><div class="tcap">Kaba brodé<span>Traditionnel</span></div></div>
+        </div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a><svg class="i"><use href="#i-users"/></svg>Clients</a>
+      <a><svg class="i"><use href="#i-bag"/></svg>Commandes</a>
+      <a class="on"><svg class="i"><use href="#i-img"/></svg>Catalogue</a>
+      <a><svg class="i"><use href="#i-user"/></svg>Profil</a>
+    </nav>
+  </div>
+</div>
+<figcaption>19 · Catalogue de modèles<span>Grille façon Pinterest, catégories et favoris</span></figcaption>
+</figure>
+
+<!-- DETAIL MODELE -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar" style="padding-bottom:10px"><div class="iconbtn"><svg class="i"><use href="#i-back"/></svg></div><div class="iconbtn"><svg class="i"><use href="#i-share"/></svg></div></div>
+    <div class="pad">
+      <div class="img g-rose" style="height:216px;border-radius:28px"><svg class="g" style="fill:#26306B;width:40%"><use href="#gown"/></svg><span style="position:absolute;left:14px;bottom:14px;background:#fff;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:700;color:var(--indigo)">Mariage</span></div>
+    </div>
+    <div class="pad" style="margin-top:16px"><h2 class="t" style="font-size:24px">Robe sirène en satin</h2><div class="sub" style="margin-top:5px">Coupe ajustée, évasée en bas</div></div>
+    <div class="pad" style="margin-top:12px"><div class="sec" style="margin-bottom:8px">Mesures à prendre</div><div class="chips" style="flex-wrap:wrap"><span class="chip">Poitrine</span><span class="chip">Taille</span><span class="chip">Hanches</span><span class="chip">Longueur robe</span></div></div>
+    <div class="pad" style="margin-top:14px"><div class="sec" style="margin-bottom:8px">Modèles similaires</div>
+      <div style="display:flex;gap:10px">
+        <div class="img g-pink" style="flex:1;height:84px;border-radius:16px"><svg class="g" style="fill:#fff;width:40%"><use href="#dress"/></svg></div>
+        <div class="img g-mist" style="flex:1;height:84px;border-radius:16px"><svg class="g" style="fill:#26306B;width:40%"><use href="#gown"/></svg></div>
+        <div class="img g-tape" style="flex:1;height:84px;border-radius:16px"><svg class="g" style="fill:#26306B;width:40%"><use href="#dress"/></svg></div>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:auto;padding-bottom:24px;display:flex;gap:10px">
+      <div class="iconbtn" style="width:52px;height:52px;border-radius:16px;flex:none;color:var(--rose)"><svg class="i"><use href="#i-heart"/></svg></div>
+      <button class="btn rose">Créer une commande</button>
+    </div>
+  </div>
+</div>
+<figcaption>20 · Détail d'un modèle<span>Mesures à prendre et création de commande</span></figcaption>
+</figure>
+
+
+<!-- NOUVEAU CLIENT -->
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar"><div class="iconbtn"><svg class="i"><use href="#i-x"/></svg></div><div class="sub" style="font-weight:700">Nouveau client</div><div style="width:42px"></div></div>
+    <div class="pad" style="text-align:center">
+      <div style="position:relative;width:92px;height:92px;margin:0 auto">
+        <div style="width:92px;height:92px;border-radius:50%;background:#fff;border:2px dashed #C9CCEA;display:flex;align-items:center;justify-content:center;color:var(--indigo)"><svg class="i" style="width:30px;height:30px"><use href="#i-user"/></svg></div>
+        <div style="position:absolute;right:-2px;bottom:-2px;width:32px;height:32px;border-radius:50%;background:var(--rose);color:#fff;display:flex;align-items:center;justify-content:center;border:3px solid var(--chalk)"><svg class="i" style="width:15px;height:15px"><use href="#i-cam"/></svg></div>
+      </div>
+      <div class="sub" style="margin-top:8px;font-size:12px">Ajouter une photo (facultatif)</div>
+    </div>
+    <div class="pad list" style="gap:10px;margin-top:16px">
+      <div class="field" style="border-color:var(--indigo)"><label>Nom complet</label><div>Nadège Mbarga</div></div>
+      <div class="field"><label>Téléphone</label><div>+237 6 77 00 00 00</div></div>
+      <div class="field"><label>Quartier ou adresse</label><div>Bonamoussadi, Douala</div></div>
+      <div>
+        <div class="sec" style="margin:2px 0 8px">Catégorie</div>
+        <div style="display:flex;background:var(--mist);border-radius:14px;padding:4px">
+          <div style="flex:1;text-align:center;padding:9px 0;border-radius:11px;background:#fff;font-weight:700;font-size:13px;color:var(--indigo)">Femme</div>
+          <div style="flex:1;text-align:center;padding:9px 0;font-weight:600;font-size:13px;color:var(--muted)">Homme</div>
+          <div style="flex:1;text-align:center;padding:9px 0;font-weight:600;font-size:13px;color:var(--muted)">Enfant</div>
+        </div>
+      </div>
+      <div class="field" style="height:74px"><label>Note (facultatif)</label><div style="color:#9A9EBD;font-weight:500">Ex. : préfère les coupes ajustées</div></div>
+    </div>
+    <div class="pad" style="margin-top:auto;padding-bottom:22px;display:flex;flex-direction:column;gap:8px">
+      <button class="btn rose" style="font-size:15px">Enregistrer et saisir les mesures</button>
+      <button class="btn ghost" style="height:46px;font-size:15px">Enregistrer seulement</button>
+    </div>
+  </div>
+</div>
+<figcaption>21 · Nouveau client<span>Ouvert par le bouton + de la liste des clients</span></figcaption>
+</figure>
+
+
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar" style="padding-bottom:6px"><div class="iconbtn"><svg class="i"><use href="#i-back"/></svg></div><div class="sub" style="font-weight:700">Fiche client</div><div class="iconbtn"><svg class="i"><use href="#i-edit"/></svg></div></div>
+    <div class="pad" style="text-align:center">
+      <div class="av a1" style="width:68px;height:68px;font-size:24px;margin:0 auto">NM</div>
+      <h2 class="t" style="margin-top:8px;font-size:22px">Nadège Mbarga</h2>
+      <div class="sub" style="margin-top:3px">+237 6 77 00 00 00 · Bonamoussadi, Douala</div>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn ghost" style="height:40px;font-size:13.5px"><svg class="i" style="width:17px;height:17px"><use href="#i-phone"/></svg>Appeler</button>
+        <button class="btn ghost" style="height:40px;font-size:13.5px"><svg class="i" style="width:17px;height:17px"><use href="#i-chat"/></svg>WhatsApp</button>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:14px"><div style="display:flex;background:var(--mist);border-radius:14px;padding:4px"><div style="flex:1;text-align:center;padding:9px 0;font-weight:600;font-size:13px;color:var(--muted)">Mesures</div><div style="flex:1;text-align:center;padding:9px 0;border-radius:11px;background:#fff;font-weight:700;font-size:13px;color:var(--indigo)">Commandes</div><div style="flex:1;text-align:center;padding:9px 0;font-weight:600;font-size:13px;color:var(--muted)">Notes</div></div></div>
+
+    <div class="pad" style="margin-top:14px;display:flex;gap:10px">
+      <div style="flex:1;background:var(--indigo);color:#fff;border-radius:16px;padding:8px 14px"><div style="font:800 20px var(--display)">1</div><div style="font-size:12px;color:#C9CCEA">en cours</div></div>
+      <div style="flex:1;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 14px"><div style="font:800 20px var(--display)">3</div><div class="sub" style="font-size:12px">au total</div></div>
+    </div>
+    <div class="pad list" style="margin-top:12px;gap:8px">
+      <div class="row" style="padding:10px 12px"><div class="img g-rose" style="width:46px;height:56px;border-radius:12px;flex:none"><svg class="g" style="fill:#26306B;width:60%"><use href="#gown"/></svg></div><div class="m"><div class="n" style="font-size:14px">Robe de soirée</div><div class="d">À livrer le 8 oct.</div></div><span class="pill p-fit">Essayage</span></div>
+      <div class="row" style="padding:10px 12px"><div class="img g-pink" style="width:46px;height:56px;border-radius:12px;flex:none"><svg class="g" style="fill:#fff;width:60%"><use href="#kaba"/></svg></div><div class="m"><div class="n" style="font-size:14px">Kaba brodé</div><div class="d">Livré le 14 août · payé</div></div><span class="pill p-done">Livrée</span></div>
+      <div class="row" style="padding:10px 12px"><div class="img g-tape" style="width:46px;height:56px;border-radius:12px;flex:none"><svg class="g" style="fill:#26306B;width:60%"><use href="#skirt"/></svg></div><div class="m"><div class="n" style="font-size:14px">Jupe en pagne</div><div class="d">Livrée le 2 juin · payée</div></div><span class="pill p-done">Livrée</span></div>
+    </div>
+    <div class="pad" style="margin-top:auto;padding-bottom:20px"><button class="btn rose" style="height:50px"><svg class="i" style="width:20px;height:20px"><use href="#i-plus"/></svg>Nouvelle commande</button></div>
+
+  </div>
+</div>
+<figcaption>22 · Fiche client, onglet Commandes<span>Historique et commandes en cours</span></figcaption>
+</figure>
+
+<figure class="cell">
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status"><span>9:41</span><span class="r"><u></u><b></b></span></div>
+  <div class="screen">
+    <div class="topbar" style="padding-bottom:6px"><div class="iconbtn"><svg class="i"><use href="#i-back"/></svg></div><div class="sub" style="font-weight:700">Fiche client</div><div class="iconbtn"><svg class="i"><use href="#i-edit"/></svg></div></div>
+    <div class="pad" style="text-align:center">
+      <div class="av a1" style="width:68px;height:68px;font-size:24px;margin:0 auto">NM</div>
+      <h2 class="t" style="margin-top:8px;font-size:22px">Nadège Mbarga</h2>
+      <div class="sub" style="margin-top:3px">+237 6 77 00 00 00 · Bonamoussadi, Douala</div>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn ghost" style="height:40px;font-size:13.5px"><svg class="i" style="width:17px;height:17px"><use href="#i-phone"/></svg>Appeler</button>
+        <button class="btn ghost" style="height:40px;font-size:13.5px"><svg class="i" style="width:17px;height:17px"><use href="#i-chat"/></svg>WhatsApp</button>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:14px"><div style="display:flex;background:var(--mist);border-radius:14px;padding:4px"><div style="flex:1;text-align:center;padding:9px 0;font-weight:600;font-size:13px;color:var(--muted)">Mesures</div><div style="flex:1;text-align:center;padding:9px 0;font-weight:600;font-size:13px;color:var(--muted)">Commandes</div><div style="flex:1;text-align:center;padding:9px 0;border-radius:11px;background:#fff;font-weight:700;font-size:13px;color:var(--indigo)">Notes</div></div></div>
+
+    <div class="pad list" style="margin-top:14px;gap:8px">
+      <div class="card" style="padding:12px 14px"><div style="display:flex;align-items:center;gap:8px"><svg class="i" style="width:15px;height:15px;color:var(--muted)"><use href="#i-clock"/></svg><span class="sub" style="font-size:12px;font-weight:600">12 sept. 2026</span><span class="pill p-cut" style="margin-left:auto">Important</span></div><div style="font-size:14px;line-height:1.45;margin-top:6px">Préfère les coupes ajustées et les manches 3/4.</div></div>
+      <div class="card" style="padding:12px 14px"><div style="display:flex;align-items:center;gap:8px"><svg class="i" style="width:15px;height:15px;color:var(--muted)"><use href="#i-clock"/></svg><span class="sub" style="font-size:12px;font-weight:600">28 sept. 2026</span></div><div style="font-size:14px;line-height:1.45;margin-top:6px">Ajouter 2 cm de marge à la taille pour la robe de soirée.</div></div>
+      <div class="card" style="padding:12px 14px"><div style="display:flex;align-items:center;gap:8px"><svg class="i" style="width:15px;height:15px;color:var(--muted)"><use href="#i-clock"/></svg><span class="sub" style="font-size:12px;font-weight:600">14 août 2026</span></div><div style="font-size:14px;line-height:1.45;margin-top:6px">Aime le satin et les couleurs sombres. Éviter le rouge.</div></div>
+    </div>
+    <div class="pad" style="margin-top:auto;padding-bottom:20px;display:flex;gap:10px;align-items:center">
+      <div class="search" style="flex:1;height:50px;color:#9A9EBD">Ajouter une note…</div>
+      <div class="iconbtn" style="width:50px;height:50px;border-radius:15px;background:var(--indigo);border-color:var(--indigo);color:#fff"><svg class="i"><use href="#i-arrow"/></svg></div>
+    </div>
+
+  </div>
+</div>
+<figcaption>23 · Fiche client, onglet Notes<span>Préférences et rappels du couturier</span></figcaption>
+</figure>
+
+
+<figure class="cell wide">
+<div class="sheet">
+  <h4>Charte des états des composants</h4>
+  <div class="states">
+    <div></div><div class="h">Normal</div><div class="h">Actif</div><div class="h">Désactivé</div><div class="h">Erreur</div>
+    <div class="rl">Bouton</div>
+    <button class="btn" style="height:44px;font-size:13px;border-radius:13px">Enregistrer</button>
+    <button class="btn press" style="height:44px;font-size:13px;border-radius:13px">Enregistrer</button>
+    <button class="btn dis" style="height:44px;font-size:13px;border-radius:13px">Enregistrer</button>
+    <button class="btn err" style="height:44px;font-size:13px;border-radius:13px">Supprimer</button>
+    <div class="rl">Champ de saisie</div>
+    <div><div class="field" style="padding:7px 11px"><label style="font-size:10px">Téléphone</label><div class="v ph" style="font-size:13px;font-weight:600">+237 6…</div></div></div><div><div class="field f-act" style="padding:7px 11px"><label style="font-size:10px">Téléphone</label><div class="v" style="font-size:13px;font-weight:600">+237 6 77<span class="caret"></span></div></div></div><div><div class="field f-dis" style="padding:7px 11px"><label style="font-size:10px">Téléphone</label><div class="v ph" style="font-size:13px;font-weight:600">+237 6…</div></div></div><div><div class="field f-err" style="padding:7px 11px"><label style="font-size:10px">Téléphone</label><div class="v" style="font-size:13px;font-weight:600">+237 6 7</div></div><div class="msg e" style="font-size:11px;margin:4px 2px 0"><svg class="i" style="width:12px;height:12px;color:var(--err)"><use href="#i-alert"/></svg><span>Numéro invalide</span></div></div>
+    <div class="rl">Puce de filtre</div>
+    <div style="display:flex;justify-content:center"><span class="chip" style="">Essayage</span></div><div style="display:flex;justify-content:center"><span class="chip" style="background:var(--indigo);border-color:var(--indigo);color:#fff">Essayage</span></div><div style="display:flex;justify-content:center"><span class="chip" style="background:#EEEFF6;color:#A6AAC8;border-color:#E2E3EF">Essayage</span></div><div style="display:flex;justify-content:center"><span class="chip" style="border-color:var(--err);color:var(--err);background:#FFF8F9">Essayage</span></div>
+    <div class="rl">Case à cocher</div>
+    <div style="display:flex;justify-content:center"><div class="cb"></div></div><div style="display:flex;justify-content:center"><div class="cb on"><svg class="i" style="width:14px;height:14px;stroke-width:3"><use href="#i-check"/></svg></div></div><div style="display:flex;justify-content:center"><div class="cb dis"></div></div><div style="display:flex;justify-content:center"><div class="cb er"></div></div>
+  </div>
+  <div>
+    <h4 style="margin-bottom:12px">Messages et chargement</h4>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+      <div class="toast t-ok"><svg class="i" style="width:20px;height:20px;color:#1E7A50"><use href="#i-check"/></svg><span>Client enregistré avec succès.</span></div>
+      <div class="toast t-err"><svg class="i" style="width:20px;height:20px;color:#B02A3A"><use href="#i-alert"/></svg><span>Échec de l'enregistrement. Réessayez.</span></div>
+      <div class="toast t-info"><svg class="i" style="width:20px;height:20px;color:var(--indigo)"><use href="#i-info"/></svg><span>Synchronisation en cours…</span></div>
+      <button class="btn" style="height:46px;font-size:14px;border-radius:14px;gap:10px"><span class="spin"></span>Enregistrement…</button>
+    </div>
+  </div>
+  <div class="concept">
+    <div><b>Un seul langage</b>Indigo pour l'action, rose pour l'accent, vert pour le succès, rouge pour l'erreur.</div>
+    <div><b>Jamais la couleur seule</b>Chaque erreur s'accompagne d'une icône et d'un message écrit.</div>
+    <div><b>Zones tactiles</b>Boutons principaux et champs de saisie d'au moins 48 px de haut.</div>
+  </div>
+</div>
+<figcaption>24 · États des composants<span>Normal, actif, désactivé, erreur, messages et chargement</span></figcaption>
+</figure>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Sweet Tailor (Desktop)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/SweetTailor.Desktop/bin/Debug/net10.0-windows/SweetTailor.Desktop.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/SweetTailor.Desktop",
+      "stopAtEntry": false,
+      "console": "internalConsole"
+    },
+    {
+      "name": "Sweet Tailor (MAUI Desktop)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Publier Sweet Tailor MAUI Desktop",
+      "program": "${workspaceFolder}\\src\\SweetTailor.App\\bin\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\publish\\SweetTailor.App.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}\\src\\SweetTailor.App\\bin\\Debug\\net10.0-windows10.0.19041.0\\win-x64\\publish",
+      "stopAtEntry": false,
+      "console": "internalConsole"
+    }
+  ]
+}

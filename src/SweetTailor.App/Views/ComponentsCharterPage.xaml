@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.ComponentsCharterPage"
+             BackgroundColor="{StaticResource Chalk}"
+             Title="Charte des composants">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20,16,20,30" Spacing="24">
+
+                <!-- En-tête -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Vitrine des composants"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="24"
+                           TextColor="{StaticResource Ink}" />
+                    <Label Text="Matrice complète des composants natifs et de leurs états (Section 3 &amp; Écran 24)."
+                           FontFamily="DMSans"
+                           FontSize="14"
+                           TextColor="{StaticResource Muted}" />
+                </VerticalStackLayout>
+
+                <!-- 1. BANDE MÈTRE RUBAN -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="1. TapeMeasure (GraphicsView IDrawable)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+                    <controls:TapeMeasure HeightRequest="24" HorizontalOptions="FillAndExpand" />
+                </VerticalStackLayout>
+
+                <!-- 2. BOUTONS (AppButton) & ÉTATS -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="2. AppButton (Normal, Accent, Ghost, Danger, Désactivé, Busy)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="10">
+                        <!-- Normal Primary -->
+                        <controls:AppButton Grid.Row="0" Grid.Column="0"
+                                            Text="Primary"
+                                            Variant="Primary" />
+
+                        <!-- Accent Rose -->
+                        <controls:AppButton Grid.Row="0" Grid.Column="1"
+                                            Text="Accent"
+                                            Variant="Accent" />
+
+                        <!-- Ghost Blanc bordé -->
+                        <controls:AppButton Grid.Row="1" Grid.Column="0"
+                                            Text="Ghost"
+                                            Variant="Ghost" />
+
+                        <!-- Danger Rouge -->
+                        <controls:AppButton Grid.Row="1" Grid.Column="1"
+                                            Text="Danger"
+                                            Variant="Danger" />
+
+                        <!-- Désactivé -->
+                        <controls:AppButton Grid.Row="2" Grid.Column="0"
+                                            Text="Désactivé"
+                                            Variant="Primary"
+                                            IsEnabled="False" />
+
+                        <!-- IsBusy / Chargement -->
+                        <controls:AppButton Grid.Row="2" Grid.Column="1"
+                                            Text="Enregistrement..."
+                                            Variant="Primary"
+                                            IsBusy="True" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- 3. CHAMPS DE SAISIE (AppEntry) & ÉTATS -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="3. AppEntry (États : Normal, Saisie, Valide, Erreur, Désactivé)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+
+                    <!-- Normal -->
+                    <controls:AppEntry Label="État normal"
+                                       Placeholder="Tapez une valeur..."
+                                       LeadingIcon="user"
+                                       HelperText="Indication facultative" />
+
+                    <!-- Valide avec Check vert -->
+                    <controls:AppEntry Label="État valide (vert + check)"
+                                       Text="Nadège Mbarga"
+                                       LeadingIcon="user"
+                                       IsValid="True" />
+
+                    <!-- Erreur avec halo rouge et message -->
+                    <controls:AppEntry Label="État erreur (rouge + alerte)"
+                                       Text="invalide@email"
+                                       LeadingIcon="mail"
+                                       ErrorMessage="Veuillez saisir une adresse email valide." />
+
+                    <!-- Mot de passe avec bouton œil interactif -->
+                    <controls:AppEntry Label="Mot de passe sécurisé (masquage/affichage)"
+                                       Text="Secret123!"
+                                       IsPassword="True"
+                                       LeadingIcon="lock" />
+
+                    <!-- Désactivé -->
+                    <controls:AppEntry Label="État désactivé (grisé, non modifiable)"
+                                       Text="Valeur verrouillée"
+                                       IsEnabled="False" />
+                </VerticalStackLayout>
+
+                <!-- 4. PASTILLES DE STATUT (StatusPill) -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="4. StatusPill (5 statuts métier)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+
+                    <HorizontalStackLayout Spacing="8">
+                        <controls:StatusPill Status="Recue" />
+                        <controls:StatusPill Status="Couture" />
+                        <controls:StatusPill Status="Essayage" />
+                        <controls:StatusPill Status="Prete" />
+                        <controls:StatusPill Status="Livree" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- 5. PUCES DE FILTRE (FilterChip) -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="5. FilterChip (Normal vs Sélectionné)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+
+                    <HorizontalStackLayout Spacing="8">
+                        <controls:FilterChip Text="Tous · 48" IsSelected="True" />
+                        <controls:FilterChip Text="En cours · 12" IsSelected="False" />
+                        <controls:FilterChip Text="À livrer · 5" IsSelected="False" />
+                        <controls:FilterChip Text="Désactivé" IsEnabled="False" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- 6. AVATARS (AvatarInitials) -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="6. AvatarInitials (Palette de 4 teintes)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+
+                    <HorizontalStackLayout Spacing="12">
+                        <controls:AvatarInitials Name="NM" ColorVariant="a1" Size="44" />
+                        <controls:AvatarInitials Name="CT" ColorVariant="a2" Size="44" />
+                        <controls:AvatarInitials Name="PE" ColorVariant="a3" Size="44" />
+                        <controls:AvatarInitials Name="AF" ColorVariant="a4" Size="44" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- 7. ONGLETS SEGMENTÉS (SegmentedTabs) -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="7. SegmentedTabs (Pilules de sélection)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+
+                    <controls:SegmentedTabs Tabs="Mesures,Commandes,Notes"
+                                            SelectedTab="Mesures" />
+                </VerticalStackLayout>
+
+                <!-- 8. LIGNE DE MESURE (MeasureRow) -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="8. MeasureRow (Normale vs Mise en valeur)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+
+                    <Border StrokeShape="RoundRectangle 14" Stroke="{StaticResource Line}" StrokeThickness="1" BackgroundColor="{StaticResource White}" Padding="12,6">
+                        <VerticalStackLayout Spacing="4">
+                            <controls:MeasureRow Label="Tour de poitrine" Value="92" Unit="cm" IsHighlighted="False" />
+                            <BoxView HeightRequest="1" Color="{StaticResource Mist}"/>
+                            <controls:MeasureRow Label="Tour de taille" Value="74" Unit="cm" IsHighlighted="True" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- 9. STEPPER VERTICAL (OrderStepper) -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="9. OrderStepper (Timeline 4 étapes)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+
+                    <Border StrokeShape="RoundRectangle 18" Stroke="{StaticResource Line}" StrokeThickness="1" BackgroundColor="{StaticResource White}" Padding="16">
+                        <controls:OrderStepper />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- 10. NOTIFICATIONS TOAST (ToastBanner) -->
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="10. ToastBanner (Succès, Erreur, Info)"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="16"
+                           TextColor="{StaticResource Ink}" />
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <controls:AppButton Grid.Column="0" Text="Toast Succès" Variant="Ghost" Clicked="OnShowSuccessToastClicked" />
+                        <controls:AppButton Grid.Column="1" Text="Toast Erreur" Variant="Danger" Clicked="OnShowErrorToastClicked" />
+                        <controls:AppButton Grid.Column="2" Text="Toast Info" Variant="Primary" Clicked="OnShowInfoToastClicked" />
+                    </Grid>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Toast interactif pour test en direct -->
+        <controls:ToastBanner x:Name="LiveToast"
+                              Grid.Row="1"
+                              IsVisible="False"
+                              Message="Opération réussie !"
+                              Type="Success" />
+    </Grid>
+
+</ContentPage>
