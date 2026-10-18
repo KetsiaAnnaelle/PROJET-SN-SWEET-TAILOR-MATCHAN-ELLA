@@ -1,0 +1,207 @@
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using SweetTailor.Core.Models;
+using SweetTailor.Core.Services;
+
+namespace SweetTailor.Core.ViewModels;
+
+public partial class CatalogViewModel : BaseViewModel
+{
+    private readonly ICatalogService _catalogService;
+
+    [ObservableProperty]
+    private string _modelCountLabel = "248 modèles";
+
+    [ObservableProperty]
+    private string _searchQuery = string.Empty;
+
+    [ObservableProperty]
+    private string _selectedCategory = "Tout";
+
+    [ObservableProperty]
+    private bool _showFavoritesOnly;
+
+    public List<string> Categories { get; } = new()
+    {
+        "Tout",
+        "Robes",
+        "Pagne",
+        "Costumes",
+        "Mariage"
+    };
+
+    public ObservableCollection<CatalogModel> Column1Models { get; } = new();
+    public ObservableCollection<CatalogModel> Column2Models { get; } = new();
+
+    public CatalogViewModel(ICatalogService catalogService)
+    {
+        _catalogService = catalogService;
+    }
+
+    [RelayCommand]
+    public async Task LoadCatalogAsync()
+    {
+        var models = await _catalogService.GetCatalogAsync(SelectedCategory, SearchQuery);
+        if (ShowFavoritesOnly)
+        {
+            models = models.Where(model => model.IsFavorite).ToList();
+        }
+
+        Column1Models.Clear();
+        Column2Models.Clear();
+
+        for (int i = 0; i < models.Count; i++)
+        {
+            if (i % 2 == 0)
+                Column1Models.Add(models[i]);
+            else
+                Column2Models.Add(models[i]);
+        }
+    }
+
+    [RelayCommand]
+    public async Task SelectCategoryAsync(string category)
+    {
+        SelectedCategory = category;
+        await LoadCatalogAsync();
+    }
+
+    [RelayCommand]
+    public async Task ToggleFavoriteAsync(CatalogModel model)
+    {
+        model.IsFavorite = await _catalogService.ToggleFavoriteAsync(model.Id);
+    }
+
+    [RelayCommand]
+    public async Task ToggleFavoritesOnlyAsync()
+    {
+        ShowFavoritesOnly = !ShowFavoritesOnly;
+        await LoadCatalogAsync();
+    }
+}
+
+public partial class CatalogDetailViewModel : BaseViewModel
+{
+    private readonly ICatalogService _catalogService;
+
+    [ObservableProperty]
+    private CatalogModel? _model;
+
+    public ObservableCollection<CatalogModel> SimilarModels { get; } = new();
+
+    public CatalogDetailViewModel(ICatalogService catalogService)
+    {
+        _catalogService = catalogService;
+    }
+
+    public async Task LoadModelAsync(int modelId)
+    {
+        Model = await _catalogService.GetModelByIdAsync(modelId);
+        if (Model == null) return;
+
+        SimilarModels.Clear();
+        var similar = await _catalogService.GetSimilarModelsAsync(modelId);
+        foreach (var m in similar)
+        {
+            SimilarModels.Add(m);
+        }
+    }
+
+    [RelayCommand]
+    public async Task ToggleFavoriteAsync()
+    {
+        if (Model == null) return;
+        Model.IsFavorite = await _catalogService.ToggleFavoriteAsync(Model.Id);
+        OnPropertyChanged(nameof(Model));
+    }
+}
+
+public partial class SearchViewModel : BaseViewModel
+{
+    private readonly IClientService _clientService;
+    private readonly IOrderService _orderService;
+
+    [ObservableProperty]
+    private string _query = string.Empty;
+
+    [ObservableProperty]
+    private string _selectedFilter = "Tout";
+
+    public List<string> FilterChips { get; } = new()
+    {
+        "Tout",
+        "Clients",
+        "Commandes",
+        "Statut ▾"
+    };
+
+    public List<string> RecentSearches { get; } = new()
+    {
+        "Kaba",
+        "Costume",
+        "Tchoua"
+    };
+
+    public ObservableCollection<Client> ClientResults { get; } = new();
+    public ObservableCollection<Order> OrderResults { get; } = new();
+
+    public bool HasNoResults => !string.IsNullOrWhiteSpace(Query) && ClientResults.Count == 0 && OrderResults.Count == 0;
+
+    public SearchViewModel(IClientService clientService, IOrderService orderService)
+    {
+        _clientService = clientService;
+        _orderService = orderService;
+    }
+
+    [RelayCommand]
+    public async Task SearchAsync()
+    {
+        ClientResults.Clear();
+        OrderResults.Clear();
+
+        if (string.IsNullOrWhiteSpace(Query))
+        {
+            OnPropertyChanged(nameof(HasNoResults));
+            return;
+        }
+
+        var q = Query.Trim().ToLowerInvariant();
+
+        if (SelectedFilter is "Tout" or "Clients")
+        {
+            var allClients = await _clientService.GetAllClientsAsync();
+            foreach (var c in allClients.Where(c => c.FullName.ToLowerInvariant().Contains(q) || c.PhoneNumber.Contains(q)))
+            {
+                ClientResults.Add(c);
+            }
+        }
+
+        if (SelectedFilter is "Tout" or "Commandes")
+        {
+            var allOrders = await _orderService.GetAllOrdersAsync();
+            foreach (var o in allOrders.Where(o => o.ModelName.ToLowerInvariant().Contains(q) || o.ClientName.ToLowerInvariant().Contains(q)))
+            {
+                OrderResults.Add(o);
+            }
+        }
+
+        OnPropertyChanged(nameof(HasNoResults));
+    }
+
+    [RelayCommand]
+    public void ClearQuery()
+    {
+        Query = string.Empty;
+        ClientResults.Clear();
+        OrderResults.Clear();
+        OnPropertyChanged(nameof(HasNoResults));
+    }
+
+    [RelayCommand]
+    public async Task SelectRecentSearchAsync(string term)
+    {
+        Query = term;
+        await SearchAsync();
+    }
+}
