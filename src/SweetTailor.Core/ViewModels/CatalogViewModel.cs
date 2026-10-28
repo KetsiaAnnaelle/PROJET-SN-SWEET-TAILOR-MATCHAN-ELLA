@@ -20,6 +20,9 @@ public partial class CatalogViewModel : BaseViewModel
     private string _selectedCategory = "Tout";
 
     [ObservableProperty]
+    private string _selectedAudience = "Tout";
+
+    [ObservableProperty]
     private bool _showFavoritesOnly;
 
     public List<string> Categories { get; } = new()
@@ -28,7 +31,17 @@ public partial class CatalogViewModel : BaseViewModel
         "Robes",
         "Pagne",
         "Costumes",
-        "Mariage"
+        "Mariage",
+        "Soirée",
+        "Traditionnel"
+    };
+
+    public List<string> Audiences { get; } = new()
+    {
+        "Tout",
+        "Femme",
+        "Homme",
+        "Enfant"
     };
 
     public ObservableCollection<CatalogModel> Column1Models { get; } = new();
@@ -42,7 +55,7 @@ public partial class CatalogViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadCatalogAsync()
     {
-        var models = await _catalogService.GetCatalogAsync(SelectedCategory, SearchQuery);
+        var models = await _catalogService.GetCatalogAsync(SelectedCategory, SearchQuery, SelectedAudience);
         if (ShowFavoritesOnly)
         {
             models = models.Where(model => model.IsFavorite).ToList();
@@ -50,6 +63,7 @@ public partial class CatalogViewModel : BaseViewModel
 
         Column1Models.Clear();
         Column2Models.Clear();
+        ModelCountLabel = $"{models.Count} modèle{(models.Count == 1 ? string.Empty : "s")}";
 
         for (int i = 0; i < models.Count; i++)
         {
@@ -64,6 +78,13 @@ public partial class CatalogViewModel : BaseViewModel
     public async Task SelectCategoryAsync(string category)
     {
         SelectedCategory = category;
+        await LoadCatalogAsync();
+    }
+
+    [RelayCommand]
+    public async Task SelectAudienceAsync(string audience)
+    {
+        SelectedAudience = audience;
         await LoadCatalogAsync();
     }
 
@@ -117,6 +138,91 @@ public partial class CatalogDetailViewModel : BaseViewModel
     }
 }
 
+public partial class CatalogModelFormViewModel : BaseViewModel
+{
+    private readonly ICatalogService _catalogService;
+
+    [ObservableProperty]
+    private string _title = string.Empty;
+
+    [ObservableProperty]
+    private string _category = "Robes";
+
+    [ObservableProperty]
+    private string _audience = "Femme";
+
+    [ObservableProperty]
+    private string _description = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasImage))]
+    private string _imagePath = string.Empty;
+
+    public bool HasImage => !string.IsNullOrWhiteSpace(ImagePath);
+    public List<string> Categories { get; } = ["Robes", "Pagne", "Costumes", "Mariage", "Traditionnel"];
+    public List<string> Audiences { get; } = ["Femme", "Homme", "Enfant"];
+    public event EventHandler? ModelSaved;
+
+    public CatalogModelFormViewModel(ICatalogService catalogService)
+    {
+        _catalogService = catalogService;
+    }
+
+    [RelayCommand]
+    public async Task SaveAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Title) || Title.Trim().Length is < 2 or > 120)
+        {
+            ShowToast("Le nom du modèle doit contenir entre 2 et 120 caractères.", ToastType.Error);
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(Category) || Description.Trim().Length > 300)
+        {
+            ShowToast("Vérifiez la catégorie et la description du modèle (300 caractères maximum).", ToastType.Error);
+            return;
+        }
+        if (Audience is not ("Homme" or "Femme" or "Enfant"))
+        {
+            ShowToast("Choisissez homme, femme ou enfant comme catégorie.", ToastType.Error);
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(ImagePath))
+        {
+            ShowToast("Ajoutez une image au modèle avant de l’enregistrer.", ToastType.Error);
+            return;
+        }
+
+        IsBusy = true;
+        try
+        {
+            await _catalogService.AddModelAsync(new CatalogModel
+            {
+                Title = Title.Trim(),
+                Category = Category,
+                Audience = Audience,
+                Subtitle = Description.Trim(),
+                SvgAsset = "dress",
+                ImagePath = ImagePath,
+                CardHeight = 180
+            });
+            ShowToast("Modèle ajouté au catalogue.", ToastType.Success);
+            ModelSaved?.Invoke(this, EventArgs.Empty);
+        }
+        catch (HttpRequestException ex)
+        {
+            ShowToast($"Impossible d’enregistrer le modèle : {ex.Message}", ToastType.Error);
+        }
+        catch (ArgumentException ex)
+        {
+            ShowToast(ex.Message, ToastType.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+}
+
 public partial class SearchViewModel : BaseViewModel
 {
     private readonly IClientService _clientService;
@@ -166,12 +272,9 @@ public partial class SearchViewModel : BaseViewModel
             return;
         }
 
-        var q = Query.Trim().ToLowerInvariant();
-
         if (SelectedFilter is "Tout" or "Clients")
         {
-            var allClients = await _clientService.GetAllClientsAsync();
-            foreach (var c in allClients.Where(c => c.FullName.ToLowerInvariant().Contains(q) || c.PhoneNumber.Contains(q)))
+            foreach (var c in await _clientService.SearchClientsAsync(Query))
             {
                 ClientResults.Add(c);
             }
@@ -179,8 +282,7 @@ public partial class SearchViewModel : BaseViewModel
 
         if (SelectedFilter is "Tout" or "Commandes")
         {
-            var allOrders = await _orderService.GetAllOrdersAsync();
-            foreach (var o in allOrders.Where(o => o.ModelName.ToLowerInvariant().Contains(q) || o.ClientName.ToLowerInvariant().Contains(q)))
+            foreach (var o in await _orderService.SearchOrdersAsync(Query))
             {
                 OrderResults.Add(o);
             }

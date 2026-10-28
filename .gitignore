@@ -484,3 +484,4 @@ $RECYCLE.BIN/
 **/bin/
 **/obj/
 .vs/
+src/SweetTailor.Api/App_Data/

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace SweetTailor.Core.Models;
 
 public class CatalogModel
@@ -5,6 +7,7 @@ public class CatalogModel
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
+    public string Audience { get; set; } = "Femme";
     public string Subtitle { get; set; } = string.Empty;
     public string SvgAsset { get; set; } = "gown";
     public string SvgFillColor { get; set; } = "#26306B";
@@ -14,4 +17,6 @@ public class CatalogModel
     public List<string> RequiredMeasurements { get; set; } = new();
     public List<int> SimilarModelIds { get; set; } = new();
     public string ImagePath { get; set; } = string.Empty;
+    [JsonIgnore]
+    public string? RemoteImagePath { get; set; }
 }

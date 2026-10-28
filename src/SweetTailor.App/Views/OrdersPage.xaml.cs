@@ -16,7 +16,16 @@ public partial class OrdersPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        UpdateFilterSelection();
         await _viewModel.LoadOrdersAsync();
+    }
+
+    private void UpdateFilterSelection()
+    {
+        foreach (var chip in OrderFilterChips.Children.OfType<Controls.FilterChip>())
+        {
+            chip.IsSelected = chip.Text == _viewModel.SelectedFilter;
+        }
     }
 
     private async void OnOrderRowClicked(object? sender, EventArgs e)

@@ -26,7 +26,7 @@
                         </Border.GestureRecognizers>
                         <Label Text="✕" FontSize="16" TextColor="{StaticResource Ink}" HorizontalOptions="Center" VerticalOptions="Center" />
                     </Border>
-                    <Label Grid.Column="1" Text="Nouveau client" FontFamily="BricolageExtraBold" FontSize="17" TextColor="{StaticResource Ink}" HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding FormTitle}" FontFamily="BricolageExtraBold" FontSize="17" TextColor="{StaticResource Ink}" HorizontalOptions="Center" VerticalOptions="Center" />
                     <BoxView Grid.Column="2" WidthRequest="40" HeightRequest="40" Color="Transparent" />
                 </Grid>
 
@@ -81,13 +81,17 @@
                     <controls:AppEntry Label="Nom complet"
                                        Text="{Binding FullName, Mode=TwoWay}"
                                        Placeholder="Ex : Nadège Mbarga"
-                                       LeadingIcon="user" />
+                                       LeadingIcon="user"
+                                       IsValid="{Binding IsFullNameValid}"
+                                       ErrorMessage="{Binding FullNameError}" />
 
                     <controls:AppEntry Label="Téléphone"
                                        Text="{Binding PhoneNumber, Mode=TwoWay}"
                                        Placeholder="+237 6 77 00 00 00"
                                        LeadingIcon="phone"
-                                       Keyboard="Telephone" />
+                                       Keyboard="Telephone"
+                                       IsValid="{Binding IsPhoneNumberValid}"
+                                       ErrorMessage="{Binding PhoneNumberError}" />
 
                     <controls:AppEntry Label="Quartier ou adresse"
                                        Text="{Binding Address, Mode=TwoWay}"
@@ -97,7 +101,7 @@
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Catégorie" FontFamily="DMSansBold" FontSize="13" TextColor="{StaticResource Muted}" />
                         <controls:SegmentedTabs Tabs="Femme,Homme,Enfant"
-                                                SelectedTab="Femme"
+                                                SelectedTab="{Binding CategoryTab, Mode=TwoWay}"
                                                 TabChanged="OnCategoryChanged" />
                     </VerticalStackLayout>
 
@@ -111,11 +115,17 @@
                 <VerticalStackLayout Spacing="10" Margin="0, 10, 0, 0">
                     <controls:AppButton Text="Enregistrer et saisir les mesures"
                                         Variant="Accent"
-                                        Clicked="OnSaveAndAddMeasurementsClicked" />
+                                        Clicked="OnSaveAndAddMeasurementsClicked"
+                                        IsVisible="{Binding IsNewClient}" />
 
-                    <controls:AppButton Text="Enregistrer seulement"
+                    <controls:AppButton Text="{Binding SaveButtonText}"
                                         Variant="Ghost"
                                         Clicked="OnSaveOnlyClicked" />
+
+                    <controls:AppButton Text="Supprimer ce client"
+                                        Variant="Danger"
+                                        Clicked="OnDeleteClientClicked"
+                                        IsVisible="{Binding IsEditing}" />
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>

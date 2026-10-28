@@ -7,6 +7,10 @@ namespace SweetTailor.Core.ViewModels;
 public partial class ProfileViewModel : BaseViewModel
 {
     private readonly IDemoModeService _demoMode;
+    private readonly IAuthService? _authService;
+    private readonly IClientService? _clientService;
+    private readonly IOrderService? _orderService;
+    private readonly IWorkshopProfileService? _profileService;
 
     public event EventHandler? LogoutRequested;
 
@@ -15,6 +19,8 @@ public partial class ProfileViewModel : BaseViewModel
 
     [ObservableProperty]
     private string _shopName = "Atelier Rose d'Or";
+
+    public string WorkshopDescription => string.IsNullOrWhiteSpace(Address) ? ShopName : $"{ShopName} · {Address}";
 
     [ObservableProperty]
     private string _address = "Bonamoussadi, Douala";
@@ -46,12 +52,21 @@ public partial class ProfileViewModel : BaseViewModel
     [ObservableProperty]
     private int _selectedDemoIndex = 0;
 
-    public ProfileViewModel(IDemoModeService demoMode)
+    public ProfileViewModel(IDemoModeService demoMode, IAuthService? authService = null,
+        IClientService? clientService = null, IOrderService? orderService = null,
+        IWorkshopProfileService? profileService = null)
     {
         _demoMode = demoMode;
+        _authService = authService;
+        _clientService = clientService;
+        _orderService = orderService;
+        _profileService = profileService;
         Title = "Profil & Atelier";
         UpdateDemoStateSelection();
     }
+
+    partial void OnShopNameChanged(string value) => OnPropertyChanged(nameof(WorkshopDescription));
+    partial void OnAddressChanged(string value) => OnPropertyChanged(nameof(WorkshopDescription));
 
     public ProfileViewModel() : this(new DemoModeService())
     {
@@ -68,6 +83,41 @@ public partial class ProfileViewModel : BaseViewModel
             DemoListState.Slow => 3,
             _ => 0
         };
+    }
+
+    public async Task LoadStatsAsync()
+    {
+        try
+        {
+            if (_profileService != null)
+            {
+                var profile = await _profileService.GetProfileAsync();
+                StylistName = profile.FullName;
+                ShopName = profile.WorkshopName;
+                Address = profile.Address;
+                Email = profile.Email;
+                Phone = profile.Phone;
+
+                var stats = await _profileService.GetStatsAsync();
+                ClientsCount = stats.ClientCount;
+                OrdersThisMonth = stats.OrdersThisMonth;
+                OnTimeRate = $"{stats.OnTimeRate}%";
+                return;
+            }
+
+            if (_clientService != null)
+            {
+                ClientsCount = await _clientService.GetClientsCountAsync();
+            }
+            if (_orderService != null)
+            {
+                OrdersThisMonth = await _orderService.GetActiveOrdersCountAsync();
+            }
+        }
+        catch (Exception)
+        {
+            ShowToast("Impossible de charger les statistiques de l'atelier.", ToastType.Error);
+        }
     }
 
     [RelayCommand]
@@ -95,8 +145,24 @@ public partial class ProfileViewModel : BaseViewModel
     [RelayCommand]
     public async Task LogoutAsync()
     {
-        ShowToast("Déconnexion en cours...", ToastType.Info);
-        await Task.Delay(400);
-        LogoutRequested?.Invoke(this, EventArgs.Empty);
+        try
+        {
+            if (_authService != null)
+            {
+                await _authService.LogoutAsync();
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            ShowToast($"Déconnexion locale effectuée ; révocation serveur impossible : {ex.Message}", ToastType.Error);
+        }
+        catch (TaskCanceledException)
+        {
+            ShowToast("Déconnexion locale effectuée ; l’API n’a pas répondu à temps.", ToastType.Error);
+        }
+        finally
+        {
+            LogoutRequested?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

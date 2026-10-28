@@ -2,6 +2,38 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Démarrer l'API Sweet Tailor",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\start-api.ps1",
+        "${workspaceFolder}\\src\\SweetTailor.Api\\SweetTailor.Api.csproj"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "sweet-tailor-api",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "endsPattern": "^(Sweet Tailor API already available at http://localhost:5080|.*Now listening on: http://0\\.0\\.0\\.0:5080)$"
+        }
+      }
+    },
+    {
+      "label": "Préparer Sweet Tailor MAUI avec API",
+      "dependsOn": [
+        "Démarrer l'API Sweet Tailor",
+        "Publier Sweet Tailor MAUI Desktop"
+      ],
+      "dependsOrder": "sequence"
+    },
+    {
       "label": "Publier Sweet Tailor MAUI Desktop",
       "command": "dotnet",
       "type": "process",

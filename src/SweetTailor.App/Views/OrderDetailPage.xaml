@@ -163,9 +163,17 @@
 
                 <!-- Action CTA: Avancer le statut -->
                 <Grid Padding="20, 8, 20, 0">
-                    <controls:AppButton Text="{Binding NextActionTitle}"
-                                        Variant="Primary"
-                                        Command="{Binding AdvanceStatusCommand}" />
+                    <VerticalStackLayout Spacing="10">
+                        <controls:AppButton Text="Modifier la commande"
+                                            Variant="Ghost"
+                                            Clicked="OnEditTapped" />
+                        <controls:AppButton Text="Supprimer la commande"
+                                            Variant="Danger"
+                                            Clicked="OnDeleteTapped" />
+                        <controls:AppButton Text="{Binding NextActionTitle}"
+                                            Variant="Primary"
+                                            Command="{Binding AdvanceStatusCommand}" />
+                    </VerticalStackLayout>
                 </Grid>
             </VerticalStackLayout>
         </ScrollView>

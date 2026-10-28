@@ -1,4 +1,4 @@
-# 🧵 Sweet Tailor — Application Mobile Native en .NET MAUI (XAML)
+#  Sweet Tailor — Application Mobile Native en .NET MAUI (XAML)
 
 > **"Chaque mesure compte."**  
 > Application mobile native Android développée en **.NET MAUI + XAML + C# (Architecture MVVM)**, reproduisant les écrans, les composants natifs, le design system et les comportements d'état de la maquette officielle.
@@ -17,6 +17,7 @@ SweetTailor/
 │   └── svg/figma-svg/                       # 24 écrans SVG vectoriels extraits
 │
 ├── src/
+│   ├── SweetTailor.Api/                     # API REST ASP.NET Core et stockage SQLite local
 │   ├── SweetTailor.Core/                    # Logique métier, Modèles & ViewModels (Multi-target net8.0;net10.0)
 │   │   ├── Models/                          # Entités métier
 │   │   │   ├── Client.cs                    # Client, catégorie, mensurations, historique
@@ -26,17 +27,18 @@ SweetTailor/
 │   │   │   ├── OrderStatus.cs               # Reçue, Couture, Essayage, Prête, Livrée
 │   │   │   ├── CatalogModel.cs              # Modèles de catalogue, styles, favoris
 │   │   │   └── ClientNote.cs                # Notes d'atelier et alertes importantes
-│   │   ├── Services/                        # Services simulés (Mock) avec latence artificielle
+│   │   ├── Services/                        # Services métier et client HTTP de l'API
 │   │   │   ├── IDemoModeService.cs          # Contrôleur d'états de démo pour la soutenance orale
-│   │   │   ├── IClientService.cs            # Gestion clients & recherche
-│   │   │   ├── IOrderService.cs             # Gestion commandes & machine à états
+│   │   │   ├── IClientService.cs            # CRUD clients, recherche, notes et mensurations
+│   │   │   ├── IOrderService.cs             # CRUD commandes & machine à états
+│   │   │   ├── IAppDataStore.cs              # Stockage JSON utilisé par les tests de services
 │   │   │   ├── ICatalogService.cs           # Catalogue & favoris
 │   │   │   ├── IMeasurementService.cs       # Validation et sauvegarde mensurations
 │   │   │   ├── IAuthService.cs              # Connexion, inscription, mot de passe
 │   │   │   └── MockDataSeeder.cs            # Données de démo avec dates dynamiques relatives
 │   │   └── ViewModels/                      # ViewModels CommunityToolkit.Mvvm
 │   │       ├── BaseViewModel.cs             # Gestion IsBusy, Titres, Toast notifications
-│   │       ├── SplashViewModel.cs           # Écran de lancement & timer 2s
+│   │       ├── SplashViewModel.cs           # Écran de lancement
 │   │       ├── OnboardingViewModel.cs       # Carrousel 3 volets & navigation
 │   │       ├── LoginViewModel.cs            # Connexion & validation
 │   │       ├── ForgotPasswordViewModel.cs   # Récupération de code SMS/Email
@@ -48,10 +50,10 @@ SweetTailor/
 │   │       ├── OrdersViewModel.cs           # Commandes réparties par semaines
 │   │       ├── OrderDetailViewModel.cs      # Stepper d'avancement & jauge d'acompte
 │   │       ├── NewOrderViewModel.cs         # Formulaire nouvelle commande
-│   │       ├── CatalogViewModel.cs          # Grille staggered 2 colonnes (Pinterest)
+│   │       ├── CatalogViewModel.cs          # Grille 2 colonnes et formulaire d'ajout de modèle
 │   │       ├── CatalogDetailViewModel.cs    # Fiche modèle & mesures requises
 │   │       ├── SearchViewModel.cs           # Recherche live & historique
-│   │       └── ProfileViewModel.cs          # Profil atelier & Panneau Mode Démo
+│   │       └── ProfileViewModel.cs          # Profil atelier & commandes de démonstration
 │   │
 │   ├── SweetTailor.App/                     # Application Mobile Native .NET MAUI (XAML)
 │   │   ├── App.xaml / App.xaml.cs           # Déclaration des ressources globales et convertisseurs
@@ -76,7 +78,7 @@ SweetTailor/
 │   │   │   ├── ErrorStateView.xaml          # Vue d'erreur réseau NET-01 avec bouton Réessayer
 │   │   │   └── ToastBanner.xaml             # Notification toast (Succès, Erreur, Info)
 │   │   └── Views/                           # Pages XAML de l'application
-│   │       ├── SplashPage.xaml              # Écran 01 : Splash Screen (timer auto 2s)
+│   │       ├── SplashPage.xaml              # Écran 01 : Splash Screen (transition rapide)
 │   │       ├── OnboardingPage.xaml          # Écrans 02, 03, 04 : Onboarding 3 volets
 │   │       ├── LoginPage.xaml               # Écran 05 : Connexion
 │   │       ├── ForgotPasswordPage.xaml      # Écran 06 : Mot de passe oublié
@@ -89,14 +91,43 @@ SweetTailor/
 │   │       ├── NewOrderPage.xaml            # Écran 17 : Formulaire Nouvelle commande
 │   │       ├── OrderDetailPage.xaml         # Écran 19 : Détail d'une commande & Stepper
 │   │       ├── CatalogPage.xaml             # Écran 20 : Catalogue (grille 2 colonnes Pinterest)
+│   │       ├── CatalogModelFormPage.xaml    # Ajout d'un modèle au catalogue
 │   │       ├── CatalogDetailPage.xaml       # Écran 21 : Fiche modèle
 │   │       ├── SearchPage.xaml              # Écrans 16bis, 18 : Recherche globale & résultats
 │   │       ├── ProfilePage.xaml             # Écran 18 : Profil atelier & Panneau Mode Démo
 │   │       └── ComponentsCharterPage.xaml   # Écran 24 : Matrice des composants & états
 │   │
 │   └── SweetTailor.Tests/                   # Suite de tests unitaires xUnit
-│       └── ServicesTests.cs                 # 9 tests unitaires validant toute la logique
+│       └── ServicesTests.cs                 # Tests unitaires services, CRUD et ViewModels
 ```
+
+---
+
+## 💾 Backend, API et persistance
+
+Les données clients et commandes sont cloisonnées par compte : les opérations de création, lecture, modification et suppression (CRUD), ainsi que les notes, mensurations, recherches et statistiques, ne portent que sur les données du compte connecté. Les favoris du catalogue sont également propres à chaque compte. Les anciennes fiches sans propriétaire ne sont pas exposées aux nouveaux comptes.
+
+`SweetTailor.Api` est le backend ASP.NET Core REST. Il persiste les comptes, clients, mensurations, notes, commandes et favoris du catalogue dans `src/SweetTailor.Api/App_Data/sweet-tailor.db` (SQLite, clés étrangères, index de recherche, WAL). Les mots de passe sont hachés avec PBKDF2 ; les routes métier demandent un jeton Bearer obtenu après connexion.
+
+Les photos de commande et de modèles sont stockées côté serveur et accessibles uniquement au propriétaire connecté. L’API accepte les images JPEG, PNG et WebP jusqu’à 5 Mo ; les modèles ajoutés au catalogue comprennent un nom, une catégorie de style, un public cible (femme, homme ou enfant), une description et une photo. Une commande ne peut passer d’« Essayage » à « Prête » que si son solde est réglé.
+
+Les comptes, clients et commandes démarrent vides : créez un compte depuis **Inscription**, puis connectez-vous. Le catalogue de démonstration est initialisé automatiquement. L’onboarding s’affiche à la première ouverture et reste accessible depuis la connexion et le profil. Vérifiez le backend sur `http://127.0.0.1:5080/api/health`.
+
+Les ViewModels MAUI appellent l'API via des services HTTP typés. L'adresse par défaut est `http://127.0.0.1:5080/` pour Windows et `http://10.0.2.2:5080/` pour l'émulateur Android. La valeur `sweet-tailor-api-url` dans les préférences de l'application permet de la remplacer. Sur un téléphone physique, indiquez l'adresse IP locale du PC dans cette préférence et autorisez le port 5080 dans le pare-feu.
+
+### Lancement local
+
+Dans deux terminaux à la racine du dépôt :
+
+```powershell
+# Terminal 1 : backend REST
+dotnet run --project .\src\SweetTailor.Api\SweetTailor.Api.csproj
+
+# Terminal 2 : frontend MAUI Windows
+dotnet run --project .\src\SweetTailor.App\SweetTailor.App.csproj --framework net10.0-windows10.0.19041.0 --property:BuildingForDesktop=true
+```
+
+Pour Android, lancer l'API de la même manière puis démarrer l'application avec `dotnet run --project .\src\SweetTailor.App\SweetTailor.App.csproj --framework net10.0-android --property:BuildingForMobile=true`. Il faut un JDK et Android SDK configurés dans Visual Studio ou via `JavaSdkDirectory` et `AndroidSdkDirectory`. Le transport HTTP et le trafic clair Android sont uniquement configurés pour le développement local ; le déploiement doit utiliser HTTPS et une configuration de secrets adaptée. L'envoi de codes de réinitialisation de mot de passe reste désactivé tant qu'un fournisseur SMS/e-mail n'est pas configuré ; l'API renvoie alors une erreur explicite au lieu de prétendre qu'un message a été envoyé.
 
 ---
 
@@ -125,18 +156,9 @@ SweetTailor/
 
 ---
 
-## 🎓 Mode Démo pour la Soutenance Orale (Écran 18 & Écran 24)
+##  Charte des composants (Écran 24)
 
-Pour présenter facilement tous les cas d'usage et les comportements d'état devant le jury sans modifier le code :
-
-1. Ouvrez l'onglet **Profil** (4ᵉ onglet de la barre de navigation).
-2. Dans la carte jaune **Panneau de Démo (Soutenance)**, vous pouvez basculer l'état des services mock d'un simple clic :
-   - **Normal** : Les listes chargent les 6 clients et commandes avec leurs données complètes.
-   - **Vide (Empty)** : Déclenche immédiatement l'affichage de `EmptyStateView` (« Aucun client pour le moment »).
-   - **Erreur NET-01** : Déclenche une exception réseau simulée et affiche `ErrorStateView` avec code `NET-01` et bouton « Réessayer ».
-   - **Lent (5 s)** : Simule une connexion 3G/Edge pour montrer le chargement avec `SkeletonList`.
-   - **Réinitialiser les données** : Remet les données initiales et affiche un toast de confirmation.
-3. Cliquez sur **« 📐 Voir la charte des composants (Écran 24) »** pour ouvrir l'écran vitrine :
+Cliquez sur **« 📐 Voir la charte des composants »** dans le profil pour ouvrir l'écran vitrine :
    - Présente tous les composants natifs côte à côte dans leurs états respectifs :
      - `AppButton` (Normal, Accent, Ghost, Danger, Désactivé, IsBusy avec ActivityIndicator).
      - `AppEntry` (Normal, Focus/Saisie, Valide avec check vert, Erreur avec halo rouge, Mot de passe avec bouton œil, Désactivé).
@@ -144,6 +166,8 @@ Pour présenter facilement tous les cas d'usage et les comportements d'état dev
      - `FilterChip` (sélectionné vs normal).
      - `ToastBanner` interactif avec 3 boutons de déclenchement direct (Succès, Erreur, Info).
      - `OrderStepper`, `MeasureRow`, `TapeMeasure`.
+
+Le panneau de simulation du profil ne réinitialise pas la base SQLite : les clients et commandes de l'application active sont gérés par l'API.
 
 ---
 
@@ -182,7 +206,7 @@ dotnet build -t:Run -f net10.0-android -p:BuildingForMobile=true .\src\SweetTail
 ### 3. Exécution du vrai frontend MAUI Desktop dans VS Code
 1. Ouvrez le dossier `SweetTailor` dans VS Code.
 2. Dans **Exécuter et déboguer** (`Ctrl+Shift+D`), choisissez **Sweet Tailor (MAUI Desktop)**.
-3. Appuyez sur `F5`. VS Code publie la cible Windows MAUI en mode Debug puis ouvre sa fenêtre.
+3. Appuyez sur `F5`. VS Code démarre l'API si elle n'est pas déjà disponible, publie la cible Windows MAUI en mode Debug puis ouvre sa fenêtre.
 
 Le profil **Lancer Sweet Tailor (Simulateur Mobile)** démarre l'ancien simulateur WPF ; choisissez le profil **MAUI Desktop** pour voir les pages XAML de l'application. L'exécutable publié en Release se trouve dans `src\SweetTailor.App\bin\Release\net10.0-windows10.0.19041.0\win-x64\publish\SweetTailor.App.exe`.
 

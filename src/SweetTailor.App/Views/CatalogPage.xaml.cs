@@ -22,7 +22,17 @@ public partial class CatalogPage : ContentPage
         FavoriteFilterIcon.Stroke = _viewModel.ShowFavoritesOnly
             ? Color.FromArgb("#E8607F")
             : Color.FromArgb("#6B7094");
+        UpdateChipSelection(AudienceFilterChips, _viewModel.SelectedAudience);
+        UpdateChipSelection(StyleFilterChips, _viewModel.SelectedCategory);
         await _viewModel.LoadCatalogAsync();
+    }
+
+    private static void UpdateChipSelection(HorizontalStackLayout chips, string selectedValue)
+    {
+        foreach (var chip in chips.Children.OfType<Controls.FilterChip>())
+        {
+            chip.IsSelected = chip.Text == selectedValue;
+        }
     }
 
     private async void OnCategoryChipClicked(object? sender, EventArgs e)
@@ -32,6 +42,20 @@ public partial class CatalogPage : ContentPage
             chip.SelectExclusively();
             await _viewModel.SelectCategoryAsync(chip.Text);
         }
+    }
+
+    private async void OnAudienceChipClicked(object? sender, EventArgs e)
+    {
+        if (sender is Controls.FilterChip chip)
+        {
+            chip.SelectExclusively();
+            await _viewModel.SelectAudienceAsync(chip.Text);
+        }
+    }
+
+    private async void OnAddModelTapped(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(CatalogModelFormPage));
     }
 
     private async void OnModelCardClicked(object? sender, EventArgs e)

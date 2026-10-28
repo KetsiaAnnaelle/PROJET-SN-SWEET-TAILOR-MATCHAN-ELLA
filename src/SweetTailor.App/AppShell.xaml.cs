@@ -5,8 +5,6 @@ namespace SweetTailor.App;
 
 public partial class AppShell : Shell
 {
-    private bool _startupNavigated;
-
     public AppShell(IServiceProvider services)
     {
         InitializeComponent();
@@ -28,7 +26,9 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(OrderDetailPage), typeof(OrderDetailPage));
         Routing.RegisterRoute(nameof(NewOrderPage), typeof(NewOrderPage));
         Routing.RegisterRoute(nameof(CatalogDetailPage), typeof(CatalogDetailPage));
+        Routing.RegisterRoute(nameof(CatalogModelFormPage), typeof(CatalogModelFormPage));
         Routing.RegisterRoute(nameof(SearchPage), typeof(SearchPage));
         Routing.RegisterRoute(nameof(ComponentsCharterPage), typeof(ComponentsCharterPage));
     }
+
 }

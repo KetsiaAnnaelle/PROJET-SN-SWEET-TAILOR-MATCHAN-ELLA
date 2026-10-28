@@ -51,6 +51,7 @@ public partial class CatalogDetailPage : ContentPage
 
     private async void OnCreateOrderClicked(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(NewOrderPage));
+        var modelName = _viewModel.Model?.Title ?? string.Empty;
+        await Shell.Current.GoToAsync($"{nameof(NewOrderPage)}?ModelName={Uri.EscapeDataString(modelName)}");
     }
 }

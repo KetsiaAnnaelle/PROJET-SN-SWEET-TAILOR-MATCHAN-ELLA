@@ -1,7 +1,10 @@
+using Microsoft.Maui.Storage;
+
 namespace SweetTailor.App.Views;
 
 public partial class SplashPage : ContentPage
 {
+    private const string OnboardingDoneKey = "HasCompletedOnboardingV2";
     private bool _hasNavigated = false;
 
     public SplashPage()
@@ -18,10 +21,8 @@ public partial class SplashPage : ContentPage
         BrandMark.Scale = 0.88;
         BrandMark.Opacity = 0;
         await Task.WhenAll(
-            BrandMark.FadeToAsync(1, 450, Easing.CubicOut),
-            BrandMark.ScaleToAsync(1, 650, Easing.SpringOut));
-
-        await Task.Delay(1300);
+            BrandMark.FadeToAsync(1, 180, Easing.CubicOut),
+            BrandMark.ScaleToAsync(1, 250, Easing.SpringOut));
         await NavigateToOnboarding();
     }
 
@@ -29,7 +30,10 @@ public partial class SplashPage : ContentPage
     {
         if (_hasNavigated) return;
         _hasNavigated = true;
-        await Shell.Current.GoToAsync("//OnboardingPage");
+        var route = Preferences.Default.Get(OnboardingDoneKey, false)
+            ? "//LoginPage"
+            : "//OnboardingPage";
+        await Shell.Current.GoToAsync(route);
     }
 
     private async void OnSplashTapped(object? sender, EventArgs e)

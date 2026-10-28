@@ -14,8 +14,8 @@ namespace SweetTailor.Desktop;
 
 public partial class MainWindow : Window
 {
-    private readonly ClientService _clientService = new();
     private readonly OrderService _orderService = new();
+    private readonly ClientService _clientService;
     private readonly CatalogService _catalogService = new();
 
     private string _currentScreen = "Splash";
@@ -23,13 +23,48 @@ public partial class MainWindow : Window
     private DispatcherTimer? _splashTimer;
     private Client? _selectedClient;
     private Order? _selectedOrder;
+    private bool _isEditingClient = false;
+    private bool _isEditingOrder = false;
 
     public MainWindow()
     {
         InitializeComponent();
-        _selectedClient = _clientService.GetClientsAsync().Result.FirstOrDefault();
-        _selectedOrder = _orderService.GetAllOrdersAsync().Result.FirstOrDefault();
+        _clientService = new ClientService(new DemoModeService(), null, null, _orderService);
         NavigateTo("Splash"); // Default faithfully to Splash Screen (Page 1)
+    }
+
+    private void DeleteClientWithConfirm(Client client)
+    {
+        var res = MessageBox.Show(
+            $"Voulez-vous vraiment supprimer le client « {client.FullName} » ainsi que toutes ses commandes et notes associées ?",
+            "Supprimer le client",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (res == MessageBoxResult.Yes)
+        {
+            _clientService.DeleteClientAsync(client.Id);
+            _selectedClient = _clientService.GetClientsAsync().Result.FirstOrDefault();
+            MessageBox.Show($"Client « {client.FullName} » supprimé avec succès.", "Sweet Tailor");
+            NavigateTo("Clients");
+        }
+    }
+
+    private void DeleteOrderWithConfirm(Order order)
+    {
+        var res = MessageBox.Show(
+            $"Voulez-vous vraiment supprimer la commande « {order.OrderNumber} - {order.ModelName} » ?",
+            "Supprimer la commande",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (res == MessageBoxResult.Yes)
+        {
+            _orderService.DeleteOrderAsync(order.Id);
+            _selectedOrder = _orderService.GetAllOrdersAsync().Result.FirstOrDefault();
+            MessageBox.Show($"Commande « {order.OrderNumber} » supprimée avec succès.", "Sweet Tailor");
+            NavigateTo("Orders");
+        }
     }
 
     private void OnSelectScreen(object sender, RoutedEventArgs e)
@@ -162,6 +197,7 @@ public partial class MainWindow : Window
             "chevron" or "chev" => "M9,5 L16,12 L9,19",
             "back" => "M15,5 L8,12 L15,19",
             "edit" => "M4,20 L8,20 L19,9 L15,5 L4,16 Z",
+            "trash" or "delete" => "M3,6 L21,6 M8,6 V4 C8,3.45 8.45,3 9,3 H15 C15.55,3 16,3.45 16,4 V6 M19,6 V20 C19,20.55 18.55,21 18,21 H6 C5.45,21 5,20.55 5,20 V6 M10,11 V17 M14,11 V17",
             "clock" or "hist" => "M12,3.5 C16.69,3.5 20.5,7.31 20.5,12 C20.5,16.69 16.69,20.5 12,20.5 C7.31,20.5 3.5,16.69 3.5,12 C3.5,7.31 7.31,3.5 12,3.5 Z M12,7.5 L12,12 L15,14",
             "close" or "x" => "M6,6 L18,18 M18,6 L6,18",
             "alert" => "M12,3 C17,3 21,7 21,12 C21,17 17,21 12,21 C7,21 3,17 3,12 C3,7 7,3 12,3 Z M12,7.5 L12,13 M12,16.3 L12,16.5",
@@ -490,7 +526,7 @@ public partial class MainWindow : Window
         return vb;
     }
 
-    private Border BuildIconBtn(string iconKey, Action onClick)
+    private Border BuildIconBtn(string iconKey, Action onClick, Brush? iconBrush = null, double size = 16)
     {
         var b = new Border
         {
@@ -506,23 +542,28 @@ public partial class MainWindow : Window
 
         FrameworkElement child;
         if (iconKey is "←" or "back")
-            child = CreateIcon("back", (Brush)FindResource("BrushInk"), size: 16);
+            child = CreateIcon("back", iconBrush ?? (Brush)FindResource("BrushInk"), size: size);
         else if (iconKey is "✕" or "x" or "close")
-            child = CreateIcon("close", (Brush)FindResource("BrushInk"), size: 16);
+            child = CreateIcon("close", iconBrush ?? (Brush)FindResource("BrushInk"), size: size);
         else if (iconKey is "✓" or "check")
-            child = CreateIcon("check", (Brush)FindResource("BrushGreen"), size: 16, strokeThickness: 2.2);
+            child = CreateIcon("check", iconBrush ?? (Brush)FindResource("BrushGreen"), size: size, strokeThickness: 2.2);
         else if (iconKey is "✏️" or "edit")
-            child = CreateIcon("edit", (Brush)FindResource("BrushInk"), size: 16);
+            child = CreateIcon("edit", iconBrush ?? (Brush)FindResource("BrushInk"), size: size);
         else if (iconKey is "⋯" or "more")
-            child = CreateIcon("more", (Brush)FindResource("BrushInk"), size: 16);
+            child = CreateIcon("more", iconBrush ?? (Brush)FindResource("BrushInk"), size: size);
         else if (iconKey is "↗" or "share")
-            child = CreateIcon("share", (Brush)FindResource("BrushInk"), size: 16);
+            child = CreateIcon("share", iconBrush ?? (Brush)FindResource("BrushInk"), size: size);
         else if (iconKey is "❤️" or "heart")
-            child = CreateIcon("heart", (Brush)FindResource("BrushRose"), fill: (Brush)FindResource("BrushRose"), size: 18);
+        {
+            var heartBrush = iconBrush ?? (Brush)FindResource("BrushRose");
+            child = CreateIcon("heart", heartBrush, fill: heartBrush, size: size);
+        }
+        else if (iconKey is "trash" or "delete")
+            child = CreateIcon("trash", iconBrush ?? (Brush)FindResource("BrushInk"), size: size);
         else if (iconKey is "filter" or "⚙️")
-            child = CreateIcon("filter", (Brush)FindResource("BrushInk"), size: 18);
+            child = CreateIcon("filter", iconBrush ?? (Brush)FindResource("BrushInk"), size: size);
         else
-            child = new TextBlock { Text = iconKey, FontSize = 16, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            child = new TextBlock { Text = iconKey, FontSize = size, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
 
         child.VerticalAlignment = VerticalAlignment.Center;
         child.HorizontalAlignment = HorizontalAlignment.Center;
@@ -1115,7 +1156,7 @@ public partial class MainWindow : Window
         grid.MouseLeftButtonDown += (s, e) => NavigateTo("Onboarding1");
 
         _splashTimer?.Stop();
-        _splashTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1800) };
+        _splashTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
         _splashTimer.Tick += (_, _) =>
         {
             _splashTimer?.Stop();
@@ -1934,7 +1975,7 @@ public partial class MainWindow : Window
         fab.Child = CreateIcon("plus", Brushes.White, size: 24, strokeThickness: 2.6);
         fab.MouseEnter += (s, e) => fab.Background = (Brush)new BrushConverter().ConvertFrom("#D64E6F")!;
         fab.MouseLeave += (s, e) => fab.Background = (Brush)FindResource("BrushRose");
-        fab.MouseLeftButtonDown += (s, e) => NavigateTo("ClientForm");
+        fab.MouseLeftButtonDown += (s, e) => { _isEditingClient = false; NavigateTo("ClientForm"); };
         rootGrid.Children.Add(fab);
 
         return rootGrid;
@@ -2201,9 +2242,14 @@ public partial class MainWindow : Window
         // Topbar
         var top = new DockPanel();
         top.Children.Add(BuildIconBtn("back", () => NavigateTo("Clients")));
-        var editBtn = BuildIconBtn("edit", () => NavigateTo("ClientForm"));
-        DockPanel.SetDock(editBtn, Dock.Right);
-        top.Children.Add(editBtn);
+        var rightBtns = new StackPanel { Orientation = Orientation.Horizontal };
+        var editBtn = BuildIconBtn("edit", () => { _isEditingClient = true; NavigateTo("ClientForm"); });
+        var deleteBtn = BuildIconBtn("trash", () => DeleteClientWithConfirm(client), (Brush)FindResource("BrushRose"));
+        deleteBtn.Margin = new Thickness(6, 0, 0, 0);
+        rightBtns.Children.Add(editBtn);
+        rightBtns.Children.Add(deleteBtn);
+        DockPanel.SetDock(rightBtns, Dock.Right);
+        top.Children.Add(rightBtns);
         top.Children.Add(new TextBlock { Text = "Fiche client", FontSize = 14, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center });
         stack.Children.Add(top);
 
@@ -2409,6 +2455,7 @@ public partial class MainWindow : Window
             newOrderBtn.Click += (s, e) =>
             {
                 _selectedClient = client;
+                _isEditingOrder = false;
                 NavigateTo("NewOrder");
             };
             stack.Children.Add(newOrderBtn);
@@ -2532,10 +2579,45 @@ public partial class MainWindow : Window
             {
                 foreach (var note in client.Notes)
                 {
-                    stack.Children.Add(BuildNoteCard(note.DateFormatted, note.Content, note.IsImportant));
+                    stack.Children.Add(BuildNoteCard(note, client.Id));
                 }
             }
         }
+
+        // Quick Action Buttons at bottom
+        var bottomClientActions = new UniformGrid { Columns = 2, Margin = new Thickness(0, 16, 0, 0) };
+        var editClientBtn = new Button
+        {
+            Content = "Modifier le client",
+            Height = 44,
+            Background = Brushes.White,
+            BorderBrush = (Brush)FindResource("BrushIndigo"),
+            BorderThickness = new Thickness(1.5),
+            Foreground = (Brush)FindResource("BrushIndigo"),
+            FontWeight = FontWeights.Bold,
+            FontSize = 13.5,
+            Margin = new Thickness(0, 0, 6, 0),
+            Cursor = Cursors.Hand
+        };
+        editClientBtn.Click += (s, e) => { _isEditingClient = true; NavigateTo("ClientForm"); };
+        bottomClientActions.Children.Add(editClientBtn);
+
+        var delClientBtn = new Button
+        {
+            Content = "Supprimer le client",
+            Height = 44,
+            Background = Brushes.White,
+            BorderBrush = (Brush)FindResource("BrushRose"),
+            BorderThickness = new Thickness(1.5),
+            Foreground = (Brush)FindResource("BrushRose"),
+            FontWeight = FontWeights.Bold,
+            FontSize = 13.5,
+            Margin = new Thickness(6, 0, 0, 0),
+            Cursor = Cursors.Hand
+        };
+        delClientBtn.Click += (s, e) => DeleteClientWithConfirm(client);
+        bottomClientActions.Children.Add(delClientBtn);
+        stack.Children.Add(bottomClientActions);
 
         scroll.Content = stack;
         return scroll;
@@ -2652,7 +2734,7 @@ public partial class MainWindow : Window
         return b;
     }
 
-    private FrameworkElement BuildNoteCard(string date, string text, bool isImportant)
+    private FrameworkElement BuildNoteCard(ClientNote note, int clientId)
     {
         var b = new Border
         {
@@ -2666,20 +2748,36 @@ public partial class MainWindow : Window
         };
         var s = new StackPanel();
         var h = new DockPanel();
-        if (isImportant)
+
+        var rightStack = new StackPanel { Orientation = Orientation.Horizontal };
+        if (note.IsImportant)
         {
-            var imp = new Border { CornerRadius = new CornerRadius(6), Background = (Brush)FindResource("BrushTapeSoft"), Padding = new Thickness(6, 2, 6, 2) };
+            var imp = new Border { CornerRadius = new CornerRadius(6), Background = (Brush)FindResource("BrushTapeSoft"), Padding = new Thickness(6, 2, 6, 2), Margin = new Thickness(0, 0, 8, 0) };
             imp.Child = new TextBlock { Text = "Important", FontSize = 10.5, FontWeight = FontWeights.Bold, Foreground = (Brush)FindResource("BrushTapeDark") };
-            DockPanel.SetDock(imp, Dock.Right);
-            h.Children.Add(imp);
+            rightStack.Children.Add(imp);
         }
+
+        var delBtn = BuildIconBtn("trash", () =>
+        {
+            var res = MessageBox.Show("Voulez-vous supprimer cette note ?", "Supprimer la note", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (res == MessageBoxResult.Yes)
+            {
+                _clientService.DeleteNoteAsync(clientId, note.Id);
+                NavigateTo("ClientNotes");
+            }
+        }, (Brush)FindResource("BrushMuted"), size: 14);
+        rightStack.Children.Add(delBtn);
+
+        DockPanel.SetDock(rightStack, Dock.Right);
+        h.Children.Add(rightStack);
+
         var dt = new StackPanel { Orientation = Orientation.Horizontal };
         dt.Children.Add(CreateIcon("clock", (Brush)FindResource("BrushMuted"), size: 14));
-        dt.Children.Add(new TextBlock { Text = " " + date, FontSize = 12, Foreground = (Brush)FindResource("BrushMuted"), VerticalAlignment = VerticalAlignment.Center });
+        dt.Children.Add(new TextBlock { Text = " " + note.DateFormatted, FontSize = 12, Foreground = (Brush)FindResource("BrushMuted"), VerticalAlignment = VerticalAlignment.Center });
         h.Children.Add(dt);
         s.Children.Add(h);
 
-        s.Children.Add(new TextBlock { Text = text, FontSize = 13.5, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 8, 0, 0), Foreground = (Brush)FindResource("BrushInk") });
+        s.Children.Add(new TextBlock { Text = note.Content, FontSize = 13.5, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 8, 0, 0), Foreground = (Brush)FindResource("BrushInk") });
         b.Child = s;
         return b;
     }
@@ -3237,9 +3335,14 @@ public partial class MainWindow : Window
 
         var top = new DockPanel { Margin = new Thickness(0, 0, 0, 14) };
         top.Children.Add(BuildIconBtn("back", () => NavigateTo("Orders")));
-        var moreBtn = BuildIconBtn("more", () => { });
-        DockPanel.SetDock(moreBtn, Dock.Right);
-        top.Children.Add(moreBtn);
+        var rightOrderBtns = new StackPanel { Orientation = Orientation.Horizontal };
+        var editOrderIcon = BuildIconBtn("edit", () => { _selectedOrder = order; _isEditingOrder = true; NavigateTo("NewOrder"); });
+        var deleteOrderIcon = BuildIconBtn("trash", () => DeleteOrderWithConfirm(order), (Brush)FindResource("BrushRose"));
+        deleteOrderIcon.Margin = new Thickness(6, 0, 0, 0);
+        rightOrderBtns.Children.Add(editOrderIcon);
+        rightOrderBtns.Children.Add(deleteOrderIcon);
+        DockPanel.SetDock(rightOrderBtns, Dock.Right);
+        top.Children.Add(rightOrderBtns);
         top.Children.Add(new TextBlock { Text = $"Commande {order.OrderNumber}", FontSize = 14.5, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center });
         stack.Children.Add(top);
 
@@ -3458,6 +3561,41 @@ public partial class MainWindow : Window
             stack.Children.Add(doneCard);
         }
 
+        // Action Buttons at bottom
+        var orderActionGrid = new UniformGrid { Columns = 2, Margin = new Thickness(0, 16, 0, 0) };
+        var modifyOrderBtn = new Button
+        {
+            Content = "Modifier la commande",
+            Height = 44,
+            Background = Brushes.White,
+            BorderBrush = (Brush)FindResource("BrushIndigo"),
+            BorderThickness = new Thickness(1.5),
+            Foreground = (Brush)FindResource("BrushIndigo"),
+            FontWeight = FontWeights.Bold,
+            FontSize = 13.5,
+            Margin = new Thickness(0, 0, 6, 0),
+            Cursor = Cursors.Hand
+        };
+        modifyOrderBtn.Click += (s, e) => { _selectedOrder = order; _isEditingOrder = true; NavigateTo("NewOrder"); };
+        orderActionGrid.Children.Add(modifyOrderBtn);
+
+        var removeOrderBtn = new Button
+        {
+            Content = "Supprimer la commande",
+            Height = 44,
+            Background = Brushes.White,
+            BorderBrush = (Brush)FindResource("BrushRose"),
+            BorderThickness = new Thickness(1.5),
+            Foreground = (Brush)FindResource("BrushRose"),
+            FontWeight = FontWeights.Bold,
+            FontSize = 13.5,
+            Margin = new Thickness(6, 0, 0, 0),
+            Cursor = Cursors.Hand
+        };
+        removeOrderBtn.Click += (s, e) => DeleteOrderWithConfirm(order);
+        orderActionGrid.Children.Add(removeOrderBtn);
+        stack.Children.Add(orderActionGrid);
+
         scroll.Content = stack;
         return scroll;
     }
@@ -3646,7 +3784,7 @@ public partial class MainWindow : Window
         fab.Child = CreateIcon("plus", Brushes.White, size: 24, strokeThickness: 2.6);
         fab.MouseEnter += (s, e) => fab.Background = (Brush)new BrushConverter().ConvertFrom("#D64E6F")!;
         fab.MouseLeave += (s, e) => fab.Background = (Brush)FindResource("BrushRose");
-        fab.MouseLeftButtonDown += (s, e) => NavigateTo("NewOrder");
+        fab.MouseLeftButtonDown += (s, e) => { _isEditingOrder = false; NavigateTo("NewOrder"); };
         root.Children.Add(fab);
 
         return root;

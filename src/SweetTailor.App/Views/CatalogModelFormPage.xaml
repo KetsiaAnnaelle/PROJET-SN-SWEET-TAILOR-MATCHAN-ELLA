@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:SweetTailor.App.Controls"
+             xmlns:vm="clr-namespace:SweetTailor.Core.ViewModels;assembly=SweetTailor.Core"
+             x:Class="SweetTailor.App.Views.CatalogModelFormPage"
+             x:DataType="vm:CatalogModelFormViewModel"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource Chalk}">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20, 12, 20, 24" Spacing="18">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                    <Border StrokeShape="RoundRectangle 20"
+                            Stroke="{StaticResource Line}"
+                            BackgroundColor="{StaticResource White}"
+                            WidthRequest="40"
+                            HeightRequest="40">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackTapped" />
+                        </Border.GestureRecognizers>
+                        <Path Data="{StaticResource IconPathBack}"
+                              Stroke="{StaticResource Ink}"
+                              StrokeThickness="1.8"
+                              WidthRequest="20"
+                              HeightRequest="20"
+                              HorizontalOptions="Center"
+                              VerticalOptions="Center" />
+                    </Border>
+                    <Label Grid.Column="1"
+                           Text="Nouveau modèle"
+                           FontFamily="BricolageExtraBold"
+                           FontSize="22"
+                           TextColor="{StaticResource Ink}"
+                           VerticalOptions="Center" />
+                </Grid>
+
+                <Label Text="Ajoutez une création avec sa photo et son public cible."
+                       FontFamily="DMSans"
+                       FontSize="14"
+                       TextColor="{StaticResource Muted}" />
+
+                <Border StrokeShape="RoundRectangle 20"
+                        Stroke="{StaticResource Line}"
+                        BackgroundColor="{StaticResource White}"
+                        HeightRequest="220"
+                        Padding="0">
+                    <Grid>
+                        <Image Source="{Binding ImagePath}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding HasImage}" />
+                        <VerticalStackLayout IsVisible="{Binding HasImage, Converter={StaticResource BoolInvert}, ConverterParameter=True}"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center"
+                                             Spacing="8">
+                            <Label Text="＋"
+                                   FontSize="36"
+                                   TextColor="{StaticResource Indigo}"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Ajouter une image du modèle"
+                                   FontFamily="DMSansBold"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Ink}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPickImageTapped" />
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Nom du modèle" FontFamily="DMSansBold" FontSize="13" TextColor="{StaticResource Ink}" />
+                    <Entry Text="{Binding Title, Mode=TwoWay}"
+                           Placeholder="Ex. Robe sirène en satin"
+                           MaxLength="120"
+                           BackgroundColor="{StaticResource White}"
+                           TextColor="{StaticResource Ink}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Catégorie" FontFamily="DMSansBold" FontSize="13" TextColor="{StaticResource Ink}" />
+                    <Picker ItemsSource="{Binding Categories}"
+                            SelectedItem="{Binding Category, Mode=TwoWay}"
+                            BackgroundColor="{StaticResource White}"
+                            TextColor="{StaticResource Ink}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Public cible" FontFamily="DMSansBold" FontSize="13" TextColor="{StaticResource Ink}" />
+                    <Picker ItemsSource="{Binding Audiences}"
+                            SelectedItem="{Binding Audience, Mode=TwoWay}"
+                            BackgroundColor="{StaticResource White}"
+                            TextColor="{StaticResource Ink}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Description (facultative)" FontFamily="DMSansBold" FontSize="13" TextColor="{StaticResource Ink}" />
+                    <Editor Text="{Binding Description, Mode=TwoWay}"
+                            Placeholder="Tissu, coupe ou détails du modèle"
+                            MaxLength="300"
+                            AutoSize="TextChanges"
+                            BackgroundColor="{StaticResource White}"
+                            TextColor="{StaticResource Ink}" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:AppButton Grid.Row="1"
+                            Text="Enregistrer le modèle"
+                            Variant="Primary"
+                            IsBusy="{Binding IsBusy}"
+                            Command="{Binding SaveCommand}"
+                            Margin="20, 8, 20, 20" />
+
+        <controls:ToastBanner Grid.Row="1"
+                              IsVisible="{Binding IsToastVisible}"
+                              Message="{Binding ToastMessage}"
+                              Type="{Binding ToastType}" />
+    </Grid>
+</ContentPage>

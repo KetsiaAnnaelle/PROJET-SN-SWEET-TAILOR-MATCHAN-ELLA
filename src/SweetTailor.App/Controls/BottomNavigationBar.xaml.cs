@@ -28,21 +28,23 @@ public partial class BottomNavigationBar : ContentView
 
     private void UpdateSelectedTab()
     {
-        var activeColor = (Color)Application.Current!.Resources["Indigo"];
+        var activeColor = (Color)Application.Current!.Resources["Rose"];
+        var activeBackground = (Color)Application.Current.Resources["RoseSoft"];
         var inactiveColor = (Color)Application.Current.Resources["Muted"];
 
-        SetTabStyle(ClientsIcon, ClientsLabel, CurrentTab == "Clients", activeColor, inactiveColor);
-        SetTabStyle(OrdersIcon, OrdersLabel, CurrentTab == "Orders", activeColor, inactiveColor);
-        SetTabStyle(CatalogIcon, CatalogLabel, CurrentTab == "Catalog", activeColor, inactiveColor);
-        SetTabStyle(ProfileIcon, ProfileLabel, CurrentTab == "Profile", activeColor, inactiveColor);
+        SetTabStyle(ClientsItem, ClientsIcon, ClientsLabel, CurrentTab == "Clients", activeColor, activeBackground, inactiveColor);
+        SetTabStyle(OrdersItem, OrdersIcon, OrdersLabel, CurrentTab == "Orders", activeColor, activeBackground, inactiveColor);
+        SetTabStyle(CatalogItem, CatalogIcon, CatalogLabel, CurrentTab == "Catalog", activeColor, activeBackground, inactiveColor);
+        SetTabStyle(ProfileItem, ProfileIcon, ProfileLabel, CurrentTab == "Profile", activeColor, activeBackground, inactiveColor);
     }
 
-    private static void SetTabStyle(Microsoft.Maui.Controls.Shapes.Path icon, Label label, bool isSelected, Color activeColor, Color inactiveColor)
+    private static void SetTabStyle(Border item, Microsoft.Maui.Controls.Shapes.Path icon, Label label, bool isSelected, Color activeColor, Color activeBackground, Color inactiveColor)
     {
         var color = isSelected ? activeColor : inactiveColor;
         icon.Stroke = color;
         label.TextColor = color;
         label.FontFamily = isSelected ? "DMSansBold" : "DMSans";
+        item.BackgroundColor = isSelected ? activeBackground : Colors.Transparent;
     }
 
     private async void OnClientsTapped(object? sender, TappedEventArgs e) =>

@@ -64,7 +64,7 @@ public partial class ModelCard : ContentView
     {
         if (model == null) return;
 
-        CategoryLabel.Text = model.Category.ToUpperInvariant();
+        CategoryLabel.Text = $"{model.Audience} · {model.Category}".ToUpperInvariant();
         TitleLabel.Text = model.Title;
         HeartIcon.Fill = model.IsFavorite ? Color.FromArgb("#E8607F") : Colors.Transparent;
         HeartIcon.Stroke = model.IsFavorite ? Color.FromArgb("#E8607F") : Color.FromArgb("#6B7094");

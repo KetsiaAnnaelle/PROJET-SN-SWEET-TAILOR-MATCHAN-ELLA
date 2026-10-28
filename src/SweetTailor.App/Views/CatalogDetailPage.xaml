@@ -74,7 +74,8 @@
                                 HorizontalOptions="Start"
                                 VerticalOptions="End"
                                 Margin="14">
-                            <Label Text="{Binding Model.Category}" FontFamily="DMSansBold" FontSize="12" TextColor="{StaticResource Indigo}" />
+                            <Label Text="{Binding Model.Audience}" FontFamily="DMSansBold" FontSize="12" TextColor="{StaticResource Indigo}" />
+                            <Label Text="{Binding Model.Category}" FontFamily="DMSans" FontSize="11" TextColor="{StaticResource Muted}" />
                         </Border>
                     </Grid>
                 </Border>

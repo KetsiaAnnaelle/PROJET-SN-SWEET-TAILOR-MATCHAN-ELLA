@@ -8,37 +8,45 @@
             StrokeThickness="1"
             Padding="0,8,0,6">
         <Grid ColumnDefinitions="*,*,*,*">
-            <VerticalStackLayout x:Name="ClientsItem" Grid.Column="0" Spacing="3" HorizontalOptions="Center">
-                <VerticalStackLayout.GestureRecognizers>
+            <Border x:Name="ClientsItem" Grid.Column="0" StrokeThickness="0" Padding="14,6" StrokeShape="RoundRectangle 16" HorizontalOptions="Center">
+                <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnClientsTapped" />
-                </VerticalStackLayout.GestureRecognizers>
-                <Path x:Name="ClientsIcon" Data="{StaticResource IconPathUsers}" Stroke="{StaticResource Indigo}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
-                <Label x:Name="ClientsLabel" Text="Clients" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Indigo}" HorizontalTextAlignment="Center" />
-            </VerticalStackLayout>
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="3">
+                    <Path x:Name="ClientsIcon" Data="{StaticResource IconPathUsers}" Stroke="{StaticResource Indigo}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                    <Label x:Name="ClientsLabel" Text="Clients" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Indigo}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
 
-            <VerticalStackLayout x:Name="OrdersItem" Grid.Column="1" Spacing="3" HorizontalOptions="Center">
-                <VerticalStackLayout.GestureRecognizers>
+            <Border x:Name="OrdersItem" Grid.Column="1" StrokeThickness="0" Padding="14,6" StrokeShape="RoundRectangle 16" HorizontalOptions="Center" BackgroundColor="Transparent">
+                <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnOrdersTapped" />
-                </VerticalStackLayout.GestureRecognizers>
-                <Path x:Name="OrdersIcon" Data="{StaticResource IconPathBag}" Stroke="{StaticResource Muted}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
-                <Label x:Name="OrdersLabel" Text="Commandes" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
-            </VerticalStackLayout>
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="3">
+                    <Path x:Name="OrdersIcon" Data="{StaticResource IconPathBag}" Stroke="{StaticResource Muted}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                    <Label x:Name="OrdersLabel" Text="Commandes" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
 
-            <VerticalStackLayout x:Name="CatalogItem" Grid.Column="2" Spacing="3" HorizontalOptions="Center">
-                <VerticalStackLayout.GestureRecognizers>
+            <Border x:Name="CatalogItem" Grid.Column="2" StrokeThickness="0" Padding="14,6" StrokeShape="RoundRectangle 16" HorizontalOptions="Center" BackgroundColor="Transparent">
+                <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnCatalogTapped" />
-                </VerticalStackLayout.GestureRecognizers>
-                <Path x:Name="CatalogIcon" Data="{StaticResource IconPathBook}" Stroke="{StaticResource Muted}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
-                <Label x:Name="CatalogLabel" Text="Catalogue" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
-            </VerticalStackLayout>
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="3">
+                    <Path x:Name="CatalogIcon" Data="{StaticResource IconPathBook}" Stroke="{StaticResource Muted}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                    <Label x:Name="CatalogLabel" Text="Catalogue" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
 
-            <VerticalStackLayout x:Name="ProfileItem" Grid.Column="3" Spacing="3" HorizontalOptions="Center">
-                <VerticalStackLayout.GestureRecognizers>
+            <Border x:Name="ProfileItem" Grid.Column="3" StrokeThickness="0" Padding="14,6" StrokeShape="RoundRectangle 16" HorizontalOptions="Center" BackgroundColor="Transparent">
+                <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnProfileTapped" />
-                </VerticalStackLayout.GestureRecognizers>
-                <Path x:Name="ProfileIcon" Data="{StaticResource IconPathUser}" Stroke="{StaticResource Muted}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
-                <Label x:Name="ProfileLabel" Text="Profil" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
-            </VerticalStackLayout>
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="3">
+                    <Path x:Name="ProfileIcon" Data="{StaticResource IconPathUser}" Stroke="{StaticResource Muted}" StrokeThickness="1.8" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                    <Label x:Name="ProfileLabel" Text="Profil" FontFamily="DMSans" FontSize="10.5" TextColor="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
         </Grid>
     </Border>
 </ContentView>

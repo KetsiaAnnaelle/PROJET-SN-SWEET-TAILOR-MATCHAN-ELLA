@@ -13,6 +13,10 @@ public partial class EmptyStateView : ContentView
     public static readonly BindableProperty ButtonTextProperty =
         BindableProperty.Create(nameof(ButtonText), typeof(string), typeof(EmptyStateView), string.Empty, propertyChanged: (b, o, n) => ((EmptyStateView)b).ActionButton.Text = (string)n);
 
+    public static readonly BindableProperty ShowActionProperty =
+        BindableProperty.Create(nameof(ShowAction), typeof(bool), typeof(EmptyStateView), true,
+            propertyChanged: (b, o, n) => ((EmptyStateView)b).ActionButton.IsVisible = (bool)n);
+
     public static readonly BindableProperty CommandProperty =
         BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(EmptyStateView), null, propertyChanged: (b, o, n) => ((EmptyStateView)b).ActionButton.Command = (ICommand)n);
 
@@ -32,6 +36,12 @@ public partial class EmptyStateView : ContentView
     {
         get => (string)GetValue(ButtonTextProperty);
         set => SetValue(ButtonTextProperty, value);
+    }
+
+    public bool ShowAction
+    {
+        get => (bool)GetValue(ShowActionProperty);
+        set => SetValue(ShowActionProperty, value);
     }
 
     public ICommand? Command

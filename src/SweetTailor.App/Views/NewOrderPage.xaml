@@ -27,7 +27,7 @@
                         </Border.GestureRecognizers>
                         <Label Text="✕" FontSize="16" TextColor="{StaticResource Ink}" HorizontalOptions="Center" VerticalOptions="Center" />
                     </Border>
-                    <Label Grid.Column="1" Text="Nouvelle commande" FontFamily="BricolageExtraBold" FontSize="17" TextColor="{StaticResource Ink}" HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding FormTitle}" FontFamily="BricolageExtraBold" FontSize="17" TextColor="{StaticResource Ink}" HorizontalOptions="Center" VerticalOptions="Center" />
                     <BoxView Grid.Column="2" WidthRequest="40" HeightRequest="40" Color="Transparent" />
                 </Grid>
 
@@ -49,7 +49,9 @@
                     <!-- Model Name -->
                     <controls:AppEntry Label="Modèle"
                                        Text="{Binding ModelName, Mode=TwoWay}"
-                                       Placeholder="Ex. : Robe de soirée longue" />
+                                       Placeholder="Ex. : Robe de soirée longue"
+                                       IsValid="{Binding IsModelNameValid}"
+                                       ErrorMessage="{Binding ModelNameError}" />
 
                     <!-- Tissu & Prix -->
                     <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
@@ -60,7 +62,9 @@
                         <controls:AppEntry Grid.Column="1"
                                            Label="Prix (FCFA)"
                                            Text="{Binding TotalPrice, Mode=TwoWay}"
-                                           Keyboard="Numeric" />
+                                           Keyboard="Numeric"
+                                           IsValid="{Binding IsTotalPriceValid}"
+                                           ErrorMessage="{Binding TotalPriceError}" />
                     </Grid>
 
                     <!-- Avance & Échéance -->
@@ -68,7 +72,9 @@
                         <controls:AppEntry Grid.Column="0"
                                            Label="Acompte (FCFA)"
                                            Text="{Binding AdvancePayment, Mode=TwoWay}"
-                                           Keyboard="Numeric" />
+                                           Keyboard="Numeric"
+                                           IsValid="{Binding IsAdvancePaymentValid}"
+                                           ErrorMessage="{Binding AdvancePaymentError}" />
 
                         <!-- Due Date Card in RoseSoft with DatePicker -->
                         <Border Grid.Column="1"
@@ -83,6 +89,11 @@
                                             FontFamily="DMSansBold"
                                             FontSize="14"
                                             TextColor="{StaticResource Ink}" />
+                                <Label Text="{Binding DueDateError}"
+                                       FontFamily="DMSans"
+                                       FontSize="11"
+                                       TextColor="{StaticResource Error}"
+                                       IsVisible="{Binding IsDueDateValid, Converter={StaticResource BoolInvert}}" />
                             </VerticalStackLayout>
                         </Border>
                     </Grid>
@@ -140,9 +151,10 @@
                 </VerticalStackLayout>
 
                 <!-- Bottom CTA Button in Rose -->
-                <controls:AppButton Text="Enregistrer la commande"
+                <controls:AppButton Text="{Binding SaveButtonText}"
                                     Variant="Accent"
                                     Clicked="OnSaveOrderClicked"
+                                    IsEnabled="{Binding CanSave}"
                                     Margin="0, 8, 0, 0" />
             </VerticalStackLayout>
         </ScrollView>

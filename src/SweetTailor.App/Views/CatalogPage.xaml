@@ -13,7 +13,7 @@
       <ScrollView Grid.Row="0">
         <VerticalStackLayout Spacing="16" Padding="0, 10, 0, 40">
             <!-- Topbar -->
-            <Grid ColumnDefinitions="*, Auto" Padding="20, 6, 20, 0">
+            <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="8" Padding="20, 6, 20, 0">
                 <VerticalStackLayout Grid.Column="0">
                     <Label Text="{Binding ModelCountLabel}"
                            FontFamily="DMSans"
@@ -48,6 +48,25 @@
                         <TapGestureRecognizer Tapped="OnFavoritesTapped" />
                     </Border.GestureRecognizers>
                 </Border>
+                <Border Grid.Column="2"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="{StaticResource Line}"
+                        StrokeThickness="1"
+                        BackgroundColor="{StaticResource White}"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center">
+                    <Label Text="+"
+                           FontSize="28"
+                           TextColor="{StaticResource Indigo}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Margin="0,-2,0,0" />
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAddModelTapped" />
+                    </Border.GestureRecognizers>
+                </Border>
             </Grid>
 
             <!-- Search Bar -->
@@ -59,12 +78,22 @@
 
             <!-- Category Chips -->
             <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="20, 0">
-                <HorizontalStackLayout Spacing="8">
+                <HorizontalStackLayout x:Name="AudienceFilterChips" Spacing="8">
+                    <controls:FilterChip Text="Tout" IsSelected="True" Tapped="OnAudienceChipClicked" />
+                    <controls:FilterChip Text="Femme" IsSelected="False" Tapped="OnAudienceChipClicked" />
+                    <controls:FilterChip Text="Homme" IsSelected="False" Tapped="OnAudienceChipClicked" />
+                    <controls:FilterChip Text="Enfant" IsSelected="False" Tapped="OnAudienceChipClicked" />
+                </HorizontalStackLayout>
+            </ScrollView>
+            <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="20, 0">
+                <HorizontalStackLayout x:Name="StyleFilterChips" Spacing="8">
                     <controls:FilterChip Text="Tout" IsSelected="True" Tapped="OnCategoryChipClicked" />
                     <controls:FilterChip Text="Robes" IsSelected="False" Tapped="OnCategoryChipClicked" />
                     <controls:FilterChip Text="Pagne" IsSelected="False" Tapped="OnCategoryChipClicked" />
                     <controls:FilterChip Text="Costumes" IsSelected="False" Tapped="OnCategoryChipClicked" />
                     <controls:FilterChip Text="Mariage" IsSelected="False" Tapped="OnCategoryChipClicked" />
+                    <controls:FilterChip Text="Soirée" IsSelected="False" Tapped="OnCategoryChipClicked" />
+                    <controls:FilterChip Text="Traditionnel" IsSelected="False" Tapped="OnCategoryChipClicked" />
                 </HorizontalStackLayout>
             </ScrollView>
 

@@ -11,7 +11,7 @@ namespace SweetTailor.App.Views;
 // =====================================================================================
 public partial class OnboardingPage : ContentPage
 {
-    private const string OnboardingDoneKey = "HasCompletedOnboarding";
+    private const string OnboardingDoneKey = "HasCompletedOnboardingV2";
     private const string LoginRoute = "//LoginPage"; // route déclarée dans AppShell (écran 5)
 
     private static readonly Color Indigo = Color.FromArgb("#26306B");
@@ -46,7 +46,7 @@ public partial class OnboardingPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-        NextArrow.AbortAnimation("nudge");
+        NextButton.AbortAnimation("nudge");
     }
 
     // Bouton retour Android : slide précédente, ne quitte pas l'onboarding
@@ -69,8 +69,7 @@ public partial class OnboardingPage : ContentPage
         position = Math.Clamp(position, 0, last);
         var isLast = position == last;
 
-        NextLabel.Text = isLast ? "Commencer" : "Suivant";
-        NextArrow.IsVisible = !isLast;
+        NextButton.Text = isLast ? "Commencer" : "Suivant  →";
         NextButton.BackgroundColor = isLast ? Rose : Indigo;
 
         for (var i = 0; i < _dots.Length; i++)
@@ -96,9 +95,9 @@ public partial class OnboardingPage : ContentPage
     // petite flèche qui "respire" sur le bouton Suivant
     private void StartArrowNudge()
     {
-        NextArrow.AbortAnimation("nudge");
-        new Animation(v => NextArrow.TranslationX = 3.5 * (0.5 - 0.5 * Math.Cos(v)), 0, Math.PI * 2)
-            .Commit(NextArrow, "nudge", 16, 1500, Easing.Linear, null, () => true);
+        NextButton.AbortAnimation("nudge");
+        new Animation(v => NextButton.TranslationX = 3.5 * (0.5 - 0.5 * Math.Cos(v)), 0, Math.PI * 2)
+            .Commit(NextButton, "nudge", 16, 1500, Easing.Linear, null, () => true);
     }
 
     // retour tactile : léger "press"
@@ -112,13 +111,13 @@ public partial class OnboardingPage : ContentPage
     }
 
     // 2, 3, 4 → 5 (Connexion)
-    private async void OnSkipClicked(object? sender, TappedEventArgs e)
+    private async void OnSkipClicked(object? sender, EventArgs e)
     {
         Press(SkipButton);
         await FinishAsync();
     }
 
-    private async void OnNextClicked(object? sender, TappedEventArgs e)
+    private async void OnNextClicked(object? sender, EventArgs e)
     {
         Press(NextButton);
         var last = _viewModel.Slides.Count - 1;
@@ -421,8 +420,8 @@ public sealed class OnboardingSlideView : ContentView
     private MPath Icon(string data, Color? stroke, double thick, double w, double h, Color? fill = null) => new()
     {
         Data = (Geometry)GeoConv.ConvertFromInvariantString(data)!,
-        Stroke = stroke == null ? null : new SolidColorBrush(stroke),
-        Fill = fill == null ? null : new SolidColorBrush(fill),
+        Stroke = stroke == null ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(stroke),
+        Fill = fill == null ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(fill),
         StrokeThickness = S(thick),
         StrokeLineCap = PenLineCap.Round,
         StrokeLineJoin = PenLineJoin.Round,
@@ -592,7 +591,7 @@ public sealed class OnboardingSlideView : ContentView
             MinimumWidthRequest = S(60),
             Content = new Label
             {
-                FormattedString = fs,
+                FormattedText = fs,
                 FontSize = S(12.5),
                 TextColor = Ink,
                 FontAutoScalingEnabled = false,

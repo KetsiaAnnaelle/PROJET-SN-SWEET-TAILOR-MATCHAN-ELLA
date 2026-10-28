@@ -46,9 +46,15 @@
                         </Border>
                       </Grid>
 
+                    <Grid Padding="20, 0">
+                        <controls:SearchBox Placeholder="Rechercher un client ou un modèle"
+                                            Text="{Binding SearchQuery, Mode=TwoWay}"
+                                            SearchCommand="{Binding LoadOrdersCommand}" />
+                    </Grid>
+
                     <!-- Status Filter Chips -->
                     <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="20, 0">
-                        <HorizontalStackLayout Spacing="8">
+                        <HorizontalStackLayout x:Name="OrderFilterChips" Spacing="8">
                             <controls:FilterChip Text="Toutes"
                                                  IsSelected="True"
                                                  Tapped="OnFilterChipClicked" />
@@ -62,6 +68,9 @@
                                                  IsSelected="False"
                                                  Tapped="OnFilterChipClicked" />
                             <controls:FilterChip Text="Prêtes"
+                                                 IsSelected="False"
+                                                 Tapped="OnFilterChipClicked" />
+                            <controls:FilterChip Text="Livrées"
                                                  IsSelected="False"
                                                  Tapped="OnFilterChipClicked" />
                         </HorizontalStackLayout>

@@ -7,19 +7,17 @@
     FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False">
 
-    <!-- Screen 1: Splash Screen (Page 1) - Initial Screen, No Navbar -->
+    <!-- Splash opens first, then routes to onboarding or login based on completion. -->
     <ShellContent x:Name="SplashShellContent"
                   Route="SplashPage"
                   Shell.TabBarIsVisible="False"
                   Shell.FlyoutItemIsVisible="False" />
 
-    <!-- Screen 2-4: 3 Onboarding Screens - No Navbar -->
     <ShellContent x:Name="OnboardingShellContent"
                   Route="OnboardingPage"
                   Shell.TabBarIsVisible="False"
                   Shell.FlyoutItemIsVisible="False" />
 
-    <!-- Screen 5: Login / Authentication - No Navbar -->
     <ShellContent x:Name="LoginShellContent"
                   Route="LoginPage"
                   Shell.TabBarIsVisible="False"
@@ -27,9 +25,9 @@
 
     <!-- Keep Shell tabs for route management; the app renders its own bottom bar. -->
     <TabBar Shell.TabBarBackgroundColor="{StaticResource White}"
-            Shell.TabBarForegroundColor="{StaticResource Indigo}"
+            Shell.TabBarForegroundColor="{StaticResource Rose}"
             Shell.TabBarUnselectedColor="{StaticResource Muted}"
-            Shell.TabBarTitleColor="{StaticResource Indigo}"
+            Shell.TabBarTitleColor="{StaticResource Rose}"
             Shell.TabBarIsVisible="False">
 
         <Tab Title="Clients">

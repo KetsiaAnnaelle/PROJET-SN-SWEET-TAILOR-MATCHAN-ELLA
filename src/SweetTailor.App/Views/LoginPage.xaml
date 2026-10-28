@@ -11,91 +11,182 @@
              BackgroundColor="{StaticResource Chalk}">
 
     <Grid RowDefinitions="*,Auto">
+
+        <!-- ============ Décor d'arrière-plan (halos de couleur) ============ -->
+        <Ellipse Grid.RowSpan="2" InputTransparent="True"
+                 WidthRequest="300" HeightRequest="300"
+                 HorizontalOptions="End" VerticalOptions="Start"
+                 Margin="0,-90,-120,0" Opacity="0.55"
+                 Fill="{StaticResource RoseSoft}" />
+        <Ellipse Grid.RowSpan="2" InputTransparent="True"
+                 WidthRequest="220" HeightRequest="220"
+                 HorizontalOptions="Start" VerticalOptions="End"
+                 Margin="-110,0,0,-60" Opacity="0.6"
+                 Fill="{StaticResource TapeSoft}" />
+
         <ScrollView Grid.Row="0">
-            <VerticalStackLayout Padding="0, 0, 0, 30" Spacing="20">
-                <!-- Top Tape Accent -->
-                <controls:TapeMeasure HeightRequest="20" HorizontalOptions="FillAndExpand" />
+            <VerticalStackLayout Padding="0,0,0,24" Spacing="0">
 
-                <!-- Header with Logo -->
-                <VerticalStackLayout Padding="24, 16, 24, 0" Spacing="16">
-                    <Border WidthRequest="64" HeightRequest="64"
-                            StrokeShape="RoundRectangle 20"
-                            StrokeThickness="0"
-                            BackgroundColor="{StaticResource Indigo}"
-                            HorizontalOptions="Start">
-                        <Label Text="S"
-                               FontFamily="BricolageExtraBold"
-                               FontSize="32"
-                               TextColor="{StaticResource Tape}"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center" />
-                    </Border>
+                <!-- Ruban de mesure -->
+                <controls:TapeMeasure HeightRequest="20" HorizontalOptions="Fill" />
 
-                    <VerticalStackLayout Spacing="6">
+                <!-- ============ En-tête : logo + titre ============ -->
+                <VerticalStackLayout Padding="24,28,24,0" Spacing="20">
+
+                    <!-- Logo « S » avec dégradé, halo et petit point rose -->
+                    <Grid x:Name="LogoBlock" WidthRequest="76" HeightRequest="76" HorizontalOptions="Start">
+                        <Border WidthRequest="72" HeightRequest="72"
+                                StrokeShape="RoundRectangle 23"
+                                StrokeThickness="1.5" Stroke="#33FFFFFF"
+                                HorizontalOptions="Start" VerticalOptions="End">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#3B4A9E" Offset="0" />
+                                    <GradientStop Color="#1B2352" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border.Shadow>
+                                <Shadow Brush="#26306B" Offset="0,12" Radius="22" Opacity="0.35" />
+                            </Border.Shadow>
+                            <Label Text="S"
+                                   FontFamily="BricolageExtraBold"
+                                   FontSize="40"
+                                   TextColor="{StaticResource Tape}"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+                        <Ellipse WidthRequest="14" HeightRequest="14"
+                                 Fill="{StaticResource Rose}" Stroke="White" StrokeThickness="2.5"
+                                 HorizontalOptions="End" VerticalOptions="Start" />
+                    </Grid>
+
+                    <VerticalStackLayout x:Name="TitleBlock" Spacing="8">
+                        <HorizontalStackLayout Spacing="8">
+                            <BoxView WidthRequest="22" HeightRequest="3" CornerRadius="2"
+                                     Color="{StaticResource Tape}" VerticalOptions="Center" />
+                            <Label Text="ESPACE ATELIER"
+                                   FontFamily="DMSansBold"
+                                   FontSize="11.5"
+                                   CharacterSpacing="1.6"
+                                   TextColor="{StaticResource Rose}" />
+                        </HorizontalStackLayout>
+
                         <Label Text="Bon retour !"
                                FontFamily="BricolageExtraBold"
-                               FontSize="30"
+                               FontSize="34"
                                TextColor="{StaticResource Ink}" />
                         <Label Text="Connectez-vous pour retrouver vos clients et vos commandes."
                                FontFamily="DMSans"
-                               FontSize="14"
+                               FontSize="15"
                                TextColor="{StaticResource Muted}"
                                LineHeight="1.4" />
                     </VerticalStackLayout>
                 </VerticalStackLayout>
 
-                <!-- Form Fields -->
-                <VerticalStackLayout Padding="24, 10, 24, 0" Spacing="16">
-                    <controls:AppEntry Label="E-mail ou téléphone"
-                                       Text="{Binding Identifier, Mode=TwoWay}"
-                                       Placeholder="nom@exemple.com"
-                                       LeadingIcon="mail"
-                                       Keyboard="Email" />
+                <!-- ============ Carte du formulaire ============ -->
+                <Border x:Name="FormCard"
+                        Margin="20,26,20,0"
+                        Padding="18,20,18,20"
+                        BackgroundColor="White"
+                        Stroke="{StaticResource Line}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 28">
+                    <Border.Shadow>
+                        <Shadow Brush="#26306B" Offset="0,14" Radius="28" Opacity="0.10" />
+                    </Border.Shadow>
 
-                    <controls:AppEntry Label="Mot de passe"
-                                       Text="{Binding Password, Mode=TwoWay}"
-                                       Placeholder="••••••••"
-                                       IsPassword="True"
-                                       LeadingIcon="lock" />
+                    <VerticalStackLayout Spacing="14">
+                        <controls:AppEntry Label="E-mail ou téléphone"
+                                           Text="{Binding Identifier, Mode=TwoWay}"
+                                           Placeholder="nom@exemple.com"
+                                           LeadingIcon="mail"
+                                           Keyboard="Email" />
 
-                    <!-- Forgot Password Link -->
-                    <Label Text="Mot de passe oublié ?"
-                           FontFamily="DMSansBold"
-                           FontSize="14"
-                           TextColor="{StaticResource Indigo}"
-                           HorizontalOptions="End"
-                           TextDecorations="Underline">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnForgotPasswordTapped" />
-                        </Label.GestureRecognizers>
-                    </Label>
+                        <controls:AppEntry Label="Mot de passe"
+                                           Text="{Binding Password, Mode=TwoWay}"
+                                           Placeholder="••••••••"
+                                           IsPassword="True"
+                                           LeadingIcon="lock" />
 
-                    <!-- Submit CTA -->
-                    <controls:AppButton Text="Se connecter"
-                                        Variant="Primary"
-                                        IsBusy="{Binding IsBusy}"
-                                        Command="{Binding LoginCommand}"
-                                        Margin="0, 10, 0, 0" />
-                </VerticalStackLayout>
+                        <!-- Mot de passe oublié -->
+                        <Label Text="Mot de passe oublié ?"
+                               FontFamily="DMSansBold"
+                               FontSize="14"
+                               TextColor="{StaticResource Indigo}"
+                               HorizontalOptions="End"
+                               Padding="0,2"
+                               TextDecorations="Underline">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnForgotPasswordTapped" />
+                            </Label.GestureRecognizers>
+                        </Label>
 
-                <!-- Footer: Switch to Register -->
-                <HorizontalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0, 30, 0, 10">
-                    <Label Text="Pas encore de compte ?" FontFamily="DMSans" FontSize="14" TextColor="{StaticResource Muted}" />
-                    <Label Text="Créer un compte"
-                           FontFamily="DMSansBold"
-                           FontSize="14"
-                           TextColor="{StaticResource Indigo}"
-                           TextDecorations="Underline">
-                        <Label.GestureRecognizers>
+                        <!-- Bouton principal -->
+                        <controls:AppButton Text="Se connecter"
+                                            Variant="Primary"
+                                            IsBusy="{Binding IsBusy}"
+                                            Command="{Binding LoginCommand}"
+                                            Margin="0,6,0,0" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ============ Pied : inscription ============ -->
+                <VerticalStackLayout x:Name="FooterBlock" Spacing="16" Margin="24,28,24,0">
+
+                    <!-- Séparateur avec libellé -->
+                    <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="12">
+                        <BoxView HeightRequest="1" Color="{StaticResource Mist}" VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="NOUVEAU SUR SWEET TAILOR ?"
+                               FontFamily="DMSansBold"
+                               FontSize="10.5"
+                               CharacterSpacing="1.2"
+                               TextColor="{StaticResource Muted}" />
+                        <BoxView Grid.Column="2" HeightRequest="1" Color="{StaticResource Mist}" VerticalOptions="Center" />
+                    </Grid>
+
+                    <!-- Bouton « Créer un compte » en pastille -->
+                    <Border BackgroundColor="White"
+                            Stroke="{StaticResource Indigo}"
+                            StrokeThickness="1.5"
+                            StrokeShape="RoundRectangle 16"
+                            HeightRequest="50">
+                        <Label Text="Créer un compte"
+                               FontFamily="DMSansBold"
+                               FontSize="15"
+                               TextColor="{StaticResource Indigo}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                        <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnRegisterTapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <Label Text="Revoir la présentation"
+                           FontFamily="DMSansBold"
+                           FontSize="13"
+                           TextColor="{StaticResource Muted}"
+                           HorizontalOptions="Center"
+                           Padding="0,6"
+                           TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnOnboardingTapped" />
                         </Label.GestureRecognizers>
                     </Label>
-                </HorizontalStackLayout>
+
+                    <Label Text="Chaque mesure compte."
+                           FontFamily="DMSans"
+                           FontSize="12"
+                           TextColor="#A6AAC8"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Toast Banner -->
-        <controls:ToastBanner Grid.Row="1"
+        <!-- ============ Toast (au-dessus de tout, en haut) ============ -->
+        <controls:ToastBanner Grid.RowSpan="2"
+                              VerticalOptions="Start"
+                              Margin="16,34,16,0"
                               IsVisible="{Binding IsToastVisible}"
                               Message="{Binding ToastMessage}"
                               Type="{Binding ToastType}" />

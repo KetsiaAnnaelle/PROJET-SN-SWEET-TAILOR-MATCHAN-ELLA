@@ -33,7 +33,7 @@
                            FontSize="22"
                            TextColor="{StaticResource Ink}"
                            HorizontalTextAlignment="Center" />
-                    <Label Text="Atelier Rose d'Or · Bonamoussadi, Douala"
+                    <Label Text="{Binding WorkshopDescription}"
                            FontFamily="DMSans"
                            FontSize="14"
                            TextColor="{StaticResource Muted}"
@@ -155,6 +155,10 @@
                                             Clicked="OnNavigateToComponentsCharterClicked" />
                     </VerticalStackLayout>
                 </Border>
+
+                <controls:AppButton Text="Revoir la présentation de l’application"
+                                    Variant="Ghost"
+                                    Clicked="OnNavigateToOnboardingClicked" />
 
                 <!-- Section Coordonnées -->
                 <VerticalStackLayout Spacing="8">
