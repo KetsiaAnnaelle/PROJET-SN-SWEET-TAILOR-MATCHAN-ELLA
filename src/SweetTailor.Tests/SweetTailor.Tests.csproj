@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SweetTailor.Core\SweetTailor.Core.csproj" />
+    <ProjectReference Include="..\SweetTailor.Api\SweetTailor.Api.csproj" />
   </ItemGroup>
 
 </Project>

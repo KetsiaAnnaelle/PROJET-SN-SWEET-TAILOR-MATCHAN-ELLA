@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/SweetTailor.Api/SweetTailor.Api.csproj" />
     <Project Path="src/SweetTailor.App/SweetTailor.App.csproj" />
     <Project Path="src/SweetTailor.Core/SweetTailor.Core.csproj" />
     <Project Path="src/SweetTailor.Desktop/SweetTailor.Desktop.csproj" />

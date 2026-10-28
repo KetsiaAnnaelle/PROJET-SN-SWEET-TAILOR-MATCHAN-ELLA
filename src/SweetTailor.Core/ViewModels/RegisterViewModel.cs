@@ -14,13 +14,13 @@ public partial class RegisterViewModel : BaseViewModel
     public event EventHandler? RegistrationSucceeded;
 
     [ObservableProperty]
-    private string _fullName = "Rose Ndongo";
+    private string _fullName = string.Empty;
 
     [ObservableProperty]
-    private string _phone = "+237 6 77 00 00 00";
+    private string _phone = string.Empty;
 
     [ObservableProperty]
-    private string _email = "rose.ndongo@mail"; // Initial value demonstrating mockup error
+    private string _email = string.Empty;
 
     [ObservableProperty]
     private string _password = string.Empty;

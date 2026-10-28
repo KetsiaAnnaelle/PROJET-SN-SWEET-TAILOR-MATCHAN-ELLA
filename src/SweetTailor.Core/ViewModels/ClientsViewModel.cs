@@ -17,6 +17,7 @@ public enum ClientsViewState
 public partial class ClientsViewModel : BaseViewModel
 {
     private readonly IClientService _clientService;
+    private readonly IDemoModeService? _demoMode;
 
     [ObservableProperty]
     private ClientsViewState _viewState = ClientsViewState.Normal;
@@ -51,17 +52,18 @@ public partial class ClientsViewModel : BaseViewModel
 
     public List<string> FilterChips { get; } = new()
     {
-        "Tous · 48",
-        "En cours · 12",
-        "À livrer · 5",
+        "Tous ",
+        "En cours ",
+        "À livrer ",
         "Livrés"
     };
 
     public ObservableCollection<Client> Clients { get; } = new();
 
-    public ClientsViewModel(IClientService clientService)
+    public ClientsViewModel(IClientService clientService, IDemoModeService? demoMode = null)
     {
         _clientService = clientService;
+        _demoMode = demoMode;
     }
 
     [RelayCommand]
@@ -70,6 +72,17 @@ public partial class ClientsViewModel : BaseViewModel
         ViewState = ClientsViewState.Loading;
         try
         {
+            if (_demoMode is { CurrentState: not DemoListState.Normal })
+            {
+                await _demoMode.SimulateDelayAsync();
+                if (_demoMode.CurrentState == DemoListState.Empty)
+                {
+                    Clients.Clear();
+                    ViewState = ClientsViewState.Empty;
+                    return;
+                }
+            }
+
             var list = await _clientService.SearchClientsAsync(SearchQuery, SelectedFilterChip);
             Clients.Clear();
             foreach (var client in list)
@@ -77,6 +90,7 @@ public partial class ClientsViewModel : BaseViewModel
                 Clients.Add(client);
             }
 
+            await RefreshFilterCountsAsync();
             ViewState = Clients.Count == 0 ? ClientsViewState.Empty : ClientsViewState.Normal;
         }
         catch (Exception)
@@ -105,6 +119,47 @@ public partial class ClientsViewModel : BaseViewModel
     {
         HideToast();
         await LoadClientsAsync();
+    }
+
+    [RelayCommand]
+    public async Task DeleteClientAsync(Client? client)
+    {
+        if (client == null) return;
+        var success = await _clientService.DeleteClientAsync(client.Id);
+        if (success)
+        {
+            Clients.Remove(client);
+            if (Clients.Count == 0) ViewState = ClientsViewState.Empty;
+            ShowToast($"Client {client.FullName} supprimé avec succès.", ToastType.Success);
+        }
+    }
+
+    [RelayCommand]
+    public async Task AddClientAsync(Client? client)
+    {
+        if (client == null) return;
+        var created = await _clientService.AddClientAsync(client);
+        Clients.Insert(0, created);
+        ViewState = ClientsViewState.Normal;
+        ShowToast($"Client {created.FullName} enregistré avec succès.", ToastType.Success);
+    }
+
+    [RelayCommand]
+    public async Task RefreshAsync()
+    {
+        HideToast();
+        await LoadClientsAsync();
+    }
+
+    private async Task RefreshFilterCountsAsync()
+    {
+        var all = await _clientService.GetAllClientsAsync();
+        var inProgress = all.Count(client => client.ActiveOrdersCount > 0);
+        var toDeliver = all.Count(client => client.CurrentOrderStatus is OrderStatus.Prete or OrderStatus.Essayage);
+        FilterChips[0] = $"Tous · {all.Count}";
+        FilterChips[1] = $"En cours · {inProgress}";
+        FilterChips[2] = $"À livrer · {toDeliver}";
+        OnPropertyChanged(nameof(FilterChips));
     }
 
     // Interactive state previewers for UI showcasing

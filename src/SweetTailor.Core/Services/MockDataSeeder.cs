@@ -457,6 +457,7 @@ public static class MockDataSeeder
                 Id = 4,
                 Title = "Costume 3 pièces",
                 Category = "Homme",
+                Audience = "Homme",
                 Subtitle = "Coupe slim sur mesure",
                 SvgAsset = "suit",
                 ImagePath = "costume_homme.jpg",
@@ -496,4 +497,23 @@ public static class MockDataSeeder
             }
         };
     }
+
+    public static List<MeasurementItem> CreateBlankMeasurements() =>
+    [
+        new() { Name = "Tour de cou", Unit = "cm", Category = MeasurementCategory.HautDuCorps },
+        new() { Name = "Carrure dos", Unit = "cm", Category = MeasurementCategory.HautDuCorps },
+        new() { Name = "Longueur d'épaule", Unit = "cm", Category = MeasurementCategory.HautDuCorps },
+        new() { Name = "Tour de poitrine", Unit = "cm", Category = MeasurementCategory.HautDuCorps },
+        new() { Name = "Hauteur de poitrine", Unit = "cm", Category = MeasurementCategory.HautDuCorps },
+        new() { Name = "Tour de taille", Unit = "cm", Category = MeasurementCategory.HautDuCorps, IsHighlighted = true },
+        new() { Name = "Longueur de manche", Unit = "cm", Category = MeasurementCategory.HautDuCorps },
+        new() { Name = "Tour de bras", Unit = "cm", Category = MeasurementCategory.HautDuCorps },
+        new() { Name = "Tour de hanches", Unit = "cm", Category = MeasurementCategory.Bas },
+        new() { Name = "Tour de cuisse", Unit = "cm", Category = MeasurementCategory.Bas },
+        new() { Name = "Entrejambe", Unit = "cm", Category = MeasurementCategory.Bas },
+        new() { Name = "Longueur robe", Unit = "cm", Category = MeasurementCategory.Longueurs },
+        new() { Name = "Longueur jupe", Unit = "cm", Category = MeasurementCategory.Longueurs },
+        new() { Name = "Longueur pantalon", Unit = "cm", Category = MeasurementCategory.Longueurs },
+        new() { Name = "Hauteur totale", Unit = "cm", Category = MeasurementCategory.Longueurs }
+    ];
 }

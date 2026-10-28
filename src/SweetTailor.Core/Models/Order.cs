@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace SweetTailor.Core.Models;
 
@@ -25,9 +26,12 @@ public partial class Order : ObservableObject
     public DateTime DueDate { get; set; }
     public string DueDateLabel { get; set; } = string.Empty;
     public bool IsHotDueDate { get; set; }
+    public DateTime? DeliveredAt { get; set; }
 
     public string SvgAsset { get; set; } = "dress";
     public string ImagePath { get; set; } = string.Empty;
+    [JsonIgnore]
+    public string? RemoteImagePath { get; set; }
     public string GradientClass { get; set; } = "g-rose";
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 

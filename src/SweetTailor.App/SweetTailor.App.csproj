@@ -73,6 +73,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="TesseractOcrMaui" Version="1.5.2" />
 		<ProjectReference Include="..\SweetTailor.Core\SweetTailor.Core.csproj" />
 	</ItemGroup>
 

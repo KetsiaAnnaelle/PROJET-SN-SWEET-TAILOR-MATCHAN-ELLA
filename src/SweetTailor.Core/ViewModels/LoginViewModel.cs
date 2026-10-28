@@ -11,7 +11,7 @@ public partial class LoginViewModel : BaseViewModel
     public event EventHandler? LoginSucceeded;
 
     [ObservableProperty]
-    private string _identifier = "rose.ndongo@mail.com";
+    private string _identifier = string.Empty;
 
     [ObservableProperty]
     private string _password = string.Empty;
@@ -48,6 +48,14 @@ public partial class LoginViewModel : BaseViewModel
                 LoginSucceeded?.Invoke(this, EventArgs.Empty);
             }
         }
+        catch (HttpRequestException ex)
+        {
+            ShowToast($"API indisponible : {ex.Message}", ToastType.Error);
+        }
+        catch (TaskCanceledException)
+        {
+            ShowToast("La requête a expiré. Vérifiez que l'API est démarrée.", ToastType.Error);
+        }
         finally
         {
             IsBusy = false;
@@ -60,7 +68,7 @@ public partial class ForgotPasswordViewModel : BaseViewModel
     private readonly IAuthService _authService;
 
     [ObservableProperty]
-    private string _identifier = "rose.ndongo@mail.com";
+    private string _identifier = string.Empty;
 
     [ObservableProperty]
     private bool _codeSent;

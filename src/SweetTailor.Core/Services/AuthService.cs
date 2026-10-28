@@ -9,6 +9,7 @@ public interface IAuthService
     Task<AuthResult> LoginAsync(string identifier, string password);
     Task<AuthResult> RegisterAsync(string fullName, string phone, string email, string password, string confirmPassword, bool acceptedTerms);
     Task<AuthResult> SendPasswordResetCodeAsync(string identifier);
+    Task LogoutAsync();
 }
 
 public class AuthService : IAuthService
@@ -58,4 +59,6 @@ public class AuthService : IAuthService
 
         return Task.FromResult(new AuthResult(true));
     }
+
+    public Task LogoutAsync() => Task.CompletedTask;
 }
