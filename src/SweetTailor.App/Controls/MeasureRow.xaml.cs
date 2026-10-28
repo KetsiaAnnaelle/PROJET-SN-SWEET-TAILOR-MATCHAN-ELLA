@@ -99,8 +99,22 @@ public partial class MeasureRow : ContentView
     private void OnValueChanged(object? sender, TextChangedEventArgs e)
     {
         if (_updating) return;
-        Value = e.NewTextValue ?? string.Empty;
-        if (Measurement != null && double.TryParse(e.NewTextValue, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var parsed))
+        if (Measurement == null)
+        {
+            Value = e.NewTextValue ?? string.Empty;
+            return;
+        }
+
+        var valueText = e.NewTextValue?.Trim();
+        if (string.IsNullOrEmpty(valueText))
+        {
+            Measurement.Value = 0;
+            return;
+        }
+
+        valueText = valueText.Replace(',', '.');
+        if (double.TryParse(valueText, System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out var parsed))
         {
             Measurement.Value = parsed;
         }

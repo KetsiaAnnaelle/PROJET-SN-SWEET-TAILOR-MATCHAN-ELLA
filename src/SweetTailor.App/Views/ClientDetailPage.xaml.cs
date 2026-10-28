@@ -78,7 +78,7 @@ public partial class ClientDetailPage : ContentPage
 
     private async void OnEditTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(ClientFormPage));
+        await Shell.Current.GoToAsync($"{nameof(ClientFormPage)}?ClientId={_clientId}");
     }
 
     private async void OnViewAllMeasurementsClicked(object? sender, EventArgs e)
@@ -88,7 +88,7 @@ public partial class ClientDetailPage : ContentPage
 
     private async void OnNewOrderClicked(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(NewOrderPage));
+        await Shell.Current.GoToAsync($"{nameof(NewOrderPage)}?ClientId={_clientId}");
     }
 
     private async void OnOrderRowClicked(object? sender, EventArgs e)

@@ -23,11 +23,15 @@ public partial class ClientDetailViewModel : BaseViewModel
     public ObservableCollection<Order> Orders { get; } = new();
     public ObservableCollection<ClientNote> Notes { get; } = new();
     public ObservableCollection<MeasurementItem> KeyMeasurements { get; } = new();
+    public bool HasOrders => Orders.Count > 0;
+    public bool HasNotes => Notes.Count > 0;
 
     public ClientDetailViewModel(IClientService clientService, IOrderService orderService)
     {
         _clientService = clientService;
         _orderService = orderService;
+        Orders.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasOrders));
+        Notes.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNotes));
     }
 
     public async Task LoadClientAsync(int clientId)
@@ -78,5 +82,52 @@ public partial class ClientDetailViewModel : BaseViewModel
         Notes.Insert(0, note);
         NewNoteContent = string.Empty;
         ShowToast("Note ajoutée !", ToastType.Success);
+    }
+
+    [RelayCommand]
+    public async Task<bool> DeleteClientAsync()
+    {
+        if (Client == null) return false;
+        var success = await _clientService.DeleteClientAsync(Client.Id);
+        if (success)
+        {
+            ShowToast($"Client {Client.FullName} supprimé.", ToastType.Success);
+        }
+        return success;
+    }
+
+    [RelayCommand]
+    public async Task<bool> DeleteNoteAsync(ClientNote? note)
+    {
+        if (Client == null || note == null) return false;
+        var success = await _clientService.DeleteNoteAsync(Client.Id, note.Id);
+        if (success)
+        {
+            Notes.Remove(note);
+            ShowToast("Note supprimée.", ToastType.Success);
+        }
+        return success;
+    }
+
+    [RelayCommand]
+    public async Task<bool> DeleteOrderAsync(Order? order)
+    {
+        if (order == null) return false;
+        var success = await _orderService.DeleteOrderAsync(order.Id);
+        if (success)
+        {
+            Orders.Remove(order);
+            ShowToast($"Commande {order.OrderNumber} supprimée.", ToastType.Success);
+        }
+        return success;
+    }
+
+    [RelayCommand]
+    public async Task RefreshAsync()
+    {
+        if (Client != null)
+        {
+            await LoadClientAsync(Client.Id);
+        }
     }
 }

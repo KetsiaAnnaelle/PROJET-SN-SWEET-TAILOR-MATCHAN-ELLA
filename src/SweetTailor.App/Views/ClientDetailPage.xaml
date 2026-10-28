@@ -123,15 +123,23 @@
 
                 <!-- ONGLET 2 : COMMANDES (Écran 13) -->
                 <VerticalStackLayout x:Name="CommandesTabContent" IsVisible="False" Spacing="12" Padding="20, 0">
-                    <BindableLayout.ItemsSource>
-                        <Binding Path="Orders" />
-                    </BindableLayout.ItemsSource>
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:Order">
-                            <controls:OrderRow Order="{Binding .}"
-                                               Tapped="OnOrderRowClicked" />
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
+                    <Grid>
+                        <VerticalStackLayout IsVisible="{Binding HasOrders}" Spacing="0">
+                            <BindableLayout.ItemsSource>
+                                <Binding Path="Orders" />
+                            </BindableLayout.ItemsSource>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:Order">
+                                    <controls:OrderRow Order="{Binding .}"
+                                                       Tapped="OnOrderRowClicked" />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <controls:EmptyStateView IsVisible="{Binding HasOrders, Converter={StaticResource BoolInvert}, ConverterParameter=True}"
+                                                 ShowAction="False"
+                                                 Title="Aucune commande pour le moment"
+                                                 Description="Les commandes de ce client apparaîtront ici." />
+                    </Grid>
 
                     <controls:AppButton Text="+ Nouvelle commande"
                                         Variant="Primary"
@@ -158,39 +166,46 @@
                         </Grid>
                     </Border>
 
-                    <!-- Liste des notes -->
-                    <BindableLayout.ItemsSource>
-                        <Binding Path="Notes" />
-                    </BindableLayout.ItemsSource>
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:ClientNote">
-                            <Border BackgroundColor="{StaticResource White}"
-                                    StrokeShape="RoundRectangle 16"
-                                    Stroke="{StaticResource Line}"
-                                    Padding="16, 12"
-                                    Margin="0, 0, 0, 4">
-                                <VerticalStackLayout Spacing="6">
-                                    <Grid ColumnDefinitions="*, Auto">
-                                        <Label Text="{Binding Date, StringFormat='{0:d MMMM yyyy}'}"
-                                               FontFamily="DMSans"
-                                               FontSize="12"
-                                               TextColor="{StaticResource Muted}" />
-                                        <Border Grid.Column="1"
-                                                IsVisible="{Binding IsImportant}"
-                                                StrokeShape="RoundRectangle 999"
-                                                BackgroundColor="{StaticResource RoseSoft}"
-                                                Padding="8, 2">
-                                            <Label Text="Important" FontFamily="DMSansBold" FontSize="11" TextColor="{StaticResource Rose}" />
-                                        </Border>
-                                    </Grid>
-                                    <Label Text="{Binding Content}"
-                                           FontFamily="DMSans"
-                                           FontSize="14"
-                                           TextColor="{StaticResource Ink}" />
-                                </VerticalStackLayout>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
+                    <Grid>
+                        <VerticalStackLayout IsVisible="{Binding HasNotes}" Spacing="10">
+                            <BindableLayout.ItemsSource>
+                                <Binding Path="Notes" />
+                            </BindableLayout.ItemsSource>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:ClientNote">
+                                    <Border BackgroundColor="{StaticResource White}"
+                                            StrokeShape="RoundRectangle 16"
+                                            Stroke="{StaticResource Line}"
+                                            Padding="16, 12"
+                                            Margin="0, 0, 0, 4">
+                                        <VerticalStackLayout Spacing="6">
+                                            <Grid ColumnDefinitions="*, Auto">
+                                                <Label Text="{Binding Date, StringFormat='{0:d MMMM yyyy}'}"
+                                                       FontFamily="DMSans"
+                                                       FontSize="12"
+                                                       TextColor="{StaticResource Muted}" />
+                                                <Border Grid.Column="1"
+                                                        IsVisible="{Binding IsImportant}"
+                                                        StrokeShape="RoundRectangle 999"
+                                                        BackgroundColor="{StaticResource RoseSoft}"
+                                                        Padding="8, 2">
+                                                    <Label Text="Important" FontFamily="DMSansBold" FontSize="11" TextColor="{StaticResource Rose}" />
+                                                </Border>
+                                            </Grid>
+                                            <Label Text="{Binding Content}"
+                                                   FontFamily="DMSans"
+                                                   FontSize="14"
+                                                   TextColor="{StaticResource Ink}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <controls:EmptyStateView IsVisible="{Binding HasNotes, Converter={StaticResource BoolInvert}, ConverterParameter=True}"
+                                                 ShowAction="False"
+                                                 Title="Aucune note pour le moment"
+                                                 Description="Les notes ajoutées pour ce client apparaîtront ici." />
+                    </Grid>
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
